@@ -2,12 +2,14 @@ import React from 'react'
 import {browserHistory, Route, Router} from "react-router";
 import Home from "../views/Home";
 import Latest from "../views/Latest";
+import Dir from "../views/Dir";
 class Routes extends React.Component {
   render() {
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Home}>
           <Route path="/latest" component={Latest}></Route>
+          <Route path="/dir/:id" component={Dir}></Route>
         </Route>
       </Router>
     )

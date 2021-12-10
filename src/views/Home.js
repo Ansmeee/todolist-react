@@ -9,7 +9,7 @@ const { Header, Content, Sider } = Layout;
 class Home extends React.Component {
   constructor(props) {
     super(props)
-    this.FileList = [
+    this.DirList = [
       {
         "id": 1,
         "name": 1
@@ -30,8 +30,8 @@ class Home extends React.Component {
   }
 
   menuItems() {
-    return this.FileList.map(file => {
-      return <Menu.Item key={'/file/' + file.id}>{file.name}</Menu.Item>
+    return this.DirList.map(dir => {
+      return <Menu.Item key={'/dir/' + dir.id}>{dir.name}</Menu.Item>
     })
   }
 
