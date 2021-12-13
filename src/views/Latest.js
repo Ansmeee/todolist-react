@@ -39,10 +39,10 @@ class Latest extends React.Component {
         <Row>
           <Col span={16}>
             <Row style={{height: '40px', lineHeight: '40px',}}>
-              <Col span={18}>
-                <Input bordered={false} placeholder="输入关键字搜索" prefix={<SearchOutlined />}></Input>
+              <Col span={20} style={{paddingLeft: '16px'}}>
+                <Input bordered={false} placeholder="输入关键字搜索"></Input>
               </Col>
-              <Col span={4} style={{textAlign: 'right'}}>
+              <Col span={4} style={{textAlign: 'right', paddingRight: '16px'}}>
                 <Button type="primary" icon={<PlusOutlined />}>新 建</Button>
               </Col>
             </Row>
