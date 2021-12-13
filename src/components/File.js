@@ -12,26 +12,8 @@ class File extends React.Component {
       keywords: '',
       from: props.state.from,
       loading: false,
+      fileList: [],
     }
-
-    this.FileList = [
-      {
-        "id": 1,
-        "title": '报表配置逻辑调整规范',
-        "tag": "123",
-        "date": '2021年12月12日'
-      },
-      {
-        "id": 2,
-        "title": 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-        "date": '2021年12月12日'
-      },
-      {
-        "id": 3,
-        "title": 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-        "date": '2021年12月12日'
-      }
-    ]
   }
 
   componentDidMount() {
@@ -43,7 +25,7 @@ class File extends React.Component {
     let params = {}
     fileApi.fileList(params).then(response => {
       if (response.code == 200) {
-        this.setState({ loading: false })
+        this.setState({ loading: false, fileList: response.data.list})
       } else {
         this.setState({ loading: false})
       }
@@ -80,7 +62,7 @@ class File extends React.Component {
             <List
               size="small"
               itemLayout="horizontal"
-              dataSource={this.FileList}
+              dataSource={this.state.fileList}
               renderItem={item => (
                 <List.Item>
                   <Skeleton loading={this.state.loading} active>
