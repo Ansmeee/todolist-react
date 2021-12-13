@@ -25,6 +25,12 @@ class Home extends React.Component {
     ]
   }
 
+
+  componentDidMount()
+  {
+    console.log('home')
+  }
+
   handleClick = e => {
     browserHistory.push(e.key)
   }
