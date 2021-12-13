@@ -1,5 +1,5 @@
 import React from "react"
-import {SearchOutlined, PlusOutlined} from "@ant-design/icons";
+import {PlusOutlined} from "@ant-design/icons";
 import {Row, Col, Input, Button, Checkbox, List, Skeleton, Typography} from "antd";
 const {Text} = Typography;
 
@@ -7,8 +7,10 @@ class Latest extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeItem: {}
+      activeItem: {},
+      keywords: ''
     }
+
     this.FileList = [
       {
         "id": 1,
@@ -29,6 +31,10 @@ class Latest extends React.Component {
     ]
   }
 
+  searchChange(e) {
+    var keywords = e.target.value
+  }
+
   itemClick(item) {
     this.setState({activeItem: item})
   }
@@ -40,7 +46,9 @@ class Latest extends React.Component {
           <Col span={16}>
             <Row style={{height: '40px', lineHeight: '40px',}}>
               <Col span={20} style={{paddingLeft: '16px'}}>
-                <Input bordered={false} placeholder="输入关键字搜索"></Input>
+                <div style={{borderBottom: '1px solid #d9d9d9'}}>
+                  <Input bordered={false} placeholder="输入关键字搜索" onPressEnter={(e) => {this.searchChange(e)}}></Input>
+                </div>
               </Col>
               <Col span={4} style={{textAlign: 'right', paddingRight: '16px'}}>
                 <Button type="primary" icon={<PlusOutlined />}>新 建</Button>
