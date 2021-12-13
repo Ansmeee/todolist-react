@@ -1,15 +1,18 @@
 import React from "react"
 import {SearchOutlined, PlusOutlined} from "@ant-design/icons";
-import {Row, Col, Input, Button, List, Skeleton, Typography} from "antd";
+import {Row, Col, Input, Button, Checkbox, List, Skeleton, Typography} from "antd";
 const {Text} = Typography;
 
 class Latest extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      activeItem: {}
+    }
     this.FileList = [
       {
         "id": 1,
-        "title": 'We supply a series of design principles',
+        "title": '报表配置逻辑调整规范',
         "tag": "123",
         "date": '2021年12月12日'
       },
@@ -26,6 +29,10 @@ class Latest extends React.Component {
     ]
   }
 
+  itemClick(item) {
+    this.setState({activeItem: item})
+  }
+
   render() {
     return (
       <div>
@@ -40,14 +47,16 @@ class Latest extends React.Component {
               </Col>
             </Row>
             <List
+              size="small"
               itemLayout="horizontal"
               dataSource={this.FileList}
               renderItem={ item => (
-                <List.Item style={{cursor: 'pointer'}}>
+                <List.Item>
                   <Skeleton loading={false} active avatar>
-                    <List.Item.Meta title={item.title}/>
-                    { item.tag ? <div style={{fontSize: '10px', marginLeft:'5px'}}>{item.tag}</div> : ''}
-                    <div style={{marginLeft:'5px'}} type="text">
+                    <Checkbox style={{marginRight:'5px'}}></Checkbox>
+                    <List.Item.Meta onClick={() => {this.itemClick(item)}} title={item.title}/>
+                    { item.tag ? <div style={{fontSize: '10px', marginLeft:'5px', cursor: 'pointer'}}>{item.tag}</div> : ''}
+                    <div style={{marginLeft:'5px', cursor: 'pointer'}}>
                       <Text type="danger" style={{fontSize: '10px'}}>{item.date}</Text>
                     </div>
                   </Skeleton>
@@ -55,7 +64,9 @@ class Latest extends React.Component {
               )}
             />
           </Col>
-          <Col span={8}>col-8</Col>
+          <Col span={8}>
+            <h3>{this.state.activeItem.title}</h3>
+          </Col>
         </Row>
       </div>
     )
