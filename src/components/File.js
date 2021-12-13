@@ -1,7 +1,7 @@
 import React from "react";
 import {PlusOutlined} from "@ant-design/icons";
 import {Row, Col, Input, Button, Checkbox, List, Skeleton, Typography} from "antd";
-
+import fileApi from "../http/file";
 const {Text} = Typography;
 
 class File extends React.Component {
@@ -39,8 +39,15 @@ class File extends React.Component {
   }
 
   loadFileList() {
-    // this.setState({ loading: true })
-
+    this.setState({ loading: true })
+    let params = {}
+    fileApi.fileList(params).then(response => {
+      if (response.code == 200) {
+        this.setState({ loading: false })
+      } else {
+        this.setState({ loading: false})
+      }
+    })
   }
 
   searchChange(e) {
