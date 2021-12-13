@@ -1,8 +1,8 @@
 import React from "react";
-import "../assets/style/home.css"
+import "../assets/style/home.less"
 import { browserHistory } from 'react-router'
 
-import { Layout, Menu, Breadcrumb } from 'antd';
+import {Layout, Menu} from 'antd';
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
@@ -37,12 +37,12 @@ class Home extends React.Component {
 
   render() {
     return (
-      <Layout>
+      <Layout className="home-page">
           <Header className="header">
             <div className="logo">logo</div>
           </Header>
           <Layout>
-            <Sider width={200} className="site-layout-background">
+            <Sider width={200} className="sider">
               <Menu
                 onClick={this.handleClick}
                 defaultSelectedKeys={['1']}
@@ -50,25 +50,14 @@ class Home extends React.Component {
                 style={{ height: '100%', borderRight: 0 }}
                 mode="inline">
                 <Menu.Item key="/latest">最近浏览</Menu.Item>
-                <SubMenu key="sub1" title="我的文件">
+                <SubMenu key="sub1" title="我的文件夹">
                   {this.menuItems()}
                 </SubMenu>
               </Menu>
             </Sider>
-            <Layout style={{ padding: '0 24px 24px' }}>
-              <Breadcrumb style={{ margin: '16px 0' }}>
-                <Breadcrumb.Item>Home</Breadcrumb.Item>
-                <Breadcrumb.Item>List</Breadcrumb.Item>
-                <Breadcrumb.Item>App</Breadcrumb.Item>
-              </Breadcrumb>
-              <Content
-                className="site-layout-background"
-                style={{
-                  padding: 24,
-                  margin: 0,
-                  minHeight: 280,
-                }}>
-                Content
+            <Layout>
+              <Content style={{padding: 10}}>
+                {this.props.children}
               </Content>
             </Layout>
           </Layout>
