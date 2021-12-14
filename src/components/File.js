@@ -1,8 +1,15 @@
 import React from "react";
-import {PlusOutlined} from "@ant-design/icons";
-import {Row, Col, Input, Button, Checkbox, List, Skeleton, Typography} from "antd";
-import fileApi from "../http/file";
-const {Text} = Typography;
+import {PlusOutlined, AlertOutlined, FrownOutlined, MehOutlined, SmileOutlined} from "@ant-design/icons";
+import {Row, Col, Input, Button, Checkbox, List, Skeleton, Space} from "antd";
+import todoApi from "../http/todo";
+import "../assets/style/file.less"
+
+const IconText = ({className, icon, text}) => (
+  <Space className={"item-opt item-opt-" + className}>
+    {React.createElement(icon)}
+    {text}
+  </Space>
+);
 
 class File extends React.Component {
   constructor(props) {
@@ -12,22 +19,22 @@ class File extends React.Component {
       keywords: '',
       from: props.state.from,
       loading: false,
-      fileList: [],
+      todoList: [],
     }
   }
 
   componentDidMount() {
-    this.loadFileList()
+    this.loadtodoList()
   }
 
-  loadFileList() {
-    this.setState({ loading: true })
+  loadtodoList() {
+    this.setState({loading: true})
     let params = {}
-    fileApi.fileList(params).then(response => {
+    todoApi.todoList(params).then(response => {
       if (response.code == 200) {
-        this.setState({ loading: false, fileList: response.data.list})
+        this.setState({loading: false, todoList: response.data.list})
       } else {
-        this.setState({ loading: false})
+        this.setState({loading: false})
       }
     })
   }
@@ -35,11 +42,55 @@ class File extends React.Component {
   searchChange(e) {
     var keywords = e.target.value
     this.setState({keywords: keywords})
-    this.loadFileList()
+    this.loadtodoList()
   }
 
   itemClick(item) {
     this.setState({activeItem: item})
+  }
+
+  getListActions(item) {
+    var currentDate = Date.now()
+    var expireDate = new Date(item.deadline).getTime()
+    var remainDate = expireDate - currentDate
+
+    var deadlineIcon = SmileOutlined
+    var deadlineClassName = 'primary'
+    if (remainDate < 24 * 60 * 60 * 1000) {
+      deadlineIcon = FrownOutlined
+      deadlineClassName = 'danger'
+    }
+
+    if (remainDate > 24 * 60 * 60 * 1000 && remainDate <= 3 * 24 * 60 * 60 * 1000) {
+      deadlineIcon = MehOutlined
+      deadlineClassName = 'warning'
+    }
+
+    var priorityText = '无'
+    var priorityClassName = ''
+    if (item.priority == 3) {
+      priorityText = '高'
+      priorityClassName = 'danger'
+    }
+
+    if (item.priority == 2) {
+      priorityText = '中'
+      priorityClassName = 'warning'
+    }
+
+    if (item.priority == 1) {
+      priorityText = '低'
+      priorityClassName = 'primary'
+    }
+
+    return [
+      <IconText className={priorityClassName} icon={AlertOutlined} text={priorityText} key="list-vertical-deadline"></IconText>,
+      <IconText className={deadlineClassName} icon={deadlineIcon} text={item.deadline} key="list-vertical-deadline"></IconText>
+    ]
+  }
+
+  getPriority(priority) {
+
   }
 
   render() {
@@ -61,26 +112,23 @@ class File extends React.Component {
             </Row>
             <List
               size="small"
-              itemLayout="horizontal"
-              dataSource={this.state.fileList}
+              itemLayout="vertical"
+              dataSource={this.state.todoList}
               renderItem={item => (
-                <List.Item>
+                <List.Item
+                  key={item.id}
+                  actions={this.getListActions(item)}>
                   <Skeleton loading={this.state.loading} active>
-                    <Checkbox style={{marginRight: '5px'}}></Checkbox>
                     <List.Item.Meta onClick={() => {
                       this.itemClick(item)
                     }} title={item.title}/>
-                    {item.tag ? <div style={{fontSize: '10px', marginLeft: '5px', cursor: 'pointer'}}>{item.tag}</div> : ''}
-                    <div style={{marginLeft: '5px', cursor: 'pointer'}}>
-                      <Text type="danger" style={{fontSize: '10px'}}>{item.date}</Text>
-                    </div>
                   </Skeleton>
                 </List.Item>
               )}
             />
           </Col>
           <Col span={8}>
-            <h3>{this.state.activeItem.title}</h3>
+            <h3>{this.state.activeItem.content}</h3>
           </Col>
         </Row>
       </div>
