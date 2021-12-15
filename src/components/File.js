@@ -1,5 +1,5 @@
 import React from "react";
-import {PlusOutlined, AlertOutlined, FrownOutlined, MehOutlined, SmileOutlined} from "@ant-design/icons";
+import {PlusOutlined, AlertOutlined, CarryOutOutlined} from "@ant-design/icons";
 import {Row, Col, Input, Button, Checkbox, List, Skeleton, Space} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
@@ -54,16 +54,17 @@ class File extends React.Component {
     var expireDate = new Date(item.deadline).getTime()
     var remainDate = expireDate - currentDate
 
-    var deadlineIcon = SmileOutlined
-    var deadlineClassName = 'primary'
+    var deadlineClassName = ''
     if (remainDate < 24 * 60 * 60 * 1000) {
-      deadlineIcon = FrownOutlined
       deadlineClassName = 'danger'
     }
 
     if (remainDate > 24 * 60 * 60 * 1000 && remainDate <= 3 * 24 * 60 * 60 * 1000) {
-      deadlineIcon = MehOutlined
       deadlineClassName = 'warning'
+    }
+
+    if (remainDate > 3 * 24 * 60 * 60 * 1000 && remainDate <= 5 * 24 * 60 * 60 * 1000) {
+      deadlineClassName = 'primary'
     }
 
     var priorityText = '无'
@@ -86,7 +87,7 @@ class File extends React.Component {
     return [
       <IconText className={priorityClassName} icon={AlertOutlined} text={priorityText}
                 key="list-vertical-deadline"></IconText>,
-      <IconText className={deadlineClassName} icon={deadlineIcon} text={item.deadline}
+      <IconText className={deadlineClassName} icon={CarryOutOutlined} text={item.deadline}
                 key="list-vertical-deadline"></IconText>
     ]
   }
