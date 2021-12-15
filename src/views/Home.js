@@ -79,7 +79,7 @@ class Home extends React.Component {
               }}>
               {this.props.children}
             </Content>
-            <Footer style={{ textAlign: 'center' }}>ToDoList ©2021 Created by Ansme</Footer>
+            <Footer style={{ textAlign: 'center', fontSize: '12px' }}>ToDoList ©2021 Created by Ansme</Footer>
           </Layout>
         </Layout>
       </Layout>
