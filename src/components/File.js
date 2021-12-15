@@ -84,8 +84,10 @@ class File extends React.Component {
     }
 
     return [
-      <IconText className={priorityClassName} icon={AlertOutlined} text={priorityText} key="list-vertical-deadline"></IconText>,
-      <IconText className={deadlineClassName} icon={deadlineIcon} text={item.deadline} key="list-vertical-deadline"></IconText>
+      <IconText className={priorityClassName} icon={AlertOutlined} text={priorityText}
+                key="list-vertical-deadline"></IconText>,
+      <IconText className={deadlineClassName} icon={deadlineIcon} text={item.deadline}
+                key="list-vertical-deadline"></IconText>
     ]
   }
 
@@ -121,7 +123,8 @@ class File extends React.Component {
                   <Skeleton loading={this.state.loading} active>
                     <List.Item.Meta onClick={() => {
                       this.itemClick(item)
-                    }} title={item.title}/>
+                    }}/>
+                    {item.title}
                   </Skeleton>
                 </List.Item>
               )}
