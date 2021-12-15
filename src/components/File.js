@@ -1,6 +1,6 @@
 import React from "react";
-import {PlusOutlined, FlagOutlined, CarryOutOutlined} from "@ant-design/icons";
-import {Row, Col, Input, Button, Checkbox, List, Skeleton, Space} from "antd";
+import {PlusOutlined, FlagOutlined, CarryOutOutlined, SortAscendingOutlined} from "@ant-design/icons";
+import {Row, Col, Input, Button, Popover, List, Skeleton, Space} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 
@@ -9,6 +9,39 @@ const IconText = ({className = "", icon = null, text = ""}) => (
     {icon ? React.createElement(icon) : ''}
     {text}
   </Space>
+);
+
+const sortPopContent = (
+  <div className="sort-opt-con">
+    <Button
+      type="text" className="sort-opt-con-item"
+      onClick={() => {
+        this.sortOptClick()
+      }}>
+      按标题降序
+    </Button>
+    <Button
+      type="text" className="sort-opt-con-item"
+      onClick={() => {
+        this.sortOptClick('deadline')
+      }}>
+      按时间降序
+    </Button>
+    <Button
+      type="text" className="sort-opt-con-item"
+      onClick={() => {
+        this.sortOptClick('status')
+      }}>
+      按状态降序
+    </Button>
+    <Button
+      type="text" className="sort-opt-con-item"
+      onClick={() => {
+        this.sortOptClick('priority')
+      }}>
+      按优先级降序
+    </Button>
+  </div>
 );
 
 class File extends React.Component {
@@ -31,7 +64,7 @@ class File extends React.Component {
     this.setState({loading: true})
     let params = {}
     todoApi.todoList(params).then(response => {
-      if (response.code == 200) {
+      if (response.code === 200) {
         this.setState({loading: false, todoList: response.data.list})
       } else {
         this.setState({loading: false})
@@ -43,6 +76,10 @@ class File extends React.Component {
     var keywords = e.target.value
     this.setState({keywords: keywords})
     this.loadtodoList()
+  }
+
+  sortOptClick() {
+    console.log('click')
   }
 
   itemClick(item) {
@@ -69,17 +106,17 @@ class File extends React.Component {
 
     var priorityText = '无'
     var priorityClassName = ''
-    if (item.priority == 3) {
+    if (item.priority === 3) {
       priorityText = '高'
       priorityClassName = 'danger'
     }
 
-    if (item.priority == 2) {
+    if (item.priority === 2) {
       priorityText = '中'
       priorityClassName = 'warning'
     }
 
-    if (item.priority == 1) {
+    if (item.priority === 1) {
       priorityText = '低'
       priorityClassName = 'primary'
     }
@@ -94,11 +131,19 @@ class File extends React.Component {
     }
 
     return [
-      <IconText className={statusClassName} text={item.status}></IconText>,
-      <IconText className={priorityClassName} icon={FlagOutlined} text={priorityText}
-                key="list-vertical-deadline"></IconText>,
-      <IconText className={deadlineClassName} icon={CarryOutOutlined} text={item.deadline}
-                key="list-vertical-deadline"></IconText>
+      <IconText
+        className={statusClassName}
+        text={item.status}/>,
+      <IconText
+        className={priorityClassName}
+        icon={FlagOutlined}
+        text={priorityText}
+        key="list-vertical-deadline"/>,
+      <IconText
+        className={deadlineClassName}
+        icon={CarryOutOutlined}
+        text={item.deadline}
+        key="list-vertical-deadline"/>
     ]
   }
 
@@ -112,12 +157,19 @@ class File extends React.Component {
         <Row>
           <Col span={16}>
             <Row style={{height: '40px', lineHeight: '40px', marginBottom: '15px'}}>
-              <Col span={20} style={{paddingLeft: '16px'}}>
+              <Col span={16} style={{paddingLeft: '16px'}}>
                 <div style={{borderBottom: '1px solid #d9d9d9'}}>
                   <Input bordered={false} placeholder="输入关键字搜索" onPressEnter={(e) => {
                     this.searchChange(e)
                   }}></Input>
                 </div>
+              </Col>
+              <Col span={4} style={{paddingLeft: '10px'}}>
+                <Popover content={sortPopContent} trigger="click">
+                  <Button type="text">
+                    <SortAscendingOutlined/>
+                  </Button>
+                </Popover>
               </Col>
               <Col span={4} style={{textAlign: 'right', paddingRight: '16px'}}>
                 <Button type="primary" icon={<PlusOutlined/>}>新 建</Button>
