@@ -75,7 +75,7 @@ class Home extends React.Component {
               style={{
                 padding: 24,
                 margin: 0,
-                minHeight: document.documentElement.clientHeight - 70 - 64,
+                minHeight: document.documentElement.clientHeight - 70 - 50 - 24 - 22 - 32,
               }}>
               {this.props.children}
             </Content>
