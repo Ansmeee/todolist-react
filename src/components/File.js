@@ -1,5 +1,5 @@
 import React from "react";
-import {PlusOutlined, AlertOutlined, CarryOutOutlined} from "@ant-design/icons";
+import {PlusOutlined, FlagOutlined, CarryOutOutlined} from "@ant-design/icons";
 import {Row, Col, Input, Button, Checkbox, List, Skeleton, Space} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
@@ -85,7 +85,7 @@ class File extends React.Component {
     }
 
     return [
-      <IconText className={priorityClassName} icon={AlertOutlined} text={priorityText}
+      <IconText className={priorityClassName} icon={FlagOutlined} text={priorityText}
                 key="list-vertical-deadline"></IconText>,
       <IconText className={deadlineClassName} icon={CarryOutOutlined} text={item.deadline}
                 key="list-vertical-deadline"></IconText>
