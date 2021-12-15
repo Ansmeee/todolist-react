@@ -4,9 +4,9 @@ import {Row, Col, Input, Button, Checkbox, List, Skeleton, Space} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 
-const IconText = ({className, icon, text}) => (
+const IconText = ({className = "", icon = null, text = ""}) => (
   <Space className={"item-opt item-opt-" + className}>
-    {React.createElement(icon)}
+    {icon ? React.createElement(icon) : ''}
     {text}
   </Space>
 );
@@ -84,7 +84,17 @@ class File extends React.Component {
       priorityClassName = 'primary'
     }
 
+    var statusClassName = ""
+    if (item.status === '进行中') {
+      statusClassName = 'primary'
+    }
+
+    if (item.status === '已完成') {
+      statusClassName = 'success'
+    }
+
     return [
+      <IconText className={statusClassName} text={item.status}></IconText>,
       <IconText className={priorityClassName} icon={FlagOutlined} text={priorityText}
                 key="list-vertical-deadline"></IconText>,
       <IconText className={deadlineClassName} icon={CarryOutOutlined} text={item.deadline}
