@@ -19,12 +19,12 @@ class File extends React.Component {
       activeItem: {},
       filterForm: {
         keywords: '',
-        sortBy  : '',
-        priority: 0,
+        sortBy: '',
+        rules: [],
       },
-      from      : props.state.from,
-      loading   : false,
-      todoList  : [],
+      from: props.state.from,
+      loading: false,
+      todoList: [],
     }
   }
 
@@ -45,7 +45,7 @@ class File extends React.Component {
   }
 
   searchChange(e) {
-    var filterForm      = this.state.filterForm
+    var filterForm = this.state.filterForm
     filterForm.keywords = e.target.value
 
     this.setState({filterForm: filterForm})
@@ -54,21 +54,33 @@ class File extends React.Component {
   }
 
   sortOptClick(sortBy) {
-    var filterForm    = this.state.filterForm
-    filterForm.sortBy = sortBy
-
+    var filterForm = this.state.filterForm
+    filterForm.sortBy = filterForm.sortBy === sortBy ? '' : sortBy
     this.setState({filterForm: filterForm})
-
     this.loadtodoList()
   }
 
   filterOptClick(filterType) {
-    var filterForm    = this.state.filterForm
+    var filterForm = this.state.filterForm
 
+    var filterRules = filterForm.rules
     if (filterType === 'priority') {
-      filterForm.priority = 3
+      if (!filterRules.includes('priority')) {
+        filterRules.push('priority')
+      } else {
+        filterRules = filterRules.filter(item => item !== 'priority')
+      }
     }
 
+    if (filterType === 'status') {
+      if (!filterRules.includes('status')) {
+        filterRules.push('status')
+      } else {
+        filterRules = filterRules.filter(item => item !== 'status')
+      }
+    }
+
+    filterForm.rules = filterRules
     this.setState({filterForm: filterForm})
     this.loadtodoList()
   }
@@ -81,11 +93,20 @@ class File extends React.Component {
     return (
       <div className="filter-opt-con">
         <Button
-          type="text" className="filter-opt-con-item"
+          type="text"
+          className={this.state.filterForm.rules.includes('priority') ? 'filter-opt-active' : ''}
           onClick={() => {
             this.filterOptClick('priority')
           }}>
-          仅展示高优先级
+          仅显示高优
+        </Button>
+        <Button
+          type="text"
+          className={this.state.filterForm.rules.includes('status') ? 'filter-opt-active' : ''}
+          onClick={() => {
+            this.filterOptClick('status')
+          }}>
+          隐藏已完成
         </Button>
       </div>
     )
@@ -95,28 +116,32 @@ class File extends React.Component {
     return (
       <div className="sort-opt-con">
         <Button
-          type="text" className="sort-opt-con-item"
+          type={this.state.filterForm.sortBy === 'title' ? 'link' : 'text'}
+          className="sort-opt-con-item"
           onClick={() => {
             this.sortOptClick('title')
           }}>
           按标题降序
         </Button>
         <Button
-          type="text" className="sort-opt-con-item"
+          type={this.state.filterForm.sortBy === 'deadline' ? 'link' : 'text'}
+          className="sort-opt-con-item"
           onClick={() => {
             this.sortOptClick('deadline')
           }}>
           按时间降序
         </Button>
         <Button
-          type="text" className="sort-opt-con-item"
+          type={this.state.filterForm.sortBy === 'status' ? 'link' : 'text'}
+          className="sort-opt-con-item"
           onClick={() => {
             this.sortOptClick('status')
           }}>
           按状态降序
         </Button>
         <Button
-          type="text" className="sort-opt-con-item"
+          type={this.state.filterForm.sortBy === 'priority' ? 'link' : 'text'}
+          className="sort-opt-con-item"
           onClick={() => {
             this.sortOptClick('priority')
           }}>
@@ -128,8 +153,8 @@ class File extends React.Component {
 
   getListActions(item) {
     var currentDate = Date.now()
-    var expireDate  = new Date(item.deadline).getTime()
-    var remainDate  = expireDate - currentDate
+    var expireDate = new Date(item.deadline).getTime()
+    var remainDate = expireDate - currentDate
 
     var deadlineClassName = ''
     if (remainDate < 24 * 60 * 60 * 1000) {
@@ -144,20 +169,20 @@ class File extends React.Component {
       deadlineClassName = 'primary'
     }
 
-    var priorityText      = '无'
+    var priorityText = '无'
     var priorityClassName = ''
     if (item.priority === 3) {
-      priorityText      = '高'
+      priorityText = '高'
       priorityClassName = 'danger'
     }
 
     if (item.priority === 2) {
-      priorityText      = '中'
+      priorityText = '中'
       priorityClassName = 'warning'
     }
 
     if (item.priority === 1) {
-      priorityText      = '低'
+      priorityText = '低'
       priorityClassName = 'primary'
     }
 
@@ -203,20 +228,20 @@ class File extends React.Component {
               <Col span={4} style={{paddingLeft: '10px'}}>
                 <Popover
                   placement="bottomLeft"
-                  title="选择排序方式"
+                  title="排序方式"
                   content={this.sortPopContent()}
                   trigger="click">
-                  <Button type="text" className="filter-form-opt">
+                  <Button type={this.state.filterForm.sortBy ? 'link' : 'text'} className="filter-form-opt">
                     <SortAscendingOutlined/>
                   </Button>
                 </Popover>
                 <Popover
                   placement="bottomLeft"
-                  title="过滤展示内容"
+                  title="展示内容"
                   content={this.filterPopContent()}
                   trigger="click">
-                  <Button type="text" className="filter-form-opt">
-                    <FilterOutlined />
+                  <Button type={this.state.filterForm.rules.length > 0 ? 'link' : 'text'} className="filter-form-opt">
+                    <FilterOutlined/>
                   </Button>
                 </Popover>
               </Col>
