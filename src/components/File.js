@@ -7,7 +7,7 @@ import {
   FilterOutlined,
   CalendarOutlined
 } from "@ant-design/icons";
-import {Row, Col, Input, Button, Popover, List, Skeleton} from "antd";
+import {Row, Col, Input, Button, Popover, List, Skeleton, DatePicker} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 
@@ -227,7 +227,7 @@ class File extends React.Component {
     ]
   }
 
-  taskInfoOptClick (key, val) {
+  taskInfoOptClick(key, val) {
     var currentTask = this.state.currentTask
     currentTask[key] = val
     this.setState({currentTask: currentTask})
@@ -300,6 +300,14 @@ class File extends React.Component {
     }
   }
 
+  getDataSelector() {
+    return (
+      <Button type="text" className="task-info-opt">
+        <CalendarOutlined/>{this.state.currentTask.deadline ? this.state.currentTask.deadline : '设置时间'}
+      </Button>
+    )
+  }
+
   getTaskOptCon() {
     return (
       <Row className="task-info-opt-con">
@@ -313,12 +321,22 @@ class File extends React.Component {
               <FlagOutlined/>{this.state.currentTask.priority ? this.state.currentTask.priority : '设置优先级'}
             </Button>
           </Popover>
-          <Button type="text" className="task-info-opt">
-            <CalendarOutlined/>{this.state.currentTask.deadline ? this.state.currentTask.deadline : '设置时间'}
-          </Button>
+            <DatePicker bordered={false} inputReadOnly={true} panelRender={this.getDataSelector()}/>
+
+          {/*<Popover*/}
+          {/*  overlayClassName="pop-opt-con"*/}
+          {/*  placement="bottomLeft"*/}
+          {/*  content={this.taskInfoPopContent('deadline')}*/}
+          {/*  trigger="click">*/}
+          {/*  <Button type="text" className="task-info-opt">*/}
+          {/*    <CalendarOutlined/>{this.state.currentTask.deadline ? this.state.currentTask.deadline : '设置时间'}*/}
+          {/*  </Button>*/}
+          {/*</Popover>*/}
         </Col>
         <Col span={4} style={{textAlign: 'right'}}>
-          <Button type="primary" onClick={() => {this.saveTaskClick()}}>保 存</Button>
+          <Button type="primary" onClick={() => {
+            this.saveTaskClick()
+          }}>保 存</Button>
         </Col>
       </Row>
     )
@@ -333,14 +351,18 @@ class File extends React.Component {
             value={this.state.createTask.title}
             bordered={false}
             placeholder="准备做什么事？"
-            onChange={(e) => {this.taskInfoChange(e, 'title')}}>
+            onChange={(e) => {
+              this.taskInfoChange(e, 'title')
+            }}>
           </Input>
           <TextArea
             value={this.state.createTask.content}
             rows={4}
             bordered={false}
             placeholder="详细信息。。。"
-            onChange={(e) => {this.taskInfoChange(e, 'content')}}>
+            onChange={(e) => {
+              this.taskInfoChange(e, 'content')
+            }}>
           </TextArea>
         </div>
       )
