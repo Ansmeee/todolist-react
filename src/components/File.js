@@ -88,18 +88,18 @@ class File extends React.Component {
 
   filterPopContent() {
     return (
-      <div className="filter-opt-con">
+      <div>
         <Button
-          type="text"
-          className={this.state.filterForm.rules.includes('priority') ? 'filter-opt-active' : ''}
+          block
+          type={this.state.filterForm.rules.includes('priority') ? 'link' : 'text'}
           onClick={() => {
             this.filterOptClick('priority')
           }}>
           仅显示高优
         </Button>
         <Button
-          type="text"
-          className={this.state.filterForm.rules.includes('status') ? 'filter-opt-active' : ''}
+          block
+          type={this.state.filterForm.rules.includes('status') ? 'link' : 'text'}
           onClick={() => {
             this.filterOptClick('status')
           }}>
@@ -111,30 +111,33 @@ class File extends React.Component {
 
   sortPopContent() {
     return (
-      <div className="sort-opt-con">
+      <div>
         <Button
+          block
           type={this.state.filterForm.sortBy === 'deadline' ? 'link' : 'text'}
           className="sort-opt-con-item"
           onClick={() => {
             this.sortOptClick('deadline')
           }}>
-          按时间降序
+          按时间
         </Button>
         <Button
+          block
           type={this.state.filterForm.sortBy === 'status' ? 'link' : 'text'}
           className="sort-opt-con-item"
           onClick={() => {
             this.sortOptClick('status')
           }}>
-          按状态降序
+          按状态
         </Button>
         <Button
+          block
           type={this.state.filterForm.sortBy === 'priority' ? 'link' : 'text'}
           className="sort-opt-con-item"
           onClick={() => {
             this.sortOptClick('priority')
           }}>
-          按优先级降序
+          按优先级
         </Button>
       </div>
     )
@@ -217,6 +220,7 @@ class File extends React.Component {
             </Col>
             <Col span={4} style={{paddingLeft: '10px'}}>
               <Popover
+                overlayClassName="sort-opt-con"
                 placement="bottomLeft"
                 title="排序方式"
                 content={this.sortPopContent()}
@@ -226,6 +230,7 @@ class File extends React.Component {
                 </Button>
               </Popover>
               <Popover
+                overlayClassName="filter-opt-con"
                 placement="bottomLeft"
                 title="展示内容"
                 content={this.filterPopContent()}
