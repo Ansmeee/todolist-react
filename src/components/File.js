@@ -37,6 +37,10 @@ class File extends React.Component {
     })
   }
 
+  createBTNClick() {
+    console.log('getet')
+  }
+
   searchChange(e) {
     var filterForm = this.state.filterForm
     filterForm.keywords = e.target.value
@@ -201,64 +205,64 @@ class File extends React.Component {
 
   render() {
     return (
-      <div>
-        <Row>
-          <Col span={16}>
-            <Row style={{height: '40px', lineHeight: '40px', marginBottom: '15px'}}>
-              <Col span={16} style={{paddingLeft: '16px'}}>
-                <div style={{borderBottom: '1px solid #d9d9d9'}}>
-                  <Input bordered={false} placeholder="输入关键字搜索" onPressEnter={(e) => {
-                    this.searchChange(e)
-                  }}></Input>
-                </div>
-              </Col>
-              <Col span={4} style={{paddingLeft: '10px'}}>
-                <Popover
-                  placement="bottomLeft"
-                  title="排序方式"
-                  content={this.sortPopContent()}
-                  trigger="click">
-                  <Button type={this.state.filterForm.sortBy ? 'link' : 'text'} className="filter-form-opt">
-                    <SortAscendingOutlined/>
-                  </Button>
-                </Popover>
-                <Popover
-                  placement="bottomLeft"
-                  title="展示内容"
-                  content={this.filterPopContent()}
-                  trigger="click">
-                  <Button type={this.state.filterForm.rules.length > 0 ? 'link' : 'text'} className="filter-form-opt">
-                    <FilterOutlined/>
-                  </Button>
-                </Popover>
-              </Col>
-              <Col span={4} style={{textAlign: 'right', paddingRight: '16px'}}>
-                <Button type="primary" icon={<PlusOutlined/>}>新 建</Button>
-              </Col>
-            </Row>
-            <List
-              size="small"
-              itemLayout="vertical"
-              dataSource={this.state.todoList}
-              renderItem={item => (
-                <List.Item
-                  key={item.id}
-                  actions={this.getListActions(item)}>
-                  <Skeleton loading={this.state.loading} active>
-                    <List.Item.Meta onClick={() => {
-                      this.itemClick(item)
-                    }}/>
-                    {item.title}
-                  </Skeleton>
-                </List.Item>
-              )}
-            />
-          </Col>
-          <Col span={8}>
-            <h3>{this.state.activeItem.content}</h3>
-          </Col>
-        </Row>
-      </div>
+      <Row className="file-page-con">
+        <Col span={16} className="file-list-con">
+          <Row className="file-filter-con">
+            <Col span={16} style={{paddingLeft: '16px'}}>
+              <div style={{borderBottom: '1px solid #d9d9d9'}}>
+                <Input bordered={false} placeholder="输入关键字搜索" onPressEnter={(e) => {
+                  this.searchChange(e)
+                }}></Input>
+              </div>
+            </Col>
+            <Col span={4} style={{paddingLeft: '10px'}}>
+              <Popover
+                placement="bottomLeft"
+                title="排序方式"
+                content={this.sortPopContent()}
+                trigger="click">
+                <Button type={this.state.filterForm.sortBy ? 'link' : 'text'} className="filter-form-opt">
+                  <SortAscendingOutlined/>
+                </Button>
+              </Popover>
+              <Popover
+                placement="bottomLeft"
+                title="展示内容"
+                content={this.filterPopContent()}
+                trigger="click">
+                <Button type={this.state.filterForm.rules.length > 0 ? 'link' : 'text'} className="filter-form-opt">
+                  <FilterOutlined/>
+                </Button>
+              </Popover>
+            </Col>
+            <Col span={4} style={{textAlign: 'right', paddingRight: '16px'}}>
+              <Button type="primary" icon={<PlusOutlined/>} onClick={() => {
+                this.createBTNClick()
+              }}>新 建</Button>
+            </Col>
+          </Row>
+          <List
+            size="small"
+            itemLayout="vertical"
+            dataSource={this.state.todoList}
+            renderItem={item => (
+              <List.Item
+                key={item.id}
+                actions={this.getListActions(item)}>
+                <Skeleton loading={this.state.loading} active>
+                  <List.Item.Meta onClick={() => {
+                    this.itemClick(item)
+                  }}/>
+                  {item.title}
+                </Skeleton>
+              </List.Item>
+            )}
+          />
+        </Col>
+        <Col span={8}>
+          <h3>{this.state.activeItem.content}</h3>
+        </Col>
+      </Row>
     )
   }
 }
