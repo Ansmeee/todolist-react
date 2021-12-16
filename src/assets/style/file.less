@@ -1,3 +1,7 @@
+.pop-opt-con {
+  width: 140px;
+}
+
 .file-page-con {
   height: 100%;
 
@@ -11,27 +15,50 @@
       width: 100%;
       line-height: 40px;
       margin-bottom: 15px;
+
+      .filter-form-opt {
+        padding: 4px 10px !important;
+      }
     }
   }
-}
-.filter-opt-con {
-  width: 140px;
 
-  .filter-opt-active {
-    color: rgb(24, 144, 255)
+  .task-info-con {
+    padding-left: 15px;
+    .task-info-opt-con {
+      height: 40px;
+      width: 100%;
+      line-height: 40px;
+      margin-bottom: 15px;
+
+      .task-info-opt {
+        padding: 4px 12px !important;
+        gap: 5px !important;
+        &-danger {
+          color: rgb(255, 77, 79)
+        }
+
+        &-warning {
+          color: rgb(250, 173, 20)
+        }
+
+        &-primary {
+          color: rgb(24, 144, 255)
+        }
+
+        &-success {
+          color: rgb(56, 158, 13)
+        }
+      }
+    }
   }
-}
-
-.filter-form-opt {
-  padding: 4px 10px !important;
-}
-
-.sort-opt-con {
-  width: 140px;
 }
 
 .ant-list {
   font-size: 14px;
+
+  .ant-list-item {
+    padding: 8px 0px !important;
+  }
 
   .ant-list-item-meta {
     margin-bottom: 0px !important;

@@ -1,8 +1,17 @@
 import React from "react";
-import {PlusOutlined, FlagOutlined, CarryOutOutlined, SortAscendingOutlined, FilterOutlined} from "@ant-design/icons";
+import {
+  PlusOutlined,
+  FlagOutlined,
+  CarryOutOutlined,
+  SortAscendingOutlined,
+  FilterOutlined,
+  CalendarOutlined
+} from "@ant-design/icons";
 import {Row, Col, Input, Button, Popover, List, Skeleton} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
+
+const {TextArea} = Input;
 
 class File extends React.Component {
   constructor(props) {
@@ -15,6 +24,14 @@ class File extends React.Component {
         sortBy: '',
         rules: [],
       },
+      createTask: false,
+      currentTask: {
+        title: '',
+        content: '',
+        deadline: '',
+        priority: '',
+      },
+      createModalVisible: false,
       from: props.state.from,
       loading: false,
       todoList: [],
@@ -38,7 +55,18 @@ class File extends React.Component {
   }
 
   createBTNClick() {
-    console.log('getet')
+    this.setState({createTask: true})
+  }
+
+  submitForm() {
+  }
+
+  resetForm() {
+
+  }
+
+  onFormFinished() {
+
   }
 
   searchChange(e) {
@@ -115,7 +143,6 @@ class File extends React.Component {
         <Button
           block
           type={this.state.filterForm.sortBy === 'deadline' ? 'link' : 'text'}
-          className="sort-opt-con-item"
           onClick={() => {
             this.sortOptClick('deadline')
           }}>
@@ -124,7 +151,6 @@ class File extends React.Component {
         <Button
           block
           type={this.state.filterForm.sortBy === 'status' ? 'link' : 'text'}
-          className="sort-opt-con-item"
           onClick={() => {
             this.sortOptClick('status')
           }}>
@@ -133,7 +159,6 @@ class File extends React.Component {
         <Button
           block
           type={this.state.filterForm.sortBy === 'priority' ? 'link' : 'text'}
-          className="sort-opt-con-item"
           onClick={() => {
             this.sortOptClick('priority')
           }}>
@@ -161,20 +186,16 @@ class File extends React.Component {
       deadlineClassName = 'primary'
     }
 
-    var priorityText = '无'
     var priorityClassName = ''
-    if (item.priority === 3) {
-      priorityText = '高'
+    if (item.priority === '高') {
       priorityClassName = 'danger'
     }
 
-    if (item.priority === 2) {
-      priorityText = '中'
+    if (item.priority === '中') {
       priorityClassName = 'warning'
     }
 
-    if (item.priority === 1) {
-      priorityText = '低'
+    if (item.priority === '低') {
       priorityClassName = 'primary'
     }
 
@@ -196,7 +217,7 @@ class File extends React.Component {
       <Button
         type="text"
         className={"item-opt item-opt-" + priorityClassName}>
-        <FlagOutlined/>{priorityText}
+        <FlagOutlined/>{item.priority}
       </Button>,
       <Button
         type="text"
@@ -206,68 +227,191 @@ class File extends React.Component {
     ]
   }
 
-  render() {
+  taskInfoOptClick (key, val) {
+    var currentTask = this.state.currentTask
+    currentTask[key] = val
+    this.setState({currentTask: currentTask})
+  }
+
+  taskInfoChange(e, key) {
+    var currentTask = this.state.currentTask
+    currentTask[key] = e.target.value
+    this.setState({currentTask: currentTask})
+  }
+
+  saveTaskClick() {
+    console.log(this.state.currentTask)
+  }
+
+  getTaskOPTClassName() {
+    if (this.state.currentTask.priority === '高') {
+      return "task-info-opt task-info-opt-danger"
+    }
+
+    if (this.state.currentTask.priority === '中') {
+      return "task-info-opt task-info-opt-warning"
+    }
+
+    if (this.state.currentTask.priority === '低') {
+      return "task-info-opt task-info-opt-primary"
+    }
+
+    return "task-info-opt"
+  }
+
+  taskInfoPopContent(opt) {
+    if (opt === 'priority') {
+      return (
+        <div>
+          <Button
+            block
+            type={this.state.currentTask.priority === '高' ? 'link' : 'text'}
+            onClick={() => {
+              this.taskInfoOptClick('priority', '高')
+            }}>
+            高优先级
+          </Button>
+          <Button
+            block
+            type={this.state.currentTask.priority === '中' ? 'link' : 'text'}
+            onClick={() => {
+              this.taskInfoOptClick('priority', '中')
+            }}>
+            中优先级
+          </Button>
+          <Button
+            block
+            type={this.state.currentTask.priority === '低' ? 'link' : 'text'}
+            onClick={() => {
+              this.taskInfoOptClick('priority', '低')
+            }}>
+            低优先级
+          </Button>
+          <Button
+            block
+            type={this.state.currentTask.priority === '无' ? 'link' : 'text'}
+            onClick={() => {
+              this.taskInfoOptClick('priority', '无')
+            }}>
+            无优先级
+          </Button>
+        </div>
+      )
+    }
+  }
+
+  getTaskOptCon() {
     return (
-      <Row className="file-page-con">
-        <Col span={16} className="file-list-con">
-          <Row className="file-filter-con">
-            <Col span={16} style={{paddingLeft: '16px'}}>
-              <div style={{borderBottom: '1px solid #d9d9d9'}}>
-                <Input bordered={false} placeholder="输入关键字搜索" onPressEnter={(e) => {
-                  this.searchChange(e)
-                }}></Input>
-              </div>
-            </Col>
-            <Col span={4} style={{paddingLeft: '10px'}}>
-              <Popover
-                overlayClassName="sort-opt-con"
-                placement="bottomLeft"
-                title="排序方式"
-                content={this.sortPopContent()}
-                trigger="click">
-                <Button type={this.state.filterForm.sortBy ? 'link' : 'text'} className="filter-form-opt">
-                  <SortAscendingOutlined/>
-                </Button>
-              </Popover>
-              <Popover
-                overlayClassName="filter-opt-con"
-                placement="bottomLeft"
-                title="展示内容"
-                content={this.filterPopContent()}
-                trigger="click">
-                <Button type={this.state.filterForm.rules.length > 0 ? 'link' : 'text'} className="filter-form-opt">
-                  <FilterOutlined/>
-                </Button>
-              </Popover>
-            </Col>
-            <Col span={4} style={{textAlign: 'right', paddingRight: '16px'}}>
-              <Button type="primary" icon={<PlusOutlined/>} onClick={() => {
-                this.createBTNClick()
-              }}>新 建</Button>
-            </Col>
-          </Row>
-          <List
-            size="small"
-            itemLayout="vertical"
-            dataSource={this.state.todoList}
-            renderItem={item => (
-              <List.Item
-                key={item.id}
-                actions={this.getListActions(item)}>
-                <Skeleton loading={this.state.loading} active>
-                  <List.Item.Meta onClick={() => {
-                    this.itemClick(item)
-                  }}/>
-                  {item.title}
-                </Skeleton>
-              </List.Item>
-            )}
-          />
+      <Row className="task-info-opt-con">
+        <Col span={20}>
+          <Popover
+            overlayClassName="pop-opt-con"
+            placement="bottomLeft"
+            content={this.taskInfoPopContent('priority')}
+            trigger="click">
+            <Button type="text" className={this.getTaskOPTClassName()}>
+              <FlagOutlined/>{this.state.currentTask.priority ? this.state.currentTask.priority : '设置优先级'}
+            </Button>
+          </Popover>
+          <Button type="text" className="task-info-opt">
+            <CalendarOutlined/>{this.state.currentTask.deadline ? this.state.currentTask.deadline : '设置时间'}
+          </Button>
         </Col>
-        <Col span={8}>
-          <h3>{this.state.activeItem.content}</h3>
+        <Col span={4} style={{textAlign: 'right'}}>
+          <Button type="primary" onClick={() => {this.saveTaskClick()}}>保 存</Button>
         </Col>
       </Row>
+    )
+  }
+
+  getCreateTaskForm() {
+    if (this.state.createTask) {
+      return (
+        <div className="task-info-con">
+          {this.getTaskOptCon()}
+          <Input
+            value={this.state.createTask.title}
+            bordered={false}
+            placeholder="准备做什么事？"
+            onChange={(e) => {this.taskInfoChange(e, 'title')}}>
+          </Input>
+          <TextArea
+            value={this.state.createTask.content}
+            rows={4}
+            bordered={false}
+            placeholder="详细信息。。。"
+            onChange={(e) => {this.taskInfoChange(e, 'content')}}>
+          </TextArea>
+        </div>
+      )
+    }
+  }
+
+  render() {
+    return (
+      <div style={{height: '100%'}}>
+        <Row className="file-page-con">
+          <Col span={15} className="file-list-con">
+            <Row className="file-filter-con">
+              <Col span={16}>
+                <div style={{borderBottom: '1px solid #d9d9d9'}}>
+                  <Input bordered={false} placeholder="输入关键字搜索" onPressEnter={(e) => {
+                    this.searchChange(e)
+                  }}></Input>
+                </div>
+              </Col>
+              <Col span={4} style={{paddingLeft: '10px'}}>
+                <Popover
+                  overlayClassName="pop-opt-con"
+                  placement="bottomLeft"
+                  title="排序方式"
+                  content={this.sortPopContent()}
+                  trigger="click">
+                  <Button type={this.state.filterForm.sortBy ? 'link' : 'text'} className="filter-form-opt">
+                    <SortAscendingOutlined/>
+                  </Button>
+                </Popover>
+                <Popover
+                  overlayClassName="pop-opt-con"
+                  placement="bottomLeft"
+                  title="展示内容"
+                  content={this.filterPopContent()}
+                  trigger="click">
+                  <Button type={this.state.filterForm.rules.length > 0 ? 'link' : 'text'} className="filter-form-opt">
+                    <FilterOutlined/>
+                  </Button>
+                </Popover>
+              </Col>
+              <Col span={4} style={{textAlign: 'right', paddingRight: '16px'}}>
+                <Button type="primary" icon={<PlusOutlined/>} onClick={() => {
+                  this.createBTNClick()
+                }}>新 建</Button>
+              </Col>
+            </Row>
+            <List
+              size="small"
+              itemLayout="vertical"
+              dataSource={this.state.todoList}
+              renderItem={item => (
+                <List.Item
+                  key={item.id}
+                  actions={this.getListActions(item)}>
+                  <Skeleton loading={this.state.loading} active>
+                    <List.Item.Meta onClick={() => {
+                      this.itemClick(item)
+                    }}/>
+                    {item.title}
+                  </Skeleton>
+                </List.Item>
+              )}
+            />
+          </Col>
+          <Col span={9}>
+            {this.getCreateTaskForm()}
+            <h3>{this.state.activeItem.content}</h3>
+          </Col>
+        </Row>
+      </div>
     )
   }
 }
