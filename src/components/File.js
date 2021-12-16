@@ -1,20 +1,13 @@
 import React from "react";
 import {PlusOutlined, FlagOutlined, CarryOutOutlined, SortAscendingOutlined, FilterOutlined} from "@ant-design/icons";
-import {Row, Col, Input, Button, Popover, List, Skeleton, Space} from "antd";
+import {Row, Col, Input, Button, Popover, List, Skeleton} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 
-const IconText = ({className = "", icon = null, text = ""}) => (
-  <Space className={"item-opt item-opt-" + className}>
-    {icon ? React.createElement(icon) : ''}
-    {text}
-  </Space>
-);
-
-
 class File extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
+
     this.state = {
       activeItem: {},
       filterForm: {
@@ -116,14 +109,6 @@ class File extends React.Component {
     return (
       <div className="sort-opt-con">
         <Button
-          type={this.state.filterForm.sortBy === 'title' ? 'link' : 'text'}
-          className="sort-opt-con-item"
-          onClick={() => {
-            this.sortOptClick('title')
-          }}>
-          按标题降序
-        </Button>
-        <Button
           type={this.state.filterForm.sortBy === 'deadline' ? 'link' : 'text'}
           className="sort-opt-con-item"
           onClick={() => {
@@ -196,19 +181,21 @@ class File extends React.Component {
     }
 
     return [
-      <IconText
-        className={statusClassName}
-        text={item.status}/>,
-      <IconText
-        className={priorityClassName}
-        icon={FlagOutlined}
-        text={priorityText}
-        key="list-vertical-deadline"/>,
-      <IconText
-        className={deadlineClassName}
-        icon={CarryOutOutlined}
-        text={item.deadline}
-        key="list-vertical-deadline"/>
+      <Button
+        type="text"
+        className={"item-opt item-opt-" + statusClassName}>
+        {item.status}
+      </Button>,
+      <Button
+        type="text"
+        className={"item-opt item-opt-" + priorityClassName}>
+        <FlagOutlined/>{priorityText}
+      </Button>,
+      <Button
+        type="text"
+        className={"item-opt item-opt-" + deadlineClassName}>
+        <CarryOutOutlined/>{item.deadline}
+      </Button>
     ]
   }
 
