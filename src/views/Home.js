@@ -45,8 +45,8 @@ class Home extends React.Component {
     return (
       <Layout className="home-page">
         <Header className="header" style = {{
-            height: '50px',
-            lineHeight: '50px',
+            height: '60px',
+            lineHeight: '60px',
           }}>
           <div className="logo">logo</div>
         </Header>
@@ -75,7 +75,7 @@ class Home extends React.Component {
               style={{
                 padding: 24,
                 margin: 0,
-                minHeight: document.documentElement.clientHeight - 70 - 50 - 24 - 22 - 32,
+                height: document.documentElement.clientHeight - 70 - 60 - 24 - 22 - 32,
               }}>
               {this.props.children}
             </Content>
