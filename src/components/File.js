@@ -31,7 +31,9 @@ class File extends React.Component {
         deadline: '',
         priority: '',
       },
+      datePickerVisible: false,
       createModalVisible: false,
+      datePickerTimer: {},
       from: props.state.from,
       loading: false,
       todoList: [],
@@ -312,26 +314,31 @@ class File extends React.Component {
     return (
       <Row className="task-info-opt-con">
         <Col span={20}>
-          <Popover
-            overlayClassName="pop-opt-con"
-            placement="bottomLeft"
-            content={this.taskInfoPopContent('priority')}
-            trigger="click">
-            <Button type="text" className={this.getTaskOPTClassName()}>
-              <FlagOutlined/>{this.state.currentTask.priority ? this.state.currentTask.priority : '设置优先级'}
-            </Button>
-          </Popover>
-            <DatePicker bordered={false} inputReadOnly={true} panelRender={this.getDataSelector()}/>
-
-          {/*<Popover*/}
-          {/*  overlayClassName="pop-opt-con"*/}
-          {/*  placement="bottomLeft"*/}
-          {/*  content={this.taskInfoPopContent('deadline')}*/}
-          {/*  trigger="click">*/}
-          {/*  <Button type="text" className="task-info-opt">*/}
-          {/*    <CalendarOutlined/>{this.state.currentTask.deadline ? this.state.currentTask.deadline : '设置时间'}*/}
-          {/*  </Button>*/}
-          {/*</Popover>*/}
+          <span className={this.getTaskOPTClassName()}>
+            <FlagOutlined className="task-info-opt-icon"/>
+            <Popover
+              overlayClassName="pop-opt-con"
+              placement="bottomLeft"
+              content={this.taskInfoPopContent('priority')}
+              trigger="click">
+              <Input
+                style={{width: '100px'}}
+                bordered={false}
+                readOnly={true}
+                placeholder="设置优先级"
+                value={this.state.currentTask.priority}/>
+            </Popover>
+          </span>
+          <span className="task-info-opt">
+            <CalendarOutlined className="task-info-opt-icon"/>
+            <DatePicker
+              bordered={false}
+              picker="date"
+              inputReadOnly={true}
+              placeholder="设置时间"
+              allowClear={false}
+              suffixIcon={null}/>
+          </span>
         </Col>
         <Col span={4} style={{textAlign: 'right'}}>
           <Button type="primary" onClick={() => {
