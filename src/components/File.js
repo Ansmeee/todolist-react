@@ -329,11 +329,13 @@ class File extends React.Component {
                 value={this.state.currentTask.priority}/>
             </Popover>
           </span>
-          <span className="task-info-opt">
+          <span className={this.state.currentTask.deadline ? 'task-info-opt task-info-opt-primary' : 'task-info-opt'}>
             <CalendarOutlined className="task-info-opt-icon"/>
             <DatePicker
+              onChange={(date, dateString) => {this.taskInfoOptClick('deadline', dateString)}}
               bordered={false}
               picker="date"
+              style={{width: '100px'}}
               inputReadOnly={true}
               placeholder="设置时间"
               allowClear={false}
