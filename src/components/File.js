@@ -20,8 +20,6 @@ class File extends React.Component {
     this.state = {
       activeItem: {},
       filterForm: {
-        keywords: '',
-        sort_by: '',
         rules: [],
       },
       createTask: false,
@@ -39,6 +37,13 @@ class File extends React.Component {
       from: props.state.from,
       loading: false,
       todoList: [],
+    }
+
+    this.priorityMap = {
+      '高': 3,
+      '中': 2,
+      '低': 1,
+      '无': 0
     }
   }
 
@@ -62,24 +67,14 @@ class File extends React.Component {
     this.setState({createTask: true})
   }
 
-  submitForm() {
-  }
-
-  resetForm() {
-
-  }
-
-  onFormFinished() {
-
-  }
-
   searchChange(e) {
     var filterForm = this.state.filterForm
-    filterForm.keywords = e.target.value
-
-    this.setState({filterForm: filterForm})
-
-    this.loadtodoList()
+    var keywords = e.target.value
+    if (keywords != filterForm.keywords) {
+      filterForm.keywords = keywords
+      this.setState({filterForm: filterForm})
+      this.loadtodoList()
+    }
   }
 
   sortOptClick(sort_by) {
@@ -262,7 +257,9 @@ class File extends React.Component {
   }
 
   createTask() {
-    todoApi.create(this.state.currentTask).then(response => {
+    var params = this.state.currentTask
+    params.priority = this.priorityMap[params.priority]
+    todoApi.create(params).then(response => {
       if (response.code == 200) {
         message.success('保存成功');
         console.log(response.data)
@@ -302,33 +299,33 @@ class File extends React.Component {
         <div>
           <Button
             block
-            type={this.state.currentTask.priority === 3 ? 'link' : 'text'}
+            type={this.state.currentTask.priority === '高' ? 'link' : 'text'}
             onClick={() => {
-              this.taskInfoOptClick('priority', 3)
+              this.taskInfoOptClick('priority', '高')
             }}>
             高优先级
           </Button>
           <Button
             block
-            type={this.state.currentTask.priority === 2 ? 'link' : 'text'}
+            type={this.state.currentTask.priority === '中' ? 'link' : 'text'}
             onClick={() => {
-              this.taskInfoOptClick('priority', 2)
+              this.taskInfoOptClick('priority', '中')
             }}>
             中优先级
           </Button>
           <Button
             block
-            type={this.state.currentTask.priority === 1 ? 'link' : 'text'}
+            type={this.state.currentTask.priority === '低' ? 'link' : 'text'}
             onClick={() => {
-              this.taskInfoOptClick('priority', 1)
+              this.taskInfoOptClick('priority', '低')
             }}>
             低优先级
           </Button>
           <Button
             block
-            type={this.state.currentTask.priority === 0 ? 'link' : 'text'}
+            type={this.state.currentTask.priority === '无' ? 'link' : 'text'}
             onClick={() => {
-              this.taskInfoOptClick('priority', 0)
+              this.taskInfoOptClick('priority', '无')
             }}>
             无优先级
           </Button>
@@ -423,9 +420,15 @@ class File extends React.Component {
             <Row className="file-filter-con">
               <Col span={16}>
                 <div style={{borderBottom: '1px solid #d9d9d9'}}>
-                  <Input bordered={false} placeholder="输入关键字搜索" onPressEnter={(e) => {
-                    this.searchChange(e)
-                  }}></Input>
+                  <Input
+                    bordered={false}
+                    placeholder="输入关键字搜索"
+                    onBlur={(e) => {
+                      this.searchChange(e)
+                    }}
+                    onPressEnter={(e) => {
+                      this.searchChange(e)
+                    }}/>
                 </div>
               </Col>
               <Col span={4} style={{paddingLeft: '10px'}}>
