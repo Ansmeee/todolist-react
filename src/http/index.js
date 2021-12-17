@@ -26,4 +26,12 @@ function Post(path, params) {
   })
 }
 
-export default {Get, Post, apiHost}
+function Put(path, params) {
+  var headers = {'Authorization': window.localStorage.getItem('token')}
+  return axios.put(apiHost + path, params, {headers: headers}).then((response) => {
+    return handlerResponse(response)
+  }).catch((error) => {
+  })
+}
+
+export default {Get, Post, Put, apiHost}

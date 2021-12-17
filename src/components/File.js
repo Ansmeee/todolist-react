@@ -7,7 +7,7 @@ import {
   FilterOutlined,
   CalendarOutlined
 } from "@ant-design/icons";
-import {Row, Col, Input, Button, Popover, List, Skeleton, DatePicker} from "antd";
+import {Row, Col, Input, Button, Popover, List, Skeleton, DatePicker, message} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 
@@ -21,15 +21,17 @@ class File extends React.Component {
       activeItem: {},
       filterForm: {
         keywords: '',
-        sortBy: '',
+        sort_by: '',
         rules: [],
       },
       createTask: false,
       currentTask: {
+        id: '',
         title: '',
         content: '',
         deadline: '',
         priority: '',
+        list_id: ''
       },
       datePickerVisible: false,
       createModalVisible: false,
@@ -80,9 +82,9 @@ class File extends React.Component {
     this.loadtodoList()
   }
 
-  sortOptClick(sortBy) {
+  sortOptClick(sort_by) {
     var filterForm = this.state.filterForm
-    filterForm.sortBy = filterForm.sortBy === sortBy ? '' : sortBy
+    filterForm.sort_by = filterForm.sort_by === sort_by ? '' : sort_by
     this.setState({filterForm: filterForm})
     this.loadtodoList()
   }
@@ -144,7 +146,7 @@ class File extends React.Component {
       <div>
         <Button
           block
-          type={this.state.filterForm.sortBy === 'deadline' ? 'link' : 'text'}
+          type={this.state.filterForm.sort_by === 'deadline' ? 'link' : 'text'}
           onClick={() => {
             this.sortOptClick('deadline')
           }}>
@@ -152,7 +154,7 @@ class File extends React.Component {
         </Button>
         <Button
           block
-          type={this.state.filterForm.sortBy === 'status' ? 'link' : 'text'}
+          type={this.state.filterForm.sort_by === 'status' ? 'link' : 'text'}
           onClick={() => {
             this.sortOptClick('status')
           }}>
@@ -160,7 +162,7 @@ class File extends React.Component {
         </Button>
         <Button
           block
-          type={this.state.filterForm.sortBy === 'priority' ? 'link' : 'text'}
+          type={this.state.filterForm.sort_by === 'priority' ? 'link' : 'text'}
           onClick={() => {
             this.sortOptClick('priority')
           }}>
@@ -189,37 +191,44 @@ class File extends React.Component {
     }
 
     var priorityClassName = ''
-    if (item.priority === '高') {
+    var priorityText = '无'
+    if (item.priority === 3) {
       priorityClassName = 'danger'
+      priorityText = '高'
     }
 
-    if (item.priority === '中') {
+    if (item.priority === 2) {
       priorityClassName = 'warning'
+      priorityText = '中'
     }
 
-    if (item.priority === '低') {
+    if (item.priority === 1) {
       priorityClassName = 'primary'
+      priorityText = '低'
     }
 
+    var statusText = "未开始"
     var statusClassName = ""
-    if (item.status === '进行中') {
+    if (item.status === 1) {
       statusClassName = 'primary'
+      statusText = "进行中"
     }
 
-    if (item.status === '已完成') {
+    if (item.status === 2) {
       statusClassName = 'success'
+      statusText = "已完成"
     }
 
     return [
       <Button
         type="text"
         className={"item-opt item-opt-" + statusClassName}>
-        {item.status}
+        {statusText}
       </Button>,
       <Button
         type="text"
         className={"item-opt item-opt-" + priorityClassName}>
-        <FlagOutlined/>{item.priority}
+        <FlagOutlined/>{priorityText}
       </Button>,
       <Button
         type="text"
@@ -241,20 +250,46 @@ class File extends React.Component {
     this.setState({currentTask: currentTask})
   }
 
+  updateTask() {
+    todoApi.update(this.state.currentTask).then(response => {
+      if (response.code == 200) {
+        message.success('保存成功')
+        console.log(response.data)
+      } else {
+        message.error(response.msg || '保存失败')
+      }
+    })
+  }
+
+  createTask() {
+    todoApi.create(this.state.currentTask).then(response => {
+      if (response.code == 200) {
+        message.success('保存成功');
+        console.log(response.data)
+      } else {
+        message.error(response.msg || '保存失败')
+      }
+    })
+  }
+
   saveTaskClick() {
-    console.log(this.state.currentTask)
+    if (this.state.currentTask.id) {
+      this.updateTask()
+    } else {
+      this.createTask()
+    }
   }
 
   getTaskOPTClassName() {
-    if (this.state.currentTask.priority === '高') {
+    if (this.state.currentTask.priority === 3) {
       return "task-info-opt task-info-opt-danger"
     }
 
-    if (this.state.currentTask.priority === '中') {
+    if (this.state.currentTask.priority === 2) {
       return "task-info-opt task-info-opt-warning"
     }
 
-    if (this.state.currentTask.priority === '低') {
+    if (this.state.currentTask.priority === 1) {
       return "task-info-opt task-info-opt-primary"
     }
 
@@ -267,33 +302,33 @@ class File extends React.Component {
         <div>
           <Button
             block
-            type={this.state.currentTask.priority === '高' ? 'link' : 'text'}
+            type={this.state.currentTask.priority === 3 ? 'link' : 'text'}
             onClick={() => {
-              this.taskInfoOptClick('priority', '高')
+              this.taskInfoOptClick('priority', 3)
             }}>
             高优先级
           </Button>
           <Button
             block
-            type={this.state.currentTask.priority === '中' ? 'link' : 'text'}
+            type={this.state.currentTask.priority === 2 ? 'link' : 'text'}
             onClick={() => {
-              this.taskInfoOptClick('priority', '中')
+              this.taskInfoOptClick('priority', 2)
             }}>
             中优先级
           </Button>
           <Button
             block
-            type={this.state.currentTask.priority === '低' ? 'link' : 'text'}
+            type={this.state.currentTask.priority === 1 ? 'link' : 'text'}
             onClick={() => {
-              this.taskInfoOptClick('priority', '低')
+              this.taskInfoOptClick('priority', 1)
             }}>
             低优先级
           </Button>
           <Button
             block
-            type={this.state.currentTask.priority === '无' ? 'link' : 'text'}
+            type={this.state.currentTask.priority === 0 ? 'link' : 'text'}
             onClick={() => {
-              this.taskInfoOptClick('priority', '无')
+              this.taskInfoOptClick('priority', 0)
             }}>
             无优先级
           </Button>
@@ -332,7 +367,9 @@ class File extends React.Component {
           <span className={this.state.currentTask.deadline ? 'task-info-opt task-info-opt-primary' : 'task-info-opt'}>
             <CalendarOutlined className="task-info-opt-icon"/>
             <DatePicker
-              onChange={(date, dateString) => {this.taskInfoOptClick('deadline', dateString)}}
+              onChange={(date, dateString) => {
+                this.taskInfoOptClick('deadline', dateString)
+              }}
               bordered={false}
               picker="date"
               style={{width: '100px'}}
@@ -398,7 +435,7 @@ class File extends React.Component {
                   title="排序方式"
                   content={this.sortPopContent()}
                   trigger="click">
-                  <Button type={this.state.filterForm.sortBy ? 'link' : 'text'} className="filter-form-opt">
+                  <Button type={this.state.filterForm.sort_by ? 'link' : 'text'} className="filter-form-opt">
                     <SortAscendingOutlined/>
                   </Button>
                 </Popover>
