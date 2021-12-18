@@ -54,6 +54,8 @@ class File extends React.Component {
   loadtodoList() {
     this.setState({loading: true})
     let params = this.state.filterForm
+    params.from = this.props.state.from
+
     todoApi.todoList(params).then(response => {
       if (response.code === 200) {
         this.setState({loading: false, todoList: response.data.list})
