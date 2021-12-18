@@ -249,7 +249,6 @@ class File extends React.Component {
     todoApi.update(this.state.currentTask).then(response => {
       if (response.code == 200) {
         message.success('保存成功')
-        console.log(response.data)
       } else {
         message.error(response.msg || '保存失败')
       }
@@ -262,7 +261,9 @@ class File extends React.Component {
     todoApi.create(params).then(response => {
       if (response.code == 200) {
         message.success('保存成功');
-        console.log(response.data)
+        var todoList = this.state.todoList
+        todoList.unshift(response.data)
+        this.setState({todoList: todoList})
       } else {
         message.error(response.msg || '保存失败')
       }
@@ -278,15 +279,15 @@ class File extends React.Component {
   }
 
   getTaskOPTClassName() {
-    if (this.state.currentTask.priority === 3) {
+    if (this.state.currentTask.priority === '高') {
       return "task-info-opt task-info-opt-danger"
     }
 
-    if (this.state.currentTask.priority === 2) {
+    if (this.state.currentTask.priority === '中') {
       return "task-info-opt task-info-opt-warning"
     }
 
-    if (this.state.currentTask.priority === 1) {
+    if (this.state.currentTask.priority === '低') {
       return "task-info-opt task-info-opt-primary"
     }
 
@@ -369,7 +370,7 @@ class File extends React.Component {
               }}
               bordered={false}
               picker="date"
-              style={{width: '100px'}}
+              style={{width: '110px'}}
               inputReadOnly={true}
               placeholder="设置时间"
               allowClear={false}
@@ -460,6 +461,10 @@ class File extends React.Component {
               </Col>
             </Row>
             <List
+              style={{
+                height: document.documentElement.clientHeight - 70 - 60 - 24 - 22 - 32 - 55 - 24 - 24,
+                overflowY: 'auto'
+              }}
               size="small"
               itemLayout="vertical"
               dataSource={this.state.todoList}
