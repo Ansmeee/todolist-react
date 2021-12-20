@@ -495,13 +495,12 @@ class File extends React.Component {
               dataSource={this.state.todoList}
               renderItem={item => (
                 <List.Item
-                  onClick={() => {
-                    this.itemClick(item)
-                  }}
                   key={item.id}
                   actions={this.getListActions(item)}>
                   <Skeleton loading={this.state.loading} active>
-                    {item.title}
+                    <span onClick={() => {
+                      this.itemClick(item)
+                    }}>{item.title}</span>
                   </Skeleton>
                 </List.Item>
               )}
