@@ -260,7 +260,13 @@ class File extends React.Component {
     todoApi.update(params).then(response => {
       if (response.code === 200) {
         message.success('保存成功')
+        var todoList = this.state.todoList
         var todo  = response.data
+
+        var index = todoList.findIndex(item => {return item.id === todo.id})
+        todoList[index] = todo
+        this.setState({todoList: todoList})
+
         todo.priority = this.priorityName[todo.priority]
         this.setState({currentTask: todo})
       } else {
@@ -279,9 +285,10 @@ class File extends React.Component {
 
         var todo = response.data
         todoList.unshift(todo)
+        this.setState({todoList: todoList})
 
         todo.priority = this.priorityName[todo.priority]
-        this.setState({todoList: todoList, currentTask: todo})
+        this.setState({currentTask: todo})
       } else {
         message.error(response.msg || '保存失败')
       }
