@@ -50,7 +50,9 @@ class Home extends React.Component {
             padding: '0px',
           }}>
           <div className="logo-con">土豆清单</div>
-          <div className="header-opt-con">header</div>
+          <div className="header-opt-con">
+            
+          </div>
         </Header>
         <Layout>
           <Sider width={200} className="site-layout-background">
