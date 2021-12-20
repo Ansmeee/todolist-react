@@ -18,7 +18,6 @@ class File extends React.Component {
     super(props)
 
     this.state = {
-      activeItem: {},
       filterForm: {
         rules: [],
       },
@@ -45,6 +44,13 @@ class File extends React.Component {
       '低': 1,
       '无': 0
     }
+
+    this.priorityName = {
+      3: '高',
+      2: '中',
+      1: '低',
+      0: '无',
+    }
   }
 
   componentDidMount() {
@@ -66,13 +72,13 @@ class File extends React.Component {
   }
 
   createBTNClick() {
-    this.setState({createTask: true})
+    this.setState({currentTask: {}, createTask: true})
   }
 
   searchChange(e) {
     var filterForm = this.state.filterForm
     var keywords = e.target.value
-    if (keywords != filterForm.keywords) {
+    if (keywords !== filterForm.keywords) {
       filterForm.keywords = keywords
       this.setState({filterForm: filterForm})
       this.loadtodoList()
@@ -112,7 +118,8 @@ class File extends React.Component {
   }
 
   itemClick(item) {
-    this.setState({activeItem: item})
+    item.priority = this.priorityName[item.priority]
+    this.setState({currentTask: item, createTask: true})
   }
 
   filterPopContent() {
@@ -248,9 +255,12 @@ class File extends React.Component {
   }
 
   updateTask() {
-    todoApi.update(this.state.currentTask).then(response => {
-      if (response.code == 200) {
+    var params = this.state.currentTask
+    params.priority = this.priorityMap[params.priority]
+    todoApi.update(params).then(response => {
+      if (response.code === 200) {
         message.success('保存成功')
+        this.setState({currentTask: response.data})
       } else {
         message.error(response.msg || '保存失败')
       }
@@ -261,11 +271,11 @@ class File extends React.Component {
     var params = this.state.currentTask
     params.priority = this.priorityMap[params.priority]
     todoApi.create(params).then(response => {
-      if (response.code == 200) {
+      if (response.code === 200) {
         message.success('保存成功');
         var todoList = this.state.todoList
         todoList.unshift(response.data)
-        this.setState({todoList: todoList})
+        this.setState({todoList: todoList, currentTask: response.data})
       } else {
         message.error(response.msg || '保存失败')
       }
@@ -394,7 +404,7 @@ class File extends React.Component {
         <div className="task-info-con">
           {this.getTaskOptCon()}
           <Input
-            value={this.state.createTask.title}
+            value={this.state.currentTask.title}
             bordered={false}
             placeholder="准备做什么事？"
             onChange={(e) => {
@@ -402,7 +412,7 @@ class File extends React.Component {
             }}>
           </Input>
           <TextArea
-            value={this.state.createTask.content}
+            value={this.state.currentTask.content}
             rows={4}
             bordered={false}
             placeholder="详细信息。。。"
@@ -472,12 +482,12 @@ class File extends React.Component {
               dataSource={this.state.todoList}
               renderItem={item => (
                 <List.Item
+                  onClick={() => {
+                    this.itemClick(item)
+                  }}
                   key={item.id}
                   actions={this.getListActions(item)}>
                   <Skeleton loading={this.state.loading} active>
-                    <List.Item.Meta onClick={() => {
-                      this.itemClick(item)
-                    }}/>
                     {item.title}
                   </Skeleton>
                 </List.Item>
@@ -486,7 +496,6 @@ class File extends React.Component {
           </Col>
           <Col span={9}>
             {this.getCreateTaskForm()}
-            <h3>{this.state.activeItem.content}</h3>
           </Col>
         </Row>
       </div>
