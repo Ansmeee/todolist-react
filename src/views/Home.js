@@ -2,7 +2,7 @@ import React from "react";
 import "../assets/style/home.less"
 import {browserHistory} from 'react-router'
 
-import {Layout, Menu, Breadcrumb} from 'antd';
+import {Layout, Menu, Breadcrumb, Row, Col} from 'antd';
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider, Footer} = Layout;
@@ -47,8 +47,10 @@ class Home extends React.Component {
         <Header className="header" style = {{
             height: '60px',
             lineHeight: '60px',
+            padding: '0px',
           }}>
-          <div className="logo">logo</div>
+          <div className="logo-con">土豆清单</div>
+          <div className="header-opt-con">header</div>
         </Header>
         <Layout>
           <Sider width={200} className="site-layout-background">
