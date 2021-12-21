@@ -2,8 +2,8 @@ import React from "react";
 import "../assets/style/home.less"
 import {browserHistory} from 'react-router'
 
-import {DownOutlined, BellOutlined} from "@ant-design/icons";
-import {Layout, Menu, Breadcrumb, Popover, Button} from 'antd';
+import {DownOutlined, BellOutlined, QuestionCircleOutlined} from "@ant-design/icons";
+import {Layout, Menu, Breadcrumb, Popover, Button, Badge, Avatar} from 'antd';
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider, Footer} = Layout;
@@ -71,13 +71,16 @@ class Home extends React.Component {
         <Header className="header-con">
           <div className="header-con-logo">土豆清单</div>
           <div className="header-con-opt">
-            <div>
-              <BellOutlined />
-            </div>
             <div className="header-con-opt-user">
               <Popover placement="bottomRight" content={this.getAccountCon()} trigger="click">
-                <span>{ this.state.account }</span><DownOutlined style={{marginLeft: '5px', fontSize: '10px'}}/>
+                <Avatar shape="square"></Avatar>
               </Popover>
+            </div>
+            <div className="header-con-opt-notice">
+              <Badge count={0} size="small"><BellOutlined style={{fontSize: '16px'}} /></Badge>
+            </div>
+            <div className="header-con-opt-notice">
+              <QuestionCircleOutlined style={{fontSize: '16px'}}/>
             </div>
           </div>
         </Header>
