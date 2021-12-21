@@ -76,7 +76,7 @@ class Home extends React.Component {
             </div>
             <div className="header-con-opt-user">
               <Popover placement="bottomRight" content={this.getAccountCon()} trigger="click">
-                <span>{ this.state.account }</span>
+                <span>{ this.state.account }</span><DownOutlined style={{marginLeft: '5px', fontSize: '10px'}}/>
               </Popover>
             </div>
           </div>
