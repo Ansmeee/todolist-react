@@ -2,7 +2,8 @@ import React from "react";
 import "../assets/style/home.less"
 import {browserHistory} from 'react-router'
 
-import {Layout, Menu, Breadcrumb, Row, Col} from 'antd';
+import {DownOutlined, BellOutlined} from "@ant-design/icons";
+import {Layout, Menu, Breadcrumb, Popover, Button} from 'antd';
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider, Footer} = Layout;
@@ -10,6 +11,11 @@ const {Header, Content, Sider, Footer} = Layout;
 class Home extends React.Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      account: "Ansme"
+    }
+
     this.DirList = [
       {
         "id": 1,
@@ -40,13 +46,40 @@ class Home extends React.Component {
       return <Menu.Item key={'/dir/' + dir.id}>{dir.name}</Menu.Item>
     })
   }
+  AccountOptClick(opt) {
+
+  }
+
+  getAccountCon() {
+    return (
+      <div>
+        <Button
+          block
+          type="text"
+          onClick={() => {
+            this.AccountOptClick('signout')
+          }}>
+          退出登陆
+        </Button>
+      </div>
+    )
+  }
 
   render() {
     return (
       <Layout>
         <Header className="header-con">
           <div className="header-con-logo">土豆清单</div>
-          <div className="header-con-opt">opt</div>
+          <div className="header-con-opt">
+            <div>
+              <BellOutlined />
+            </div>
+            <div className="header-con-opt-user">
+              <Popover placement="bottomRight" content={this.getAccountCon()} trigger="click">
+                <span>{ this.state.account }</span>
+              </Popover>
+            </div>
+          </div>
         </Header>
         <Layout>
           <Sider width={200} className="site-layout-background">
