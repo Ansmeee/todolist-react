@@ -43,16 +43,10 @@ class Home extends React.Component {
 
   render() {
     return (
-      <Layout className="home-page">
-        <Header className="header" style = {{
-            height: '60px',
-            lineHeight: '60px',
-            padding: '0px',
-          }}>
-          <div className="logo-con">土豆清单</div>
-          <div className="header-opt-con">
-            
-          </div>
+      <Layout>
+        <Header className="header-con">
+          <div className="header-con-logo">土豆清单</div>
+          <div className="header-con-opt">opt</div>
         </Header>
         <Layout>
           <Sider width={200} className="site-layout-background">
@@ -60,7 +54,7 @@ class Home extends React.Component {
               onClick={this.handleClick}
               defaultSelectedKeys={['1']}
               defaultOpenKeys={['sub1']}
-              style={{height: '100%', borderRight: 0}}
+              style={{height: document.documentElement.clientHeight - 60, borderRight: 0}}
               mode="inline">
               <Menu.Item key="/latest">最近浏览</Menu.Item>
               <SubMenu key="sub1" title="我的文件夹">
@@ -68,7 +62,7 @@ class Home extends React.Component {
               </SubMenu>
             </Menu>
           </Sider>
-          <Layout style={{padding: '0 24px 24px'}}>
+          <Layout style={{padding: '0px 15px', height: '100%',}}>
             <Breadcrumb style={{margin: '16px 0'}}>
               <Breadcrumb.Item>Home</Breadcrumb.Item>
               <Breadcrumb.Item>List</Breadcrumb.Item>
@@ -79,11 +73,13 @@ class Home extends React.Component {
               style={{
                 padding: 24,
                 margin: 0,
-                height: document.documentElement.clientHeight - 70 - 60 - 24 - 22 - 32,
+                height: document.documentElement.clientHeight - 60 - 32 - 22 - 70
               }}>
               {this.props.children}
             </Content>
-            <Footer style={{ textAlign: 'center', fontSize: '12px' }}>ToDoList ©2021 Created by Ansme</Footer>
+            <Footer className="footer-con">
+              ToDoList ©2021 Created by Ansme
+            </Footer>
           </Layout>
         </Layout>
       </Layout>

@@ -261,9 +261,11 @@ class File extends React.Component {
       if (response.code === 200) {
         message.success('保存成功')
         var todoList = this.state.todoList
-        var todo  = response.data
+        var todo = response.data
 
-        var index = todoList.findIndex(item => {return item.id === todo.id})
+        var index = todoList.findIndex(item => {
+          return item.id === todo.id
+        })
         todoList[index] = todo
         this.setState({todoList: todoList})
 
@@ -380,7 +382,7 @@ class File extends React.Component {
               content={this.taskInfoPopContent('priority')}
               trigger="click">
               <Input
-                style={{width: '100px'}}
+                style={{maxWidth: '100px', minWidth: '20px'}}
                 bordered={false}
                 readOnly={true}
                 placeholder="设置优先级"
@@ -395,7 +397,7 @@ class File extends React.Component {
               }}
               bordered={false}
               picker="date"
-              style={{width: '110px'}}
+              style={{maxWidth: '110px', minWidth: '110px'}}
               inputReadOnly={true}
               placeholder="设置时间"
               allowClear={false}
@@ -440,77 +442,75 @@ class File extends React.Component {
 
   render() {
     return (
-      <div style={{height: '100%'}}>
-        <Row className="file-page-con">
-          <Col span={15} className="file-list-con">
-            <Row className="file-filter-con">
-              <Col span={16}>
-                <div style={{borderBottom: '1px solid #d9d9d9'}}>
-                  <Input
-                    bordered={false}
-                    placeholder="输入关键字搜索"
-                    onBlur={(e) => {
-                      this.searchChange(e)
-                    }}
-                    onPressEnter={(e) => {
-                      this.searchChange(e)
-                    }}/>
-                </div>
-              </Col>
-              <Col span={4} style={{paddingLeft: '10px'}}>
-                <Popover
-                  overlayClassName="pop-opt-con"
-                  placement="bottomLeft"
-                  title="排序方式"
-                  content={this.sortPopContent()}
-                  trigger="click">
-                  <Button type={this.state.filterForm.sort_by ? 'link' : 'text'} className="filter-form-opt">
-                    <SortAscendingOutlined/>
-                  </Button>
-                </Popover>
-                <Popover
-                  overlayClassName="pop-opt-con"
-                  placement="bottomLeft"
-                  title="展示内容"
-                  content={this.filterPopContent()}
-                  trigger="click">
-                  <Button type={this.state.filterForm.rules.length > 0 ? 'link' : 'text'} className="filter-form-opt">
-                    <FilterOutlined/>
-                  </Button>
-                </Popover>
-              </Col>
-              <Col span={4} style={{textAlign: 'right', paddingRight: '16px'}}>
-                <Button type="primary" icon={<PlusOutlined/>} onClick={() => {
-                  this.createBTNClick()
-                }}>新 建</Button>
-              </Col>
-            </Row>
-            <List
-              style={{
-                height: document.documentElement.clientHeight - 70 - 60 - 24 - 22 - 32 - 55 - 24 - 24,
-                overflowY: 'auto'
-              }}
-              size="small"
-              itemLayout="vertical"
-              dataSource={this.state.todoList}
-              renderItem={item => (
-                <List.Item
-                  key={item.id}
-                  actions={this.getListActions(item)}>
-                  <Skeleton loading={this.state.loading} active>
+      <Row className="file-page-con">
+        <Col span={15} className="file-list-con">
+          <Row className="file-filter-con">
+            <Col span={16}>
+              <div style={{borderBottom: '1px solid #d9d9d9'}}>
+                <Input
+                  bordered={false}
+                  placeholder="输入关键字搜索"
+                  onBlur={(e) => {
+                    this.searchChange(e)
+                  }}
+                  onPressEnter={(e) => {
+                    this.searchChange(e)
+                  }}/>
+              </div>
+            </Col>
+            <Col span={4} style={{paddingLeft: '10px'}}>
+              <Popover
+                overlayClassName="pop-opt-con"
+                placement="bottomLeft"
+                title="排序方式"
+                content={this.sortPopContent()}
+                trigger="click">
+                <Button type={this.state.filterForm.sort_by ? 'link' : 'text'} className="filter-form-opt">
+                  <SortAscendingOutlined/>
+                </Button>
+              </Popover>
+              <Popover
+                overlayClassName="pop-opt-con"
+                placement="bottomLeft"
+                title="展示内容"
+                content={this.filterPopContent()}
+                trigger="click">
+                <Button type={this.state.filterForm.rules.length > 0 ? 'link' : 'text'} className="filter-form-opt">
+                  <FilterOutlined/>
+                </Button>
+              </Popover>
+            </Col>
+            <Col span={4} style={{textAlign: 'right', paddingRight: '16px'}}>
+              <Button type="primary" icon={<PlusOutlined/>} onClick={() => {
+                this.createBTNClick()
+              }}>新 建</Button>
+            </Col>
+          </Row>
+          <List
+            style={{
+              height: document.documentElement.clientHeight - 60 - 32 - 22 - 70 - 48 - 55,
+              overflowY: 'auto'
+            }}
+            size="small"
+            itemLayout="vertical"
+            dataSource={this.state.todoList}
+            renderItem={item => (
+              <List.Item
+                key={item.id}
+                actions={this.getListActions(item)}>
+                <Skeleton loading={this.state.loading} active>
                     <span onClick={() => {
                       this.itemClick(item)
                     }}>{item.title}</span>
-                  </Skeleton>
-                </List.Item>
-              )}
-            />
-          </Col>
-          <Col span={9}>
-            {this.getCreateTaskForm()}
-          </Col>
-        </Row>
-      </div>
+                </Skeleton>
+              </List.Item>
+            )}
+          />
+        </Col>
+        <Col span={9}>
+          {this.getCreateTaskForm()}
+        </Col>
+      </Row>
     )
   }
 }
