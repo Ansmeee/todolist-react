@@ -77,10 +77,10 @@ class Home extends React.Component {
               </Popover>
             </div>
             <div className="header-con-opt-notice">
-              <Badge count={0} size="small"><BellOutlined style={{fontSize: '16px'}} /></Badge>
+              <Badge count={5} size="small"><BellOutlined style={{fontSize: '14px'}} /></Badge>
             </div>
             <div className="header-con-opt-notice">
-              <QuestionCircleOutlined style={{fontSize: '16px'}}/>
+              <QuestionCircleOutlined style={{fontSize: '14px'}}/>
             </div>
           </div>
         </Header>
