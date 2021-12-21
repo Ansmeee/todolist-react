@@ -418,17 +418,20 @@ class File extends React.Component {
       return (
         <div className="task-info-con">
           {this.getTaskOptCon()}
-          <Input
+          <TextArea
+            minRows={2}
+            autoSize={true}
             value={this.state.currentTask.title}
             bordered={false}
             placeholder="准备做什么事？"
             onChange={(e) => {
               this.taskInfoChange(e, 'title')
             }}>
-          </Input>
+          </TextArea>
           <TextArea
+            minRows={4}
+            autoSize={true}
             value={this.state.currentTask.content}
-            rows={4}
             bordered={false}
             placeholder="详细信息。。。"
             onChange={(e) => {
