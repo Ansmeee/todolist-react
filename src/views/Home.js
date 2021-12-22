@@ -1,8 +1,8 @@
 import React from "react";
 import "../assets/style/home.less"
 import {browserHistory} from 'react-router'
-
-import {DownOutlined, BellOutlined, QuestionCircleOutlined} from "@ant-design/icons";
+import fileApi from '../http/file'
+import {BellOutlined, QuestionCircleOutlined} from "@ant-design/icons";
 import {Layout, Menu, Breadcrumb, Popover, Button, Badge, Avatar} from 'antd';
 
 const {SubMenu} = Menu;
@@ -13,7 +13,8 @@ class Home extends React.Component {
     super(props)
 
     this.state = {
-      account: "Ansme"
+      account: "Ansme",
+      dirList:[]
     }
 
     this.DirList = [
@@ -34,18 +35,27 @@ class Home extends React.Component {
 
 
   componentDidMount() {
-    console.log('home')
+    this.loadMenuList()
   }
 
   handleClick = e => {
     browserHistory.push(e.key)
   }
 
-  menuItems() {
-    return this.DirList.map(dir => {
-      return <Menu.Item key={'/dir/' + dir.id}>{dir.name}</Menu.Item>
+  loadMenuList() {
+    fileApi.fileList({}).then(response => {
+      if (response.code === 200) {
+        this.setState({dirList: response.data.list})
+      }
     })
   }
+
+  menuItems() {
+    return this.state.dirList.map(dir => {
+      return <Menu.Item key={'/dir/' + dir.id}>{dir.title}</Menu.Item>
+    })
+  }
+
   AccountOptClick(opt) {
 
   }
