@@ -10,6 +10,7 @@ import {
 import {Row, Col, Input, Button, Popover, List, Skeleton, DatePicker, message} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
+import moment from 'moment';
 
 const {TextArea} = Input;
 
@@ -61,12 +62,10 @@ class File extends React.Component {
     this.setState({loading: true})
     let params = this.state.filterForm
     params.from = this.props.state.from
-
     todoApi.todoList(params).then(response => {
+      this.setState({loading: false})
       if (response.code === 200) {
-        this.setState({loading: false, todoList: response.data.list})
-      } else {
-        this.setState({loading: false})
+        this.setState({todoList: response.data.list})
       }
     })
   }
@@ -119,6 +118,7 @@ class File extends React.Component {
 
   itemClick(item) {
     item.priority = this.priorityName[item.priority]
+    // item.deadline = moment(item.deadline)
     this.setState({currentTask: item, createTask: true})
   }
 
@@ -397,6 +397,7 @@ class File extends React.Component {
               }}
               bordered={false}
               picker="date"
+              value={moment(this.state.currentTask.deadline)}
               style={{maxWidth: '110px', minWidth: '110px'}}
               inputReadOnly={true}
               placeholder="设置时间"
