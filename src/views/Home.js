@@ -3,7 +3,7 @@ import "../assets/style/home.less"
 import {browserHistory} from 'react-router'
 import fileApi from '../http/file'
 import {BellOutlined, QuestionCircleOutlined} from "@ant-design/icons";
-import {Layout, Menu, Breadcrumb, Popover, Button, Badge, Avatar} from 'antd';
+import {Layout, Menu, Breadcrumb, Popover, Button, Badge, Avatar, Input} from 'antd';
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider, Footer} = Layout;
@@ -13,8 +13,12 @@ class Home extends React.Component {
     super(props)
 
     this.state = {
-      account: "Ansme",
-      dirList:[]
+      account: "",
+      dirList: [],
+      siginInForm: {
+        account: '',
+        auth: ''
+      }
     }
 
     this.DirList = [
@@ -35,7 +39,11 @@ class Home extends React.Component {
 
 
   componentDidMount() {
-    this.loadMenuList()
+    if (this.state.account) {
+      this.loadMenuList()
+    } else {
+      browserHistory.push("/signin")
+    }
   }
 
   handleClick = e => {
@@ -75,25 +83,9 @@ class Home extends React.Component {
     )
   }
 
-  render() {
-    return (
-      <Layout>
-        <Header className="header-con">
-          <div className="header-con-logo">土豆清单</div>
-          <div className="header-con-opt">
-            <div className="header-con-opt-user">
-              <Popover placement="bottomRight" content={this.getAccountCon()} trigger="click">
-                <Avatar shape="square"></Avatar>
-              </Popover>
-            </div>
-            <div className="header-con-opt-notice">
-              <Badge count={5} size="small"><BellOutlined style={{fontSize: '14px'}} /></Badge>
-            </div>
-            <div className="header-con-opt-notice">
-              <QuestionCircleOutlined style={{fontSize: '14px'}}/>
-            </div>
-          </div>
-        </Header>
+  getContent() {
+    if (this.state.account) {
+      return (
         <Layout>
           <Sider width={200} className="site-layout-background">
             <Menu
@@ -128,6 +120,48 @@ class Home extends React.Component {
             </Footer>
           </Layout>
         </Layout>
+      )
+    }
+
+    return (
+      <Layout>
+        <Content
+          className="site-layout-background"
+          style={{
+            padding: 24,
+            margin: 0,
+            height: document.documentElement.clientHeight - 60 - 70,
+            overflowY: 'auto'
+          }}>
+          {this.props.children}
+        </Content>
+        <Footer className="footer-con">
+          ToDoList ©2021 Created by Ansme
+        </Footer>
+      </Layout>
+    )
+  }
+
+  render() {
+    return (
+      <Layout>
+        <Header className="header-con">
+          <div className="header-con-logo">土豆清单</div>
+          <div className="header-con-opt">
+            <div className="header-con-opt-user">
+              <Popover placement="bottomRight" content={this.getAccountCon()} trigger="click">
+                <Avatar shape="square"></Avatar>
+              </Popover>
+            </div>
+            <div className="header-con-opt-notice">
+              <Badge count={5} size="small"><BellOutlined style={{fontSize: '14px'}}/></Badge>
+            </div>
+            <div className="header-con-opt-notice">
+              <QuestionCircleOutlined style={{fontSize: '14px'}}/>
+            </div>
+          </div>
+        </Header>
+        {this.getContent()}
       </Layout>
     )
   }
