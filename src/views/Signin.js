@@ -1,9 +1,10 @@
 import React from "react"
-import {Button, Input, Form} from "antd";
+import {Button, Input, Form, message} from "antd";
 import "../assets/style/sign.less"
 import {UserOutlined, LockOutlined} from "@ant-design/icons";
 import {browserHistory} from "react-router";
 import signApi from "../http/sign"
+
 class Signin extends React.Component {
   constructor(props) {
     super(props);
@@ -13,13 +14,6 @@ class Signin extends React.Component {
     }
   }
 
-  signinClick() {
-    signApi.signin({}).then(response => {
-      if (response.code === 200) {
-
-      }
-    })
-  }
 
   signUpClick() {
     browserHistory.push("/signup")
@@ -28,7 +22,11 @@ class Signin extends React.Component {
   onFinish(values) {
     signApi.signin(values).then(response => {
       if (response.code === 200) {
-        console.log(response)
+        window.localStorage.setItem("token", response.data.token)
+        window.localStorage.setItem("account", values.account)
+        window.location.href = '/'
+      } else {
+        message.error(response.msg || '登陆失败')
       }
     })
   }
@@ -39,7 +37,9 @@ class Signin extends React.Component {
         <div className="signin-form">
           <div className="signin-form-title">土豆清单 · 用户登陆</div>
           <Form
-            onFinish={(values) => {this.onFinish(values)}}>
+            onFinish={(values) => {
+              this.onFinish(values)
+            }}>
             <Form.Item
               name="account"
               style={{textAlign: "right"}}

@@ -1,5 +1,5 @@
 import React from 'react'
-import {browserHistory, Route, Router} from "react-router";
+import {browserHistory, Route, Router, Redirect} from "react-router";
 import Home from "../views/Home";
 import Latest from "../views/Latest";
 import Dir from "../views/Dir";
@@ -10,6 +10,7 @@ class Routes extends React.Component {
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Home}>
+          <Redirect from="/" to="/latest"></Redirect>
           <Route path="/signin" component={Signin}></Route>
           <Route path="/signup" component={Signup}></Route>
           <Route path="/latest" component={Latest}></Route>

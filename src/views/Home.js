@@ -3,7 +3,7 @@ import "../assets/style/home.less"
 import {browserHistory} from 'react-router'
 import fileApi from '../http/file'
 import {BellOutlined, QuestionCircleOutlined} from "@ant-design/icons";
-import {Layout, Menu, Breadcrumb, Popover, Button, Badge, Avatar, Input} from 'antd';
+import {Layout, Menu, Breadcrumb, Popover, Button, Badge, Avatar} from 'antd';
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider, Footer} = Layout;
@@ -20,26 +20,12 @@ class Home extends React.Component {
         auth: ''
       }
     }
-
-    this.DirList = [
-      {
-        "id": 1,
-        "name": 1
-      },
-      {
-        "id": 2,
-        "name": 2
-      },
-      {
-        "id": 3,
-        "name": 3
-      }
-    ]
   }
 
-
   componentDidMount() {
-    if (this.state.account) {
+    var account = window.localStorage.getItem("account")
+    if (account) {
+      this.setState({account: account})
       this.loadMenuList()
     } else {
       browserHistory.push("/signin")
