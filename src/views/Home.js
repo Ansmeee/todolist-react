@@ -97,8 +97,7 @@ class Home extends React.Component {
           <Sider width={200} className="site-layout-background">
             <Menu
               onClick={this.handleClick}
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
+              defaultSelectedKeys={['/latest']}
               style={{height: document.documentElement.clientHeight - 60, borderRight: 0}}
               mode="inline">
               <Menu.Item key="/latest">最近浏览</Menu.Item>
@@ -108,7 +107,7 @@ class Home extends React.Component {
             </Menu>
           </Sider>
           <Layout style={{padding: '0px 15px', height: '100%',}}>
-            <Breadcrumb styl={{margin: '16px 0'}}>
+            <Breadcrumb style={{margin: '16px 0'}}>
               <Breadcrumb.Item>Home</Breadcrumb.Item>
               <Breadcrumb.Item>List</Breadcrumb.Item>
               <Breadcrumb.Item>App</Breadcrumb.Item>
