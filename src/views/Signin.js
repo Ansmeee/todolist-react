@@ -23,7 +23,6 @@ class Signin extends React.Component {
     signApi.signin(values).then(response => {
       if (response.code === 200) {
         window.localStorage.setItem("token", response.data.token)
-        window.localStorage.setItem("account", values.account)
         window.location.href = '/'
       } else {
         message.error(response.msg || '登陆失败')

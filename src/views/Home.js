@@ -23,13 +23,34 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    var account = window.localStorage.getItem("account")
-    if (account) {
-      this.setState({account: account})
-      this.loadMenuList()
-    } else {
+    var token = window.localStorage.getItem("token")
+    if (!token) {
       browserHistory.push("/signin")
+      return
     }
+
+    var tokenArr = token.split(".")
+    var payload = JSON.parse(atob(tokenArr[1]))
+    var expiredat = new Date(payload.expiredat)
+    var currentTime = new Date()
+
+    if (currentTime > expiredat) {
+      browserHistory.push("/signin")
+      return
+    }
+
+    var account = payload.account
+    if (!account) {
+      browserHistory.push("/signin")
+      return
+    }
+
+    this.setState({account: account})
+    this.loadMenuList()
+  }
+
+  goHome() {
+    window.location.href = '/'
   }
 
   handleClick = e => {
@@ -132,7 +153,7 @@ class Home extends React.Component {
     return (
       <Layout>
         <Header className="header-con">
-          <div className="header-con-logo">土豆清单</div>
+          <div className="header-con-logo" onClick={() => {this.goHome()}}>土豆清单</div>
           <div className="header-con-opt">
             <div className="header-con-opt-user">
               <Popover placement="bottomRight" content={this.getAccountCon()} trigger="click">
