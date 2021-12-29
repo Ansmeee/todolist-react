@@ -15,6 +15,7 @@ class Routes extends React.Component {
           <Route path="/signup" component={Signup}></Route>
           <Route path="/latest" component={Latest}></Route>
           <Route path="/dir/:id" component={Dir}></Route>
+          <Route path="*" component={Latest}/>
         </Route>
       </Router>
     )
