@@ -3,7 +3,8 @@ import "../assets/style/home.less"
 import {browserHistory} from 'react-router'
 import fileApi from '../http/file'
 import {BellOutlined, QuestionCircleOutlined} from "@ant-design/icons";
-import {Layout, Menu, Breadcrumb, Popover, Button, Badge, Avatar} from 'antd';
+import {Layout, Menu, Breadcrumb, Popover, Button, Badge, Avatar, message} from 'antd';
+import signApi from "../http/sign";
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider, Footer} = Layout;
@@ -70,9 +71,23 @@ class Home extends React.Component {
       return <Menu.Item key={'/dir/' + dir.id}>{dir.title}</Menu.Item>
     })
   }
+  
+  signout() {
+    signApi.signout().then(response => {
+      if (response.code === 200) {
+        window.localStorage.removeItem("token")
+        window.location.href = '/'
+      } else {
+        message.error(response.msg || '登出失败')
+      }
+    })
+  }
 
-  AccountOptClick(opt) {
-
+  accountOptClick(opt) {
+    if (opt == 'signout') {
+      this.signout()
+      return
+    }
   }
 
   getAccountCon() {
@@ -82,12 +97,34 @@ class Home extends React.Component {
           block
           type="text"
           onClick={() => {
-            this.AccountOptClick('signout')
+            this.accountOptClick('signout')
           }}>
           退出登陆
         </Button>
       </div>
     )
+  }
+
+  getHeaderUser() {
+    if (this.state.account) {
+      return (
+        <div className="header-con-opt-user">
+          <Popover placement="bottomRight" content={this.getAccountCon()} trigger="click">
+            <Avatar shape="square"></Avatar>
+          </Popover>
+        </div>
+      )
+    }
+  }
+
+  getHeaderNotice() {
+    if (this.state.account) {
+      return (
+        <div className="header-con-opt-notice">
+          <Badge count={5} size="small"><BellOutlined style={{fontSize: '14px'}}/></Badge>
+        </div>
+      )
+    }
   }
 
   getContent() {
@@ -154,14 +191,8 @@ class Home extends React.Component {
         <Header className="header-con">
           <div className="header-con-logo" onClick={() => {this.goHome()}}>土豆清单</div>
           <div className="header-con-opt">
-            <div className="header-con-opt-user">
-              <Popover placement="bottomRight" content={this.getAccountCon()} trigger="click">
-                <Avatar shape="square"></Avatar>
-              </Popover>
-            </div>
-            <div className="header-con-opt-notice">
-              <Badge count={5} size="small"><BellOutlined style={{fontSize: '14px'}}/></Badge>
-            </div>
+            {this.getHeaderUser()}
+            {this.getHeaderNotice()}
             <div className="header-con-opt-notice">
               <QuestionCircleOutlined style={{fontSize: '14px'}}/>
             </div>
