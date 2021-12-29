@@ -58,6 +58,12 @@ class File extends React.Component {
     this.loadtodoList()
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.state.from != this.props.state.from) {
+      this.loadtodoList()
+    }
+  }
+
   loadtodoList() {
     this.setState({loading: true})
     let params = this.state.filterForm
