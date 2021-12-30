@@ -11,10 +11,10 @@ class Routes extends React.Component {
       <Router history={browserHistory}>
         <Route path="/" component={Home}>
           <IndexRoute component={Latest}/>
-          <Route path="/signin" component={Signin}></Route>
-          <Route path="/signup" component={Signup}></Route>
-          <Route path="/latest" component={Latest}></Route>
-          <Route path="/dir/:id" component={Dir}></Route>
+          <Route path="/signin" component={Signin}/>
+          <Route path="/signup" component={Signup}/>
+          <Route path="/latest" component={Latest}/>
+          <Route path="/dir/:id" component={Dir}/>
           <Route path="*" component={Latest}/>
         </Route>
       </Router>

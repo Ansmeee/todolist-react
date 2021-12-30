@@ -1,8 +1,6 @@
 import axios from 'axios'
 import httpConfig from '../config/http'
 
-// axios.defaults.withCredentials=true
-
 const apiHost = httpConfig.host()
 
 function handlerResponse(response) {
@@ -34,4 +32,13 @@ function Put(path, params) {
   })
 }
 
-export default {Get, Post, Put, apiHost}
+function Delete(path, params) {
+  var headers = {'Authorization': window.localStorage.getItem('token')}
+  return axios.delete(apiHost + path, params, {headers: headers}).then((response) => {
+    return handlerResponse(response)
+  }).catch((error) => {
+  })
+}
+
+
+export default {Get, Post, Put, Delete, apiHost}
