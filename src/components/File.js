@@ -11,6 +11,7 @@ import {Row, Col, Input, Button, Popover, List, Skeleton, DatePicker, message} f
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
+
 const _ = require('lodash');
 
 const {TextArea} = Input;
@@ -126,6 +127,7 @@ class File extends React.Component {
   itemClick(item) {
     var currentTask = _.cloneDeep(item)
     currentTask.priority = this.priorityName[item.priority]
+    currentTask.deadline = currentTask.deadline ? currentTask.deadline : moment().format('YYYY-MM-DD')
     this.setState({currentTask: currentTask, createTask: true})
   }
 
@@ -293,8 +295,9 @@ class File extends React.Component {
         todoList.unshift(todo)
         this.setState({todoList: todoList})
 
-        todo.priority = this.priorityName[todo.priority]
-        this.setState({currentTask: todo})
+        var currentTask = _.cloneDeep(todo)
+        currentTask.priority = this.priorityName[todo.priority]
+        this.setState({currentTask: currentTask})
       } else {
         message.error(response.msg || '保存失败')
       }
