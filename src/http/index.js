@@ -4,8 +4,7 @@ import httpConfig from '../config/http'
 const apiHost = httpConfig.host()
 
 function handlerResponse(response) {
-  let data = response.data
-  return data
+  return response.data ? response.data : {}
 }
 
 function Get(path, params) {

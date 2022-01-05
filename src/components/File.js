@@ -11,6 +11,7 @@ import {Row, Col, Input, Button, Popover, List, Skeleton, DatePicker, message} f
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
+const _ = require('lodash');
 
 const {TextArea} = Input;
 
@@ -123,9 +124,9 @@ class File extends React.Component {
   }
 
   itemClick(item) {
-    item.priority = this.priorityName[item.priority]
-    // item.deadline = moment(item.deadline)
-    this.setState({currentTask: item, createTask: true})
+    var currentTask = _.cloneDeep(item)
+    currentTask.priority = this.priorityName[item.priority]
+    this.setState({currentTask: currentTask, createTask: true})
   }
 
   filterPopContent() {
@@ -261,22 +262,19 @@ class File extends React.Component {
   }
 
   updateTask() {
-    var params = this.state.currentTask
+    var params = _.cloneDeep(this.state.currentTask)
     params.priority = this.priorityMap[params.priority]
     todoApi.update(params).then(response => {
       if (response.code === 200) {
         message.success('保存成功')
         var todoList = this.state.todoList
         var todo = response.data
-
         var index = todoList.findIndex(item => {
           return item.id === todo.id
         })
+
         todoList[index] = todo
         this.setState({todoList: todoList})
-
-        todo.priority = this.priorityName[todo.priority]
-        this.setState({currentTask: todo})
       } else {
         message.error(response.msg || '保存失败')
       }
