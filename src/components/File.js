@@ -185,6 +185,53 @@ class File extends React.Component {
     )
   }
 
+  statusChange(item, opt) {
+    var params = {
+      id: item.id,
+      name: 'status',
+      value: opt.toString()
+    }
+
+    todoApi.updateAttr(params).then(response => {
+      if (response.code === 200) {
+        this.updateTodoList(response.data)
+      } else {
+        message.error(response.msg || '更新失败')
+      }
+    })
+  }
+
+  statusPopContent(item) {
+    return (
+      <div>
+        <Button
+          block
+          type="text"
+          onClick={() => {
+            this.statusChange(item, 0)
+          }}>
+          未开始
+        </Button>
+        <Button
+          block
+          type="text"
+          onClick={() => {
+            this.statusChange(item, 1)
+          }}>
+          进行中
+        </Button>
+        <Button
+          block
+          type="text"
+          onClick={() => {
+            this.statusChange(item, 2)
+          }}>
+          已完成
+        </Button>
+      </div>
+    )
+  }
+
   getListActions(item) {
     var currentDate = Date.now()
     var expireDate = new Date(item.deadline).getTime()
@@ -233,11 +280,13 @@ class File extends React.Component {
     }
 
     return [
-      <Button
-        type="text"
-        className={"item-opt item-opt-" + statusClassName}>
-        {statusText}
-      </Button>,
+      <Popover placement="bottomLeft" content={this.statusPopContent(item)} trigger="click">
+        <Button
+          type="text"
+          className={"item-opt item-opt-" + statusClassName}>
+          {statusText}
+        </Button>
+      </Popover>,
       <Button
         type="text"
         className={"item-opt item-opt-" + priorityClassName}>
@@ -263,20 +312,23 @@ class File extends React.Component {
     this.setState({currentTask: currentTask})
   }
 
+  updateTodoList(todo) {
+    var todoList = this.state.todoList
+    var index = todoList.findIndex(item => {
+      return item.id === todo.id
+    })
+
+    todoList[index] = todo
+    this.setState({todoList: todoList})
+  }
+
   updateTask() {
     var params = _.cloneDeep(this.state.currentTask)
     params.priority = this.priorityMap[params.priority]
     todoApi.update(params).then(response => {
       if (response.code === 200) {
         message.success('保存成功')
-        var todoList = this.state.todoList
-        var todo = response.data
-        var index = todoList.findIndex(item => {
-          return item.id === todo.id
-        })
-
-        todoList[index] = todo
-        this.setState({todoList: todoList})
+        this.updateTodoList(response.data)
       } else {
         message.error(response.msg || '保存失败')
       }

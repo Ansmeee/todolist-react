@@ -11,5 +11,9 @@ export default {
 
   update(params) {
     return index.Put(`/todo`, params)
+  },
+
+  updateAttr(params) {
+    return index.Put(`/todo/attr`, params)
   }
 }
