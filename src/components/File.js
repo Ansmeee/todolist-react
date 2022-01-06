@@ -398,6 +398,7 @@ class File extends React.Component {
         <div>
           <Button
             block
+            className="pop-opt-danger"
             type={this.state.currentTask.priority === '高' ? 'link' : 'text'}
             onClick={() => {
               this.taskInfoOptClick('priority', '高')
@@ -406,6 +407,7 @@ class File extends React.Component {
           </Button>
           <Button
             block
+            className="pop-opt-warning"
             type={this.state.currentTask.priority === '中' ? 'link' : 'text'}
             onClick={() => {
               this.taskInfoOptClick('priority', '中')
@@ -414,6 +416,7 @@ class File extends React.Component {
           </Button>
           <Button
             block
+            className="pop-opt-primary"
             type={this.state.currentTask.priority === '低' ? 'link' : 'text'}
             onClick={() => {
               this.taskInfoOptClick('priority', '低')
