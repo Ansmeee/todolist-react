@@ -43,14 +43,14 @@ class File extends React.Component {
       todoList: [],
     }
 
-    this.priorityMap = {
+    this.priorityName2Key = {
       '高': 3,
       '中': 2,
       '低': 1,
       '无': 0
     }
 
-    this.priorityName = {
+    this.priorityKey2Name = {
       3: '高',
       2: '中',
       1: '低',
@@ -133,7 +133,7 @@ class File extends React.Component {
 
   itemClick(item) {
     var currentTask = _.cloneDeep(item)
-    currentTask.priority = this.priorityName[item.priority]
+    currentTask.priority = this.priorityKey2Name[item.priority]
     currentTask.deadline = currentTask.deadline ? currentTask.deadline : moment().format('YYYY-MM-DD')
     this.setState({currentTask: currentTask, createTask: true})
   }
@@ -352,7 +352,7 @@ class File extends React.Component {
 
   updateTask() {
     var params = _.cloneDeep(this.state.currentTask)
-    params.priority = this.priorityMap[params.priority]
+    params.priority = this.priorityName2Key[params.priority]
     todoApi.update(params).then(response => {
       if (response.code === 200) {
         message.success('保存成功')
@@ -365,7 +365,7 @@ class File extends React.Component {
 
   createTask() {
     var params = this.state.currentTask
-    params.priority = this.priorityMap[params.priority]
+    params.priority = this.priorityName2Key[params.priority]
     todoApi.create(params).then(response => {
       if (response.code === 200) {
         message.success('保存成功');
@@ -376,7 +376,7 @@ class File extends React.Component {
         this.setState({todoList: todoList})
 
         var currentTask = _.cloneDeep(todo)
-        currentTask.priority = this.priorityName[todo.priority]
+        currentTask.priority = this.priorityKey2Name[todo.priority]
         this.setState({currentTask: currentTask})
       } else {
         message.error(response.msg || '保存失败')
