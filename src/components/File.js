@@ -537,7 +537,7 @@ class File extends React.Component {
   render() {
     return (
       <Row className="file-page-con">
-        <Col span={14} className="file-list-con">
+        <Col span={15} className="file-list-con">
           <Row className="file-filter-con">
             <Col span={16}>
               <div style={{borderBottom: '1px solid #d9d9d9'}}>
@@ -603,7 +603,7 @@ class File extends React.Component {
             )}
           />
         </Col>
-        <Col span={10}>
+        <Col span={9}>
           {this.getCreateTaskForm()}
         </Col>
       </Row>
