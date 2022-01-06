@@ -221,6 +221,7 @@ class File extends React.Component {
         <Button
           block
           type="text"
+          className="pop-status-opt-primary"
           onClick={() => {
             this.statusChange(item, 1)
           }}>
@@ -229,6 +230,7 @@ class File extends React.Component {
         <Button
           block
           type="text"
+          className="pop-status-opt-success"
           onClick={() => {
             this.statusChange(item, 2)
           }}>
@@ -286,7 +288,12 @@ class File extends React.Component {
     }
 
     return [
-      <Popover placement="bottomLeft" content={this.statusPopContent(item)} trigger="click">
+      <Popover
+        autoAdjustOverflow={true}
+        placement="bottomLeft"
+        overlayClassName="pop-status-con"
+        content={this.statusPopContent(item)}
+        trigger="click">
         <Button
           type="text"
           className={"item-opt item-opt-" + statusClassName}>
