@@ -85,10 +85,9 @@ class File extends React.Component {
   searchChange(e) {
     var filterForm = this.state.filterForm
     var keywords = e.target.value
-    if (keywords !== filterForm.keywords) {
+    if ((keywords || filterForm.keywords) && (keywords !== filterForm.keywords)) {
       filterForm.keywords = keywords
-      this.setState({filterForm: filterForm})
-      this.loadtodoList()
+      this.setState({filterForm: filterForm}, () => this.loadtodoList())
     }
   }
 
