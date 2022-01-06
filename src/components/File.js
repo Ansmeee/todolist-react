@@ -5,9 +5,11 @@ import {
   CarryOutOutlined,
   SortAscendingOutlined,
   FilterOutlined,
-  CalendarOutlined
+  CalendarOutlined,
+  MoreOutlined,
+  DeleteOutlined
 } from "@ant-design/icons";
-import {Row, Col, Input, Button, Popover, List, Skeleton, DatePicker, message} from "antd";
+import {Row, Col, Input, Button, Popover, List, Skeleton, DatePicker, message, Dropdown, Menu} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
@@ -206,36 +208,46 @@ class File extends React.Component {
     })
   }
 
-  statusPopContent(item) {
-    return (
+  removeTodo(item) {
+  }
+
+  getListExtras(item) {
+    var menu = (
       <div>
-        <Button
-          block
-          type="text"
-          onClick={() => {
-            this.statusChange(item, 0)
-          }}>
-          未开始
-        </Button>
-        <Button
-          block
-          type="text"
-          className="pop-status-opt-primary"
-          onClick={() => {
-            this.statusChange(item, 1)
-          }}>
-          进行中
-        </Button>
-        <Button
-          block
-          type="text"
-          className="pop-status-opt-success"
-          onClick={() => {
-            this.statusChange(item, 2)
-          }}>
-          已完成
-        </Button>
+        <div className="item-opt-li item-opt-status">
+          <div className="item-opt-more-label">状态</div>
+          <div className="item-opt-status-div">
+            <Button
+              type="text"
+              onClick={() => {
+                this.statusChange(item, 0)
+              }}>未开始</Button>
+            <Button
+              type="text"
+              className="item-opt-status-primary"
+              onClick={() => {
+                this.statusChange(item, 1)
+              }}>进行中</Button>
+            <Button
+              type="text"
+              className="item-opt-status-success"
+              onClick={() => {
+                this.statusChange(item, 2)
+              }}>已完成</Button>
+          </div>
+        </div>
+        <div className="item-opt-li item-opt-del">
+          <span><DeleteOutlined/> 删除</span>
+        </div>
       </div>
+    )
+
+    return (
+      <Popover overlayClassName="item-opt-more" placement="bottomLeft" content={menu} trigger="click">
+        <Button type="text">
+          <MoreOutlined/>
+        </Button>
+      </Popover>
     )
   }
 
@@ -287,18 +299,11 @@ class File extends React.Component {
     }
 
     return [
-      <Popover
-        autoAdjustOverflow={true}
-        placement="bottomLeft"
-        overlayClassName="pop-status-con"
-        content={this.statusPopContent(item)}
-        trigger="click">
-        <Button
-          type="text"
-          className={"item-opt item-opt-" + statusClassName}>
-          {statusText}
-        </Button>
-      </Popover>,
+      <Button
+        type="text"
+        className={"item-opt item-opt-" + statusClassName}>
+        {statusText}
+      </Button>,
       <Button
         type="text"
         className={"item-opt item-opt-" + priorityClassName}>
@@ -572,14 +577,16 @@ class File extends React.Component {
             size="small"
             itemLayout="vertical"
             dataSource={this.state.todoList}
+            className="file-item-con"
             renderItem={item => (
               <List.Item
                 key={item.id}
+                extra={this.getListExtras(item)}
                 actions={this.getListActions(item)}>
                 <Skeleton loading={this.state.loading} active>
-                    <span onClick={() => {
-                      this.itemClick(item)
-                    }}>{item.title}</span>
+                  <div onClick={() => {
+                    this.itemClick(item)
+                  }}>{item.title}</div>
                 </Skeleton>
               </List.Item>
             )}
