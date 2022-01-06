@@ -5,6 +5,10 @@ export default {
     return index.Get(`/todo`, params)
   },
 
+  delete(id) {
+    return index.Delete(`/todo/${id}`)
+  },
+
   create(params) {
     return index.Post(`/todo`, params)
   },

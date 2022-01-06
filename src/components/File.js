@@ -209,6 +209,17 @@ class File extends React.Component {
   }
 
   removeTodo(item) {
+    todoApi.delete(item.id).then(response => {
+      if (response.code === 200) {
+        var todoList = this.state.todoList
+        var index = todoList.findIndex(i => {
+          return i.id === item.id
+        })
+
+        todoList.splice(index, 1)
+        this.setState({todoList: todoList})
+      }
+    })
   }
 
   getListExtras(item) {
@@ -237,7 +248,7 @@ class File extends React.Component {
           </div>
         </div>
         <div className="item-opt-li item-opt-del">
-          <span><DeleteOutlined/> 删除</span>
+          <span onClick={() => {this.removeTodo(item)}}><DeleteOutlined/> 删除</span>
         </div>
       </div>
     )
