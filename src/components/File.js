@@ -93,10 +93,15 @@ class File extends React.Component {
   }
 
   sortOptClick(sort_by) {
-    var filterForm = this.state.filterForm
-    filterForm.sort_by = filterForm.sort_by === sort_by ? '' : sort_by
-    this.setState({filterForm: filterForm})
-    this.loadtodoList()
+    var filterForm = {}
+    filterForm.rules = this.state.filterForm.rules
+    if (sort_by && (this.state.filterForm.sort_by != sort_by || this.state.filterForm.sort_by === undefined)) {
+      filterForm.sort_by = sort_by
+    }
+
+    this.setState({filterForm: filterForm}, () => {
+      this.loadtodoList()
+    })
   }
 
   filterOptClick(filterType) {
@@ -120,8 +125,9 @@ class File extends React.Component {
     }
 
     filterForm.rules = filterRules
-    this.setState({filterForm: filterForm})
-    this.loadtodoList()
+    this.setState({filterForm: filterForm}, () => {
+      this.loadtodoList()
+    })
   }
 
   itemClick(item) {
