@@ -446,8 +446,8 @@ class File extends React.Component {
 
   getTaskOptCon() {
     return (
-      <Row className="task-info-opt-con">
-        <Col span={20}>
+      <div className="task-info-opt-con">
+        <div className="task-info-opt-pre">
           <span className={this.getTaskOPTClassName()}>
             <FlagOutlined className="task-info-opt-icon"/>
             <Popover
@@ -456,10 +456,10 @@ class File extends React.Component {
               content={this.taskInfoPopContent('priority')}
               trigger="click">
               <Input
-                style={{maxWidth: '100px', minWidth: '20px'}}
+                style={{maxWidth: '65px', minWidth: '20px'}}
                 bordered={false}
                 readOnly={true}
-                placeholder="设置优先级"
+                placeholder="优先级"
                 value={this.state.currentTask.priority}/>
             </Popover>
           </span>
@@ -474,17 +474,17 @@ class File extends React.Component {
               value={moment(this.state.currentTask.deadline)}
               style={{maxWidth: '110px', minWidth: '110px'}}
               inputReadOnly={true}
-              placeholder="设置时间"
+              placeholder="时间"
               allowClear={false}
               suffixIcon={null}/>
           </span>
-        </Col>
-        <Col span={4} style={{textAlign: 'right'}}>
+        </div>
+        <div className="task-info-opt-end">
           <Button type="primary" onClick={() => {
             this.saveTaskClick()
           }}>保 存</Button>
-        </Col>
-      </Row>
+        </div>
+      </div>
     )
   }
 
@@ -521,7 +521,7 @@ class File extends React.Component {
   render() {
     return (
       <Row className="file-page-con">
-        <Col span={15} className="file-list-con">
+        <Col span={14} className="file-list-con">
           <Row className="file-filter-con">
             <Col span={16}>
               <div style={{borderBottom: '1px solid #d9d9d9'}}>
@@ -585,7 +585,7 @@ class File extends React.Component {
             )}
           />
         </Col>
-        <Col span={9}>
+        <Col span={10}>
           {this.getCreateTaskForm()}
         </Col>
       </Row>
