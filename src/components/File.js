@@ -452,14 +452,6 @@ class File extends React.Component {
     }
   }
 
-  getDataSelector() {
-    return (
-      <Button type="text" className="task-info-opt">
-        <CalendarOutlined/>{this.state.currentTask.deadline ? this.state.currentTask.deadline : '设置时间'}
-      </Button>
-    )
-  }
-
   getTaskOptCon() {
     return (
       <div className="task-info-opt-con">
