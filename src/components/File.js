@@ -7,9 +7,11 @@ import {
   FilterOutlined,
   CalendarOutlined,
   MoreOutlined,
-  DeleteOutlined
+  DeleteOutlined,
+  CheckCircleOutlined,
+  UnorderedListOutlined
 } from "@ant-design/icons";
-import {Row, Col, Input, Button, Popover, List, Skeleton, DatePicker, message, Dropdown, Menu} from "antd";
+import {Row, Col, Input, Button, Popover, List, Skeleton, DatePicker, message} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
@@ -192,13 +194,26 @@ class File extends React.Component {
     )
   }
 
+  priorityChange(item, opt) {
+    var params = {
+      id: item.id,
+      name: 'priority',
+      value: opt.toString()
+    }
+
+    this.updateAttr(params)
+  }
+
   statusChange(item, opt) {
     var params = {
       id: item.id,
       name: 'status',
       value: opt.toString()
     }
+    this.updateAttr(params)
+  }
 
+  updateAttr(params) {
     todoApi.updateAttr(params).then(response => {
       if (response.code === 200) {
         this.updateTodoList(response.data)
@@ -225,9 +240,11 @@ class File extends React.Component {
   getListExtras(item) {
     var menu = (
       <div>
-        <div className="item-opt-li item-opt-status">
-          <div className="item-opt-more-label">状态</div>
-          <div className="item-opt-status-div">
+        <div className="item-opt-li item-opt-mul">
+          <div className="item-opt-more-label">
+            <CheckCircleOutlined style={{marginRight: '3px'}} />状态
+          </div>
+          <div className="item-opt-mul-div">
             <Button
               type="text"
               onClick={() => {
@@ -235,20 +252,50 @@ class File extends React.Component {
               }}>未开始</Button>
             <Button
               type="text"
-              className="item-opt-status-primary"
+              className="item-opt-mul-primary"
               onClick={() => {
                 this.statusChange(item, 1)
               }}>进行中</Button>
             <Button
               type="text"
-              className="item-opt-status-success"
+              className="item-opt-mul-success"
               onClick={() => {
                 this.statusChange(item, 2)
               }}>已完成</Button>
           </div>
         </div>
+        <div className="item-opt-li item-opt-mul">
+          <div className="item-opt-more-label">
+            <UnorderedListOutlined style={{marginRight: '3px'}}/>优先级
+          </div>
+          <div className="item-opt-mul-div">
+            <Button
+              type="text"
+              className="item-opt-mul-danger"
+              onClick={() => {
+                this.priorityChange(item, 3)
+              }}>高</Button>
+            <Button
+              type="text"
+              className="item-opt-mul-warning"
+              onClick={() => {
+                this.priorityChange(item, 2)
+              }}>中</Button>
+            <Button
+              type="text"
+              className="item-opt-mul-primary"
+              onClick={() => {
+                this.priorityChange(item, 1)
+              }}>低</Button>
+            <Button
+              type="text"
+              onClick={() => {
+                this.priorityChange(item, 0)
+              }}>无</Button>
+          </div>
+        </div>
         <div className="item-opt-li item-opt-del">
-          <span onClick={() => {this.removeTodo(item)}}><DeleteOutlined/> 删除</span>
+          <div onClick={() => {this.removeTodo(item)}}><DeleteOutlined/> 删除</div>
         </div>
       </div>
     )
@@ -313,6 +360,7 @@ class File extends React.Component {
       <Button
         type="text"
         className={"item-opt item-opt-" + statusClassName}>
+        <CheckCircleOutlined/>
         {statusText}
       </Button>,
       <Button

@@ -36,7 +36,7 @@
     padding: 5px 16px !important;
 
     .item-opt-more-label {
-      font-size: 12px;
+      font-size: 10px;
       color: rgba(0, 0, 0, 0.45);
       margin-top: 5px;
     }
@@ -44,20 +44,30 @@
     .item-opt-li {
       cursor: pointer;
       margin: 5px 0px;
+      font-size: 12px;
     }
 
-    .item-opt-status {
+    .item-opt-mul {
       border-top: 1px solid rgb(217, 217, 217);
 
-      .item-opt-status-div {
+      .item-opt-mul-div {
         display: flex;
         justify-content: space-evenly;
 
         .ant-btn-text {
+          font-size: 12px;
           padding: 5px 0px !important;
         }
 
-        .item-opt-status {
+        .item-opt-mul {
+          &-danger {
+            color: rgb(255, 77, 79)
+          }
+
+          &-warning {
+            color: rgb(250, 173, 20)
+          }
+
           &-primary {
             color: rgb(24, 144, 255)
           }
