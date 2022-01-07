@@ -15,6 +15,7 @@ class Home extends React.Component {
 
     this.state = {
       account: "",
+      name: "",
       dirList: [],
       siginInForm: {
         account: '',
@@ -40,13 +41,15 @@ class Home extends React.Component {
       return
     }
 
+    var name = payload.name
+    var icon = payload.icon
     var account = payload.account
     if (!account) {
       browserHistory.push("/signin")
       return
     }
 
-    this.setState({account: account})
+    this.setState({account: account, name: name, icon: icon})
     this.loadMenuList()
   }
 
@@ -71,7 +74,7 @@ class Home extends React.Component {
       return <Menu.Item key={'/dir/' + dir.id}>{dir.title}</Menu.Item>
     })
   }
-  
+
   signout() {
     signApi.signout().then(response => {
       if (response.code === 200) {
@@ -107,10 +110,24 @@ class Home extends React.Component {
 
   getHeaderUser() {
     if (this.state.account) {
+      var icon = this.state.icon
+      if (icon) {
+        var avatar = (
+          <Avatar src={icon} />
+        )
+      } else {
+        var account = this.state.name
+          ? this.state.name.substring(0, 1).toUpperCase()
+          : this.state.account.substring(0, 1).toUpperCase()
+        var avatar = (
+          <Avatar shape="square">{account}</Avatar>
+        )
+      }
+
       return (
         <div className="header-con-opt-user">
           <Popover placement="bottomRight" content={this.getAccountCon()} trigger="click">
-            <Avatar shape="square"></Avatar>
+            {avatar}
           </Popover>
         </div>
       )
@@ -189,7 +206,10 @@ class Home extends React.Component {
     return (
       <Layout>
         <Header className="header-con">
-          <div className="header-con-logo" onClick={() => {this.goHome()}}>土豆清单</div>
+          <div className="header-con-logo" onClick={() => {
+            this.goHome()
+          }}>土豆清单
+          </div>
           <div className="header-con-opt">
             {this.getHeaderUser()}
             {this.getHeaderNotice()}
