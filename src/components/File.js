@@ -157,7 +157,7 @@ class File extends React.Component {
           onClick={() => {
             this.filterOptClick('status')
           }}>
-          隐藏已完成
+          显示已完成
         </Button>
       </div>
     )
@@ -216,6 +216,7 @@ class File extends React.Component {
   updateAttr(params) {
     todoApi.updateAttr(params).then(response => {
       if (response.code === 200) {
+        message.success('已更新')
         this.updateTodoList(response.data)
       } else {
         message.error(response.msg || '更新失败')
@@ -394,7 +395,12 @@ class File extends React.Component {
       return item.id === todo.id
     })
 
-    todoList[index] = todo
+    if (todo.status === 2) {
+      todoList.splice(index, 1)
+    } else {
+      todoList[index] = todo
+    }
+
     this.setState({todoList: todoList})
   }
 
@@ -403,7 +409,7 @@ class File extends React.Component {
     params.priority = this.priorityName2Key[params.priority]
     todoApi.update(params).then(response => {
       if (response.code === 200) {
-        message.success('保存成功')
+        message.success('已保存')
         this.updateTodoList(response.data)
       } else {
         message.error(response.msg || '保存失败')
@@ -416,7 +422,7 @@ class File extends React.Component {
     params.priority = this.priorityName2Key[params.priority]
     todoApi.create(params).then(response => {
       if (response.code === 200) {
-        message.success('保存成功');
+        message.success('已保存');
         var todoList = this.state.todoList
 
         var todo = response.data
