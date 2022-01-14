@@ -50,26 +50,26 @@ class Home extends React.Component {
       browserHistory.push("/signin")
       return
     }
-
-    var currentPathName = browserHistory.getCurrentLocation().pathname
-    this.setState({defaultSelectedMenuKey: currentPathName})
-
-    var defaultOpenKey = ''
-    if (currentPathName.indexOf('dir')) {
-      defaultOpenKey = 'dir'
-    }
-
-    this.setState({defaultOpenKey: defaultOpenKey})
+    this.setSelectedMenu()
     this.setState({account: account, name: name, icon: icon})
     this.loadMenuList()
   }
 
+  setSelectedMenu() {
+    var currentPathName = browserHistory.getCurrentLocation().pathname
+    var defaultOpenKey = ''
+    if (currentPathName.indexOf('dir') >= 0) {
+      defaultOpenKey = 'dir'
+    }
+    this.setState({defaultOpenKey: defaultOpenKey, defaultSelectedMenuKey: currentPathName})
+  }
   goHome() {
     window.location.href = '/'
   }
 
   handleClick = e => {
     browserHistory.push(e.key)
+    this.setSelectedMenu()
   }
 
   loadMenuList() {
