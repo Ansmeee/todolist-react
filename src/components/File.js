@@ -86,6 +86,7 @@ class File extends React.Component {
 
   createBTNClick() {
     this.setState({currentTask: {}, createTask: true})
+    this.loadDirList()
   }
 
   searchChange(e) {
@@ -141,6 +142,7 @@ class File extends React.Component {
     currentTask.priority = this.priorityKey2Name[item.priority]
     currentTask.deadline = currentTask.deadline ? currentTask.deadline : moment().format('YYYY-MM-DD')
     this.setState({currentTask: currentTask, createTask: true})
+    this.loadDirList()
   }
 
   filterPopContent() {
@@ -556,9 +558,8 @@ class File extends React.Component {
     )
   }
 
-  loadDirList(value) {
-    var params = {keywords: value}
-    fileApi.fileList(params).then(response => {
+  loadDirList() {
+    fileApi.fileList({}).then(response => {
       if (response.code === 200) {
         var dirList = []
         response.data.list.forEach(item => {
@@ -589,14 +590,11 @@ class File extends React.Component {
             }}>
           </TextArea>
           <Select
-            style={{width: '100%'}}
             bordered={false}
-            labelInValue
-            showSearch
-            value={this.state.currentTask.list_id}
+            style={{width: '100%'}}
             placeholder="选择一个分类"
-            onSearch={(value) => {this.loadDirList(value)}}
-            options={this.state.dirList}>
+            options={this.state.dirList}
+            value={this.state.currentTask.list_id}>
           </Select>
           <TextArea
             minRows={4}
