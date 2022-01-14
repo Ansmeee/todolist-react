@@ -17,6 +17,8 @@ class Home extends React.Component {
       account: "",
       name: "",
       dirList: [],
+      defaultSelectedMenuKey: '/latest',
+      defaultOpenKey: '',
       siginInForm: {
         account: '',
         auth: ''
@@ -49,6 +51,15 @@ class Home extends React.Component {
       return
     }
 
+    var currentPathName = browserHistory.getCurrentLocation().pathname
+    this.setState({defaultSelectedMenuKey: currentPathName})
+
+    var defaultOpenKey = ''
+    if (currentPathName.indexOf('dir')) {
+      defaultOpenKey = 'dir'
+    }
+
+    this.setState({defaultOpenKey: defaultOpenKey})
     this.setState({account: account, name: name, icon: icon})
     this.loadMenuList()
   }
@@ -151,11 +162,12 @@ class Home extends React.Component {
           <Sider width={200}>
             <Menu
               onClick={this.handleClick}
-              defaultSelectedKeys={['/latest']}
+              defaultSelectedKeys={[this.state.defaultSelectedMenuKey]}
+              defaultOpenKeys={[this.state.defaultOpenKey]}
               style={{height: '100%'}}
               mode="inline">
               <Menu.Item key="/latest">最近浏览</Menu.Item>
-              <SubMenu key="sub1" title="我的文件夹">
+              <SubMenu key="dir" title="我的文件夹">
                 {this.menuItems()}
               </SubMenu>
             </Menu>
