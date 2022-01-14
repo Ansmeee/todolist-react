@@ -95,11 +95,12 @@ class File extends React.Component {
     }
   }
 
-  sortOptClick(sort_by) {
+  sortOptClick(sort_by, sort_order = 'desc') {
     var filterForm = {}
     filterForm.rules = this.state.filterForm.rules
     if (sort_by && (this.state.filterForm.sort_by != sort_by || this.state.filterForm.sort_by === undefined)) {
       filterForm.sort_by = sort_by
+      filterForm.sort_order = sort_order
     }
 
     this.setState({filterForm: filterForm}, () => {
@@ -170,7 +171,7 @@ class File extends React.Component {
           block
           type={this.state.filterForm.sort_by === 'deadline' ? 'link' : 'text'}
           onClick={() => {
-            this.sortOptClick('deadline')
+            this.sortOptClick('deadline', 'asc')
           }}>
           按时间
         </Button>
@@ -243,7 +244,7 @@ class File extends React.Component {
       <div>
         <div className="item-opt-li item-opt-mul">
           <div className="item-opt-more-label">
-            <CheckCircleOutlined style={{marginRight: '3px'}} />状态
+            <CheckCircleOutlined style={{marginRight: '3px'}}/>状态
           </div>
           <div className="item-opt-mul-div">
             <Button
@@ -296,7 +297,10 @@ class File extends React.Component {
           </div>
         </div>
         <div className="item-opt-li item-opt-del">
-          <div onClick={() => {this.removeTodo(item)}}><DeleteOutlined/> 删除</div>
+          <div onClick={() => {
+            this.removeTodo(item)
+          }}><DeleteOutlined/> 删除
+          </div>
         </div>
       </div>
     )
