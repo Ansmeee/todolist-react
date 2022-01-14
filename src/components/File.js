@@ -11,10 +11,11 @@ import {
   CheckCircleOutlined,
   UnorderedListOutlined
 } from "@ant-design/icons";
-import {Row, Col, Input, Button, Popover, List, Skeleton, DatePicker, message} from "antd";
+import {Row, Col, Input, Select, Button, Popover, List, Skeleton, DatePicker, message} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
+import fileApi from "../http/file";
 
 const _ = require('lodash');
 
@@ -43,6 +44,7 @@ class File extends React.Component {
       from: props.state.from,
       loading: false,
       todoList: [],
+      dirList:[],
     }
 
     this.priorityName2Key = {
@@ -554,6 +556,23 @@ class File extends React.Component {
     )
   }
 
+  loadDirList(value) {
+    var params = {keywords: value}
+    fileApi.fileList(params).then(response => {
+      if (response.code === 200) {
+        var dirList = []
+        response.data.list.forEach(item => {
+          dirList.push({
+            label: item.title,
+            value: item.id,
+          })
+        })
+
+        this.setState({dirList: dirList})
+      }
+    })
+  }
+
   getCreateTaskForm() {
     if (this.state.createTask) {
       return (
@@ -569,6 +588,16 @@ class File extends React.Component {
               this.taskInfoChange(e, 'title')
             }}>
           </TextArea>
+          <Select
+            style={{width: '100%'}}
+            bordered={false}
+            labelInValue
+            showSearch
+            value={this.state.currentTask.list_id}
+            placeholder="选择一个分类"
+            onSearch={(value) => {this.loadDirList(value)}}
+            options={this.state.dirList}>
+          </Select>
           <TextArea
             minRows={4}
             autoSize={true}
