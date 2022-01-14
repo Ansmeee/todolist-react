@@ -113,7 +113,7 @@ class Home extends React.Component {
       var icon = this.state.icon
       if (icon) {
         var avatar = (
-          <Avatar src={icon} />
+          <Avatar src={icon}/>
         )
       } else {
         var account = this.state.name
@@ -147,12 +147,12 @@ class Home extends React.Component {
   getContent() {
     if (this.state.account) {
       return (
-        <Layout>
-          <Sider width={200} className="site-layout-background">
+        <Layout style={{height: document.documentElement.clientHeight - 65 - 70}}>
+          <Sider width={200}>
             <Menu
               onClick={this.handleClick}
               defaultSelectedKeys={['/latest']}
-              style={{height: document.documentElement.clientHeight - 60, borderRight: 0}}
+              style={{height: '100%'}}
               mode="inline">
               <Menu.Item key="/latest">最近浏览</Menu.Item>
               <SubMenu key="sub1" title="我的文件夹">
@@ -160,24 +160,15 @@ class Home extends React.Component {
               </SubMenu>
             </Menu>
           </Sider>
-          <Layout style={{padding: '0px 15px', height: '100%',}}>
-            <Breadcrumb style={{margin: '16px 0'}}>
-              <Breadcrumb.Item>Home</Breadcrumb.Item>
-              <Breadcrumb.Item>List</Breadcrumb.Item>
-              <Breadcrumb.Item>App</Breadcrumb.Item>
-            </Breadcrumb>
+          <Layout style={{padding: '0px 15px', height: '100%', backgroundColor: '#fff'}}>
             <Content
               className="site-layout-background"
               style={{
                 padding: 24,
                 margin: 0,
-                height: document.documentElement.clientHeight - 60 - 32 - 22 - 70
               }}>
               {this.props.children}
             </Content>
-            <Footer className="footer-con">
-              ToDoList ©2021 Created by Ansme
-            </Footer>
           </Layout>
         </Layout>
       )
@@ -190,7 +181,7 @@ class Home extends React.Component {
           style={{
             padding: 24,
             margin: 0,
-            height: document.documentElement.clientHeight - 60 - 70,
+            height: document.documentElement.clientHeight - 65 - 70,
             overflowY: 'auto'
           }}>
           {this.props.children}
@@ -206,9 +197,10 @@ class Home extends React.Component {
     return (
       <Layout>
         <Header className="header-con">
-          <div className="header-con-logo" onClick={() => {
-            this.goHome()
-          }}>土豆清单
+          <div className="header-con-logo"
+               onClick={() => {
+                 this.goHome()
+               }}>土豆清单
           </div>
           <div className="header-con-opt">
             {this.getHeaderUser()}
@@ -219,6 +211,9 @@ class Home extends React.Component {
           </div>
         </Header>
         {this.getContent()}
+        <Footer className="footer-con">
+          ToDoList ©2021 Created by Ansme
+        </Footer>
       </Layout>
     )
   }
