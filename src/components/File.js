@@ -44,7 +44,7 @@ class File extends React.Component {
       from: props.state.from,
       loading: false,
       todoList: [],
-      dirList:[],
+      dirList: [],
     }
 
     this.priorityName2Key = {
@@ -391,6 +391,12 @@ class File extends React.Component {
     this.setState({currentTask: currentTask})
   }
 
+  taskInfoListChange(value) {
+    var currentTask = this.state.currentTask
+    currentTask.list_id = value
+    this.setState({currentTask: currentTask})
+  }
+
   taskInfoChange(e, key) {
     var currentTask = this.state.currentTask
     currentTask[key] = e.target.value
@@ -594,6 +600,9 @@ class File extends React.Component {
             style={{width: '100%'}}
             placeholder="选择一个分类"
             options={this.state.dirList}
+            onChange={(value) => {
+              this.taskInfoListChange(value)
+            }}
             value={this.state.currentTask.list_id}>
           </Select>
           <TextArea
