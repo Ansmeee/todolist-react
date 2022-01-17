@@ -36,7 +36,7 @@ class File extends React.Component {
         content: '',
         deadline: '',
         priority: '',
-        list_id: ''
+        list_id: 0
       },
       datePickerVisible: false,
       createModalVisible: false,
@@ -393,7 +393,7 @@ class File extends React.Component {
 
   taskInfoListChange(value) {
     var currentTask = this.state.currentTask
-    currentTask.list_id = value
+    currentTask.list_id = parseInt(value)
     this.setState({currentTask: currentTask})
   }
 
