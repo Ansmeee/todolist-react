@@ -422,7 +422,7 @@ class File extends React.Component {
       return item.id === todo.id
     })
 
-    if (todo.status === 2) {
+    if ((todo.status === 2 && this.props.state.from != 'done') || (todo.status != 2 && this.props.state.from === 'done')) {
       todoList.splice(index, 1)
     } else {
       todoList[index] = todo
