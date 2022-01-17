@@ -102,11 +102,24 @@ class Home extends React.Component {
       this.signout()
       return
     }
+
+    if (opt == 'settings') {
+      browserHistory.push("/settings")
+      return
+    }
   }
 
   getAccountCon() {
     return (
       <div>
+        <Button
+          block
+          type="text"
+          onClick={() => {
+            this.accountOptClick('settings')
+          }}>
+          个人中心
+        </Button>
         <Button
           block
           type="text"
@@ -166,7 +179,7 @@ class Home extends React.Component {
               defaultOpenKeys={[this.state.defaultOpenKey]}
               style={{height: '100%'}}
               mode="inline">
-              <Menu.Item key="/latest">最近浏览</Menu.Item>
+              <Menu.Item key="/latest">最近查看</Menu.Item>
               <Menu.Item key="/done">已完成</Menu.Item>
               <SubMenu key="dir" title="我的文件夹">
                 {this.menuItems()}

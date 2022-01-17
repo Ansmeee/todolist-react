@@ -1,11 +1,12 @@
 import React from 'react'
 import {browserHistory, Route, Router, IndexRoute} from "react-router";
-import Home from "../views/Home";
-import Latest from "../views/Latest";
-import Done from "../views/Done";
-import Dir from "../views/Dir";
+import Home from "../views/Home"
+import Latest from "../views/Latest"
+import Done from "../views/Done"
+import Dir from "../views/Dir"
 import Signin from "../views/Signin"
 import Signup from "../views/Signup"
+import Settings from "../views/Settings"
 class Routes extends React.Component {
   render() {
     return (
@@ -17,6 +18,7 @@ class Routes extends React.Component {
           <Route path="/latest" component={Latest}/>
           <Route path="/done" component={Done}/>
           <Route path="/dir/:id" component={Dir}/>
+          <Route path="/settings" component={Settings}/>
           <Route path="*" component={Latest}/>
         </Route>
       </Router>
