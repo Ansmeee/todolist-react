@@ -21,7 +21,7 @@ import fileApi from "../http/file";
 const _ = require('lodash');
 
 const {TextArea} = Input;
-const { Option } = Select;
+const {Option} = Select;
 
 class File extends React.Component {
   constructor(props) {
@@ -47,7 +47,8 @@ class File extends React.Component {
       loading: false,
       todoList: [],
       dirList: [],
-      typeTitle: ''
+      typeTitle: '',
+      TypePopVisible: false
     }
 
     this.priorityName2Key = {
@@ -585,19 +586,22 @@ class File extends React.Component {
 
 
   createType() {
-    var params = {
-      title: this.state.typeTitle
-    }
-
-    fileApi.create(params).then(response => {
-      if (response.code === 200) {
-        message.success('已保存')
-
-        var dirList = this.state.dirList
-        dirList.push({label: response.data.title, value: response.data.id})
-        this.setState({dirList: dirList}, this.taskInfoListChange(response.data.id))
+    if (this.state.typeTitle) {
+      var params = {
+        title: this.state.typeTitle
       }
-    })
+
+      fileApi.create(params).then(response => {
+        if (response.code === 200) {
+          message.success('已保存')
+
+          var dirList = this.state.dirList
+          dirList.push({label: response.data.title, value: response.data.id})
+          this.setState({dirList: dirList}, this.taskInfoListChange(response.data.id))
+          this.setState({TypePopVisible: false})
+        }
+      })
+    }
   }
 
   typeTitleChange(e) {
@@ -607,14 +611,35 @@ class File extends React.Component {
   typePopoverContent() {
     return (
       <div style={{display: 'flex', justifyContent: 'space-evenly'}}>
-        <Input onChange={(e) => {this.typeTitleChange(e)}} placeholder="分类描述" maxLength="10" bordered={false}></Input>
-        <Button type="text" onClick={() => { this.createType() }}><CheckOutlined style={{color: 'rgb(56, 158, 13)'}}/></Button>
+        <Input
+          placeholder="分类描述"
+          maxLength="10"
+          bordered={false}
+          onChange={(e) => {
+            this.typeTitleChange(e)
+          }}
+          onPressEnter={() => {
+            this.createType()
+          }}></Input>
+        <Button
+          type="text"
+          onClick={() => {
+            this.createType()
+          }}>
+          <CheckOutlined style={{color: 'rgb(56, 158, 13)'}}/>
+        </Button>
       </div>
     )
   }
 
-  typeOptions () {
-    return this.state.dirList.map(element => <Option key={element.value} value={element.value}> {element.label}</Option>);
+  typeOptions() {
+    return this.state.dirList.map(element =>
+      <Option key={element.value} value={element.value}> {element.label}</Option>
+    );
+  }
+
+  typePopVisibleChange(visible) {
+    this.setState({ TypePopVisible: visible})
   }
 
   getCreateTaskForm() {
@@ -633,8 +658,12 @@ class File extends React.Component {
               value={this.state.currentTask.list_id}>
               {this.typeOptions()}
             </Select>
-            <Popover trigger="click"  title="新增分类" content={()=> this.typePopoverContent()}>
-              <Button type="text"><PlusOutlined /></Button>
+            <Popover
+              visible={this.state.TypePopVisible}
+              onVisibleChange={() => {this.typePopVisibleChange()}}
+              trigger="click" title="新增分类"
+              content={() => this.typePopoverContent()}>
+              <Button type="text"><PlusOutlined/></Button>
             </Popover>
           </div>
 
