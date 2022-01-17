@@ -150,6 +150,17 @@ class File extends React.Component {
   }
 
   filterPopContent() {
+    var showStatus = ""
+    if (this.props.state.from != 'done') {
+      showStatus = <Button
+        block
+        type={this.state.filterForm.rules.includes('status') ? 'link' : 'text'}
+        onClick={() => {
+          this.filterOptClick('status')
+        }}>
+        显示已完成
+      </Button>
+    }
     return (
       <div>
         <Button
@@ -160,19 +171,24 @@ class File extends React.Component {
           }}>
           仅显示高优
         </Button>
-        <Button
-          block
-          type={this.state.filterForm.rules.includes('status') ? 'link' : 'text'}
-          onClick={() => {
-            this.filterOptClick('status')
-          }}>
-          显示已完成
-        </Button>
+        {showStatus}
       </div>
     )
   }
 
   sortPopContent() {
+    var statusSort = ""
+    if (this.props.state.from != "done") {
+      statusSort = <Button
+        block
+        type={this.state.filterForm.sort_by === 'status' ? 'link' : 'text'}
+        onClick={() => {
+          this.sortOptClick('status')
+        }}>
+        按状态
+      </Button>
+    }
+
     return (
       <div>
         <Button
@@ -183,14 +199,7 @@ class File extends React.Component {
           }}>
           按时间
         </Button>
-        <Button
-          block
-          type={this.state.filterForm.sort_by === 'status' ? 'link' : 'text'}
-          onClick={() => {
-            this.sortOptClick('status')
-          }}>
-          按状态
-        </Button>
+        {statusSort}
         <Button
           block
           type={this.state.filterForm.sort_by === 'priority' ? 'link' : 'text'}
