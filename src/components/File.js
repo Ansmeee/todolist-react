@@ -9,9 +9,10 @@ import {
   MoreOutlined,
   DeleteOutlined,
   CheckCircleOutlined,
-  UnorderedListOutlined
+  UnorderedListOutlined,
+  CheckOutlined
 } from "@ant-design/icons";
-import {Row, Col, Input, Select, Button, Popover, List, Skeleton, DatePicker, message} from "antd";
+import {Row, Col, Input, Select, Button, Popover, List, Skeleton, DatePicker, message, Tooltip} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
@@ -20,6 +21,7 @@ import fileApi from "../http/file";
 const _ = require('lodash');
 
 const {TextArea} = Input;
+const { Option } = Select;
 
 class File extends React.Component {
   constructor(props) {
@@ -45,6 +47,7 @@ class File extends React.Component {
       loading: false,
       todoList: [],
       dirList: [],
+      typeTitle: ''
     }
 
     this.priorityName2Key = {
@@ -580,11 +583,61 @@ class File extends React.Component {
     })
   }
 
+
+  createType() {
+    var params = {
+      title: this.state.typeTitle
+    }
+
+    fileApi.create(params).then(response => {
+      if (response.code === 200) {
+        message.success('已保存')
+
+        var dirList = this.state.dirList
+        dirList.push({label: response.data.title, value: response.data.id})
+        this.setState({dirList: dirList}, this.taskInfoListChange(response.data.id))
+      }
+    })
+  }
+
+  typeTitleChange(e) {
+    this.setState({typeTitle: e.target.value})
+  }
+
+  typePopoverContent() {
+    return (
+      <div style={{display: 'flex', justifyContent: 'space-evenly'}}>
+        <Input onChange={(e) => {this.typeTitleChange(e)}} placeholder="分类描述" maxLength="10" bordered={false}></Input>
+        <Button type="text" onClick={() => { this.createType() }}><CheckOutlined style={{color: 'rgb(56, 158, 13)'}}/></Button>
+      </div>
+    )
+  }
+
+  typeOptions () {
+    return this.state.dirList.map(element => <Option key={element.value} value={element.value}> {element.label}</Option>);
+  }
+
   getCreateTaskForm() {
     if (this.state.createTask) {
       return (
         <div className="task-info-con">
           {this.getTaskOptCon()}
+          <div className="task-info-con-type">
+            <Select
+              bordered={false}
+              style={{width: '100%'}}
+              placeholder="选择一个分类"
+              onChange={(value) => {
+                this.taskInfoListChange(value)
+              }}
+              value={this.state.currentTask.list_id}>
+              {this.typeOptions()}
+            </Select>
+            <Popover trigger="click"  title="新增分类" content={()=> this.typePopoverContent()}>
+              <Button type="text"><PlusOutlined /></Button>
+            </Popover>
+          </div>
+
           <TextArea
             minRows={2}
             autoSize={true}
@@ -595,16 +648,6 @@ class File extends React.Component {
               this.taskInfoChange(e, 'title')
             }}>
           </TextArea>
-          <Select
-            bordered={false}
-            style={{width: '100%'}}
-            placeholder="选择一个分类"
-            options={this.state.dirList}
-            onChange={(value) => {
-              this.taskInfoListChange(value)
-            }}
-            value={this.state.currentTask.list_id}>
-          </Select>
           <TextArea
             minRows={4}
             autoSize={true}
