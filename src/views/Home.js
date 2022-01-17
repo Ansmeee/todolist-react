@@ -167,6 +167,7 @@ class Home extends React.Component {
               style={{height: '100%'}}
               mode="inline">
               <Menu.Item key="/latest">最近浏览</Menu.Item>
+              <Menu.Item key="/done">已完成</Menu.Item>
               <SubMenu key="dir" title="我的文件夹">
                 {this.menuItems()}
               </SubMenu>
