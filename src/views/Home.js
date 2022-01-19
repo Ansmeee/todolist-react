@@ -1,13 +1,11 @@
 import React from "react";
 import "../assets/style/home.less"
 import {browserHistory} from 'react-router'
-import fileApi from '../http/file'
-import {BellOutlined, QuestionCircleOutlined} from "@ant-design/icons";
-import {Layout, Menu, Breadcrumb, Popover, Button, Badge, Avatar, message} from 'antd';
-import signApi from "../http/sign";
+import {Layout} from 'antd';
+import Head from "../components/layout/Head";
+import Side from "../components/layout/Side";
 
-const {SubMenu} = Menu;
-const {Header, Content, Sider, Footer} = Layout;
+const {Content, Footer} = Layout;
 
 class Home extends React.Component {
   constructor(props) {
@@ -16,14 +14,24 @@ class Home extends React.Component {
     this.state = {
       account: "",
       name: "",
-      dirList: [],
-      defaultSelectedMenuKey: '/latest',
-      defaultOpenKey: '',
+      icon: "",
       siginInForm: {
         account: '',
         auth: ''
       }
     }
+  }
+
+  render() {
+    return (
+      <Layout>
+        <Head account={this.state.account} name={this.state.name} icon={this.state.icon}></Head>
+        {this.getContent()}
+        <Footer className="footer-con">
+          ToDoList ©2021 Created by Ansme
+        </Footer>
+      </Layout>
+    )
   }
 
   componentDidMount() {
@@ -50,149 +58,17 @@ class Home extends React.Component {
       browserHistory.push("/signin")
       return
     }
-    this.setSelectedMenu()
+
     this.setState({account: account, name: name, icon: icon})
-    this.loadMenuList()
-  }
-
-  setSelectedMenu() {
-    var currentPathName = browserHistory.getCurrentLocation().pathname
-    var defaultOpenKey = ''
-    if (currentPathName.indexOf('dir') >= 0) {
-      defaultOpenKey = 'dir'
-    }
-    this.setState({defaultOpenKey: defaultOpenKey, defaultSelectedMenuKey: currentPathName})
-  }
-  goHome() {
-    window.location.href = '/'
-  }
-
-  handleClick = e => {
-    browserHistory.push(e.key)
-    this.setSelectedMenu()
-  }
-
-  loadMenuList() {
-    fileApi.fileList({}).then(response => {
-      if (response.code === 200) {
-        this.setState({dirList: response.data.list})
-      }
-    })
-  }
-
-  menuItems() {
-    return this.state.dirList.map(dir => {
-      return <Menu.Item key={'/dir/' + dir.id}>{dir.title}</Menu.Item>
-    })
-  }
-
-  signout() {
-    signApi.signout().then(response => {
-      if (response.code === 200) {
-        window.localStorage.removeItem("token")
-        window.location.href = '/'
-      } else {
-        message.error(response.msg || '登出失败')
-      }
-    })
-  }
-
-  accountOptClick(opt) {
-    if (opt == 'signout') {
-      this.signout()
-      return
-    }
-
-    if (opt == 'settings') {
-      browserHistory.push("/settings")
-      return
-    }
-  }
-
-  getAccountCon() {
-    return (
-      <div>
-        <Button
-          block
-          type="text"
-          onClick={() => {
-            this.accountOptClick('settings')
-          }}>
-          个人中心
-        </Button>
-        <Button
-          block
-          type="text"
-          onClick={() => {
-            this.accountOptClick('signout')
-          }}>
-          退出登陆
-        </Button>
-      </div>
-    )
-  }
-
-  getHeaderUser() {
-    if (this.state.account) {
-      var icon = this.state.icon
-      if (icon) {
-        var avatar = (
-          <Avatar src={icon}/>
-        )
-      } else {
-        var account = this.state.name
-          ? this.state.name.substring(0, 1).toUpperCase()
-          : this.state.account.substring(0, 1).toUpperCase()
-        var avatar = (
-          <Avatar shape="square">{account}</Avatar>
-        )
-      }
-
-      return (
-        <div className="header-con-opt-user">
-          <Popover placement="bottomRight" content={this.getAccountCon()} trigger="click">
-            {avatar}
-          </Popover>
-        </div>
-      )
-    }
-  }
-
-  getHeaderNotice() {
-    if (this.state.account) {
-      return (
-        <div className="header-con-opt-notice">
-          <Badge count={5} size="small"><BellOutlined style={{fontSize: '14px'}}/></Badge>
-        </div>
-      )
-    }
   }
 
   getContent() {
     if (this.state.account) {
       return (
         <Layout style={{height: document.documentElement.clientHeight - 65 - 70}}>
-          <Sider width={200}>
-            <Menu
-              onClick={this.handleClick}
-              defaultSelectedKeys={[this.state.defaultSelectedMenuKey]}
-              defaultOpenKeys={[this.state.defaultOpenKey]}
-              style={{height: '100%'}}
-              mode="inline">
-              <Menu.Item key="/latest">最近查看</Menu.Item>
-              <Menu.Item key="/done">已完成</Menu.Item>
-              <SubMenu key="dir" title="我的文件夹">
-                {this.menuItems()}
-              </SubMenu>
-            </Menu>
-          </Sider>
+          <Side account={this.state.account}></Side>
           <Layout style={{padding: '0px 15px', height: '100%', backgroundColor: '#fff'}}>
-            <Content
-              className="site-layout-background"
-              style={{
-                padding: 24,
-                margin: 0,
-              }}>
+            <Content className="site-layout-background" style={{padding: 24, margin: 0,}}>
               {this.props.children}
             </Content>
           </Layout>
@@ -212,34 +88,6 @@ class Home extends React.Component {
           }}>
           {this.props.children}
         </Content>
-        <Footer className="footer-con">
-          ToDoList ©2021 Created by Ansme
-        </Footer>
-      </Layout>
-    )
-  }
-
-  render() {
-    return (
-      <Layout>
-        <Header className="header-con">
-          <div className="header-con-logo"
-               onClick={() => {
-                 this.goHome()
-               }}>土豆清单
-          </div>
-          <div className="header-con-opt">
-            {this.getHeaderUser()}
-            {this.getHeaderNotice()}
-            <div className="header-con-opt-notice">
-              <QuestionCircleOutlined style={{fontSize: '14px'}}/>
-            </div>
-          </div>
-        </Header>
-        {this.getContent()}
-        <Footer className="footer-con">
-          ToDoList ©2021 Created by Ansme
-        </Footer>
       </Layout>
     )
   }
