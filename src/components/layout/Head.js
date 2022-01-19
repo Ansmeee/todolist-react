@@ -1,5 +1,5 @@
 import React from "react";
-import {BellOutlined, QuestionCircleOutlined} from "@ant-design/icons";
+import {BellOutlined, QuestionCircleOutlined, ExportOutlined, UserOutlined, DownOutlined} from "@ant-design/icons";
 import {Avatar, Badge, Button, Layout, message, Popover} from "antd";
 import "../../assets/style/head.less"
 import {browserHistory} from "react-router";
@@ -64,6 +64,7 @@ class Head extends React.Component {
           onClick={() => {
             this.accountOptClick('settings')
           }}>
+          <UserOutlined />
           个人中心
         </Button>
         <Button
@@ -72,6 +73,7 @@ class Head extends React.Component {
           onClick={() => {
             this.accountOptClick('signout')
           }}>
+          <ExportOutlined />
           退出登陆
         </Button>
       </div>
@@ -94,10 +96,17 @@ class Head extends React.Component {
         )
       }
 
+      var name = this.props.name
       return (
         <div className="header-con-opt-user">
-          <Popover placement="bottomRight" content={this.getAccountCon()} trigger="click">
+          <Popover
+            overlayClassName="header-con-opt-user-pop"
+            content={this.getAccountCon()}
+            placement="bottom"
+            trigger="click">
             {avatar}
+            <span className="header-con-username">{name}</span>
+            <DownOutlined style={{fontSize: '14px'}} />
           </Popover>
         </div>
       )
