@@ -14,7 +14,7 @@ class Settings extends React.Component {
           <Panel header="基本信息" key="1">
             <BaseInfo></BaseInfo>
           </Panel>
-          <Panel header="系统设置" key="1">
+          <Panel header="系统设置" key="2">
             <System></System>
           </Panel>
         </Collapse>
