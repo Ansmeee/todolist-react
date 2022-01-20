@@ -8,10 +8,6 @@ import signApi from "../../http/sign";
 const {Header} = Layout;
 
 class Head extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <Header className="header-con">
@@ -44,12 +40,12 @@ class Head extends React.Component {
   }
 
   accountOptClick(opt) {
-    if (opt == 'signout') {
+    if (opt === 'signout') {
       this.signout()
       return
     }
 
-    if (opt == 'settings') {
+    if (opt === 'settings') {
       browserHistory.push("/settings")
       return
     }
@@ -84,14 +80,14 @@ class Head extends React.Component {
     if (this.props.account) {
       var icon = this.props.icon
       if (icon) {
-        var avatar = (
+        var cusavatar = (
           <Avatar src={icon}/>
         )
       } else {
         var account = this.props.name
           ? this.props.name.substring(0, 1).toUpperCase()
           : this.props.account.substring(0, 1).toUpperCase()
-        var avatar = (
+        cusavatar = (
           <Avatar shape="square">{account}</Avatar>
         )
       }
@@ -104,7 +100,7 @@ class Head extends React.Component {
             content={this.getAccountCon()}
             placement="bottom"
             trigger="click">
-            {avatar}
+            {cusavatar}
             <span className="header-con-username">{name}</span>
             <DownOutlined style={{fontSize: '14px'}} />
           </Popover>

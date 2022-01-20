@@ -1,5 +1,5 @@
 import React from "react";
-import {EditOutlined, LoadingOutlined, UploadOutlined} from "@ant-design/icons";
+import {LoadingOutlined, UploadOutlined} from "@ant-design/icons";
 import {Upload, message} from "antd";
 class Account extends React.Component {
   constructor(props) {

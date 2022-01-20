@@ -1,8 +1,7 @@
 import React from "react"
-import {Button, Input, Statistic} from "antd";
+import {Button, Input} from "antd";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
 import {browserHistory} from "react-router";
-const { Countdown } = Statistic;
 
 class Signup extends React.Component {
   constructor(props) {

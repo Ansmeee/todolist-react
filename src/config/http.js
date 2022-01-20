@@ -1,5 +1,5 @@
-export default {
-  host: function () {
+const http = {
+  host () {
     let enviment = process.env.NODE_ENV
     let httpstr = !window.location.protocol ? 'http:' : window.location.protocol;
     let apiUrl = '';
@@ -14,3 +14,5 @@ export default {
     return apiUrl;
   }
 }
+
+export default http

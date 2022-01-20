@@ -4,10 +4,6 @@ import "../assets/style/settings.less"
 import Account from "../components/settings/Account"
 const { Panel } = Collapse
 class Settings extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     return (
       <div>

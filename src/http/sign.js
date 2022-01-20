@@ -1,6 +1,5 @@
 import index from './index'
-
-export default {
+const signApi = {
   signin(params) {
     return index.Post(`/user/signin`, params)
   },
@@ -9,3 +8,5 @@ export default {
     return index.Post(`/user/signout`)
   }
 }
+
+export default signApi

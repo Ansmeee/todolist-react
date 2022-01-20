@@ -1,6 +1,6 @@
 import index from './index'
 
-export default {
+const todoApi = {
   todoList(params) {
     return index.Get(`/todo`, params)
   },
@@ -21,3 +21,5 @@ export default {
     return index.Put(`/todo/attr`, params)
   }
 }
+
+export default todoApi

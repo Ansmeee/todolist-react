@@ -12,7 +12,7 @@ import {
   UnorderedListOutlined,
   CheckOutlined
 } from "@ant-design/icons";
-import {Row, Col, Input, Select, Button, Popover, List, Skeleton, DatePicker, message, Tooltip} from "antd";
+import {Row, Col, Input, Select, Button, Popover, List, Skeleton, DatePicker, message} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
@@ -71,7 +71,7 @@ class File extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.state.from != this.props.state.from) {
+    if (prevProps.state.from !== this.props.state.from) {
       this.loadtodoList()
     }
   }
@@ -105,7 +105,7 @@ class File extends React.Component {
   sortOptClick(sort_by, sort_order = 'desc') {
     var filterForm = {}
     filterForm.rules = this.state.filterForm.rules
-    if (sort_by && (this.state.filterForm.sort_by != sort_by || this.state.filterForm.sort_by === undefined)) {
+    if (sort_by && (this.state.filterForm.sort_by !== sort_by || this.state.filterForm.sort_by === undefined)) {
       filterForm.sort_by = sort_by
       filterForm.sort_order = sort_order
     }
@@ -151,7 +151,7 @@ class File extends React.Component {
 
   filterPopContent() {
     var showStatus = ""
-    if (this.props.state.from != 'done') {
+    if (this.props.state.from !== 'done') {
       showStatus = <Button
         block
         type={this.state.filterForm.rules.includes('status') ? 'link' : 'text'}
@@ -178,7 +178,7 @@ class File extends React.Component {
 
   sortPopContent() {
     var statusSort = ""
-    if (this.props.state.from != "done") {
+    if (this.props.state.from !== "done") {
       statusSort = <Button
         block
         type={this.state.filterForm.sort_by === 'status' ? 'link' : 'text'}
@@ -422,7 +422,7 @@ class File extends React.Component {
       return item.id === todo.id
     })
 
-    if ((todo.status === 2 && this.props.state.from != 'done') || (todo.status != 2 && this.props.state.from === 'done')) {
+    if ((todo.status === 2 && this.props.state.from !== 'done') || (todo.status !== 2 && this.props.state.from === 'done')) {
       todoList.splice(index, 1)
     } else {
       todoList[index] = todo
