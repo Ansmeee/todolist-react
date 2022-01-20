@@ -7,10 +7,9 @@ class Settings extends React.Component {
   render() {
     return (
       <div>
+        <Account></Account>
         <Collapse bordered={false} defaultActiveKey={['1']} className="settings-page-con">
-          <Panel header="账号设置" key="1">
-            <Account></Account>
-          </Panel>
+          <Panel header="账号设置" key="1"></Panel>
         </Collapse>
       </div>
     )

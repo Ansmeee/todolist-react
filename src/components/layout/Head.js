@@ -88,7 +88,7 @@ class Head extends React.Component {
           ? this.props.name.substring(0, 1).toUpperCase()
           : this.props.account.substring(0, 1).toUpperCase()
         cusavatar = (
-          <Avatar shape="square">{account}</Avatar>
+          <Avatar>{account}</Avatar>
         )
       }
 

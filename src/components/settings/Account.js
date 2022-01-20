@@ -1,25 +1,34 @@
 import React from "react";
 import {LoadingOutlined, UploadOutlined} from "@ant-design/icons";
 import {Upload, message} from "antd";
+import ImgCrop from 'antd-img-crop';
+import userApi from "../../http/user";
+
+function uploadPath() {
+  return userApi.iconUploadPath()
+}
+
+function beforeUpload(file) {
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+  if (!isJpgOrPng) {
+    message.error('仅自持 .png 或 .jpg 格式的图片')
+  }
+
+  const isLt2M = file.size / 1024 / 1024 < 2
+  if (!isLt2M) {
+    message.error('文件大小不能超过 2M')
+  }
+
+  return isJpgOrPng && isLt2M
+}
+
 class Account extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       loading: false,
       imageUrl: ''
     }
-  }
-  beforeUpload(file) {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    if (!isJpgOrPng) {
-      message.error('仅自持 .png 或 .jpg 格式的图片');
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error('文件大小不能超过 2M');
-    }
-    return isJpgOrPng && isLt2M;
   }
 
   uploadButton() {
@@ -43,13 +52,20 @@ class Account extends React.Component {
     }
 
     if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      this.getBase64(info.file.originFileObj, imageUrl =>
-        this.setState({
-          imageUrl,
-          loading: false,
-        }),
-      );
+      if (info.file.response.code === 200) {
+        message.success('上传成功')
+        var iconPath = info.file.response.data
+
+        this.getBase64(info.file.originFileObj, imageUrl =>
+          this.setState({
+            imageUrl,
+            loading: false,
+          }),
+        );
+      } else {
+        message.error('上传失败')
+        this.setState({loading: false})
+      }
     }
   }
 
@@ -57,18 +73,23 @@ class Account extends React.Component {
     return (
       <div className="settings-page-con-account">
         <div className="settings-page-con-account-icon">
-          <Upload
-            name="icon"
-            listType="picture-card"
-            className="avatar-uploader"
-            showUploadList={false}
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            beforeUpload={(file) => {this.beforeUpload(file)}}
-            onChange={(info) => {this.handleChange(info)}}>
-            {this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" style={{ width: '100%' }} /> : this.uploadButton()}
-          </Upload>
+          <ImgCrop rotate shape="round">
+            <Upload
+              name="icon"
+              listType="picture-card"
+              className="avatar-uploader"
+              showUploadList={false}
+              action={uploadPath}
+              headers={{'Authorization': window.localStorage.getItem('token')}}
+              beforeUpload={beforeUpload}
+              onChange={(info) => {this.handleChange(info)}}>
+              {this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" className="settings-page-con-account-icon-img" /> : this.uploadButton()}
+            </Upload>
+          </ImgCrop>
         </div>
-        <div className="settings-page-con-account-tips">点击上传新头像</div>
+        <div className="settings-page-con-account-name">
+          <div>{this.state.name}</div>
+        </div>
       </div>
     )
   }

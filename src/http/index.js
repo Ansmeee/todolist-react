@@ -3,6 +3,10 @@ import httpConfig from '../config/http'
 
 const apiHost = httpConfig.host()
 const indexApi = {
+  Host() {
+    return apiHost
+  },
+
   handlerResponse(response) {
     return response.data ? response.data : {}
   },
