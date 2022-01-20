@@ -1,8 +1,13 @@
 import React from "react";
 class System extends React.Component {
+  componentDidMount() {
+  }
+
   render() {
     return (
-      <div> 账户设置 </div>
+      <div>
+
+      </div>
     )
   }
 }
