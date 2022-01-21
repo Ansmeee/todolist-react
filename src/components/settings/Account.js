@@ -27,7 +27,7 @@ class Account extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      icon: props.userInfo.name || '',
+      icon: props.userInfo.icon || '',
       name: props.userInfo.name || ''
     }
   }
