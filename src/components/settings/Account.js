@@ -27,7 +27,8 @@ class Account extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      imageUrl: ''
+      icon: props.userInfo.name || '',
+      name: props.userInfo.name || ''
     }
   }
 
@@ -56,9 +57,9 @@ class Account extends React.Component {
         message.success('上传成功')
         var iconPath = info.file.response.data
 
-        this.getBase64(info.file.originFileObj, imageUrl =>
+        this.getBase64(info.file.originFileObj, icon =>
           this.setState({
-            imageUrl,
+            icon,
             loading: false,
           }),
         );
@@ -83,12 +84,12 @@ class Account extends React.Component {
               headers={{'Authorization': window.localStorage.getItem('token')}}
               beforeUpload={beforeUpload}
               onChange={(info) => {this.handleChange(info)}}>
-              {this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" className="settings-page-con-account-icon-img" /> : this.uploadButton()}
+              {this.state.icon ? <img src={this.state.icon} alt="avatar" className="settings-page-con-account-icon-img" /> : this.uploadButton()}
             </Upload>
           </ImgCrop>
         </div>
         <div className="settings-page-con-account-name">
-          <div>{this.state.name}</div>
+          <div className="user-name">{this.state.name}</div>
         </div>
       </div>
     )

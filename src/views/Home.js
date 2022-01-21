@@ -4,9 +4,8 @@ import {browserHistory} from 'react-router'
 import {Layout} from 'antd';
 import Head from "../components/layout/Head";
 import Side from "../components/layout/Side";
-
+import {getUserInfoFromLocal} from "../utils/user";
 const {Content, Footer} = Layout;
-
 class Home extends React.Component {
   constructor(props) {
     super(props)
@@ -35,31 +34,13 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    var token = window.localStorage.getItem("token")
-    if (!token) {
+    var userInfo = getUserInfoFromLocal()
+    if (!userInfo) {
       browserHistory.push("/signin")
       return
     }
 
-    var tokenArr = token.split(".")
-    var payload = JSON.parse(atob(tokenArr[1]))
-    var expiredat = new Date(payload.expiredat)
-    var currentTime = new Date()
-
-    if (currentTime > expiredat) {
-      browserHistory.push("/signin")
-      return
-    }
-
-    var name = payload.name
-    var icon = payload.icon
-    var account = payload.account
-    if (!account) {
-      browserHistory.push("/signin")
-      return
-    }
-
-    this.setState({account: account, name: name, icon: icon})
+    this.setState({account: userInfo.account, name: userInfo.name, icon: userInfo.icon})
   }
 
   getContent() {

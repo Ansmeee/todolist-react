@@ -4,6 +4,7 @@ import "../assets/style/sign.less"
 import {UserOutlined, LockOutlined} from "@ant-design/icons";
 import {browserHistory} from "react-router";
 import signApi from "../http/sign"
+import {initUserInfo} from "../utils/user";
 
 class Signin extends React.Component {
   constructor(props) {
@@ -14,7 +15,6 @@ class Signin extends React.Component {
     }
   }
 
-
   signUpClick() {
     browserHistory.push("/signup")
   }
@@ -22,7 +22,7 @@ class Signin extends React.Component {
   onFinish(values) {
     signApi.signin(values).then(response => {
       if (response.code === 200) {
-        window.localStorage.setItem("token", response.data.token)
+        initUserInfo(response.data.token)
         window.location.href = '/'
       } else {
         message.error(response.msg || '登陆失败')
