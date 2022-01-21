@@ -1,5 +1,5 @@
 import React from "react";
-import {LoadingOutlined, UploadOutlined} from "@ant-design/icons";
+import {LoadingOutlined, UploadOutlined, CrownOutlined} from "@ant-design/icons";
 import {Upload, message} from "antd";
 import ImgCrop from 'antd-img-crop';
 import userApi from "../../http/user";
@@ -90,6 +90,7 @@ class Account extends React.Component {
         </div>
         <div className="settings-page-con-account-name">
           <div className="user-name">{this.state.name}</div>
+          <div className="user-vip"><CrownOutlined /></div>
         </div>
       </div>
     )
