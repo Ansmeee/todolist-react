@@ -7,6 +7,10 @@ const userApi = {
 
   info(params) {
     return index.Get(`/user`, params)
+  },
+
+  updateAttr(params) {
+    return index.Put('/user/attr', params)
   }
 }
 

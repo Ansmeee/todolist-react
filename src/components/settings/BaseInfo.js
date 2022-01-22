@@ -1,6 +1,8 @@
 import React from "react";
-import {Input, Button} from "antd";
+import {Input, Button, message} from "antd";
 import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
+import userApi from '../../http/user';
+
 const _ = require('lodash');
 
 class userInfo extends React.Component {
@@ -8,25 +10,25 @@ class userInfo extends React.Component {
     super(props);
 
     this.state = {
-      userInfo: {
+      userInfo   : {
         account: '',
-        name: '',
-        email: '',
-        phone: '',
-        icon: ''
+        name   : '',
+        email  : '',
+        phone  : '',
+        icon   : ''
       },
-      originInfo: {
+      originInfo : {
         account: '',
-        name: '',
-        email: '',
-        phone: '',
-        icon: ''
+        name   : '',
+        email  : '',
+        phone  : '',
+        icon   : ''
       },
       modifiedKey: {
         account: false,
-        name: false,
-        email: false,
-        phone: false
+        name   : false,
+        email  : false,
+        phone  : false
       }
     }
   }
@@ -37,14 +39,32 @@ class userInfo extends React.Component {
     }
   }
 
+  confirm(key) {
+    var params = {
+      id   : this.state.userInfo.account,
+      key  : key,
+      value: this.state.userInfo[key]
+    }
+
+    userApi.updateAttr(params).then(response => {
+      if (response.code === 200) {
+        message.success('已更新')
+        this.updateModifiedKey(key, false)
+      } else {
+        message.error(response.msg || '更新失败')
+        this.updateModifiedKey(key, false)
+      }
+    })
+  }
+
   updateModifiedKey(key, value) {
-    var modifiedKey = this.state.modifiedKey
+    var modifiedKey  = this.state.modifiedKey
     modifiedKey[key] = value
     this.setState({modifiedKey: modifiedKey})
   }
 
   updateuserInfo(key, value) {
-    var userInfo = this.state.userInfo
+    var userInfo  = this.state.userInfo
     userInfo[key] = value
     this.setState({userInfo: userInfo})
   }
@@ -56,7 +76,7 @@ class userInfo extends React.Component {
           <Button
             type="text"
             onClick={() => {
-              this.updateModifiedKey(key, false)
+              this.confirm(key)
             }}>
             <CheckOutlined className="item-li-val-success"/>
           </Button>
@@ -92,7 +112,7 @@ class userInfo extends React.Component {
                 this.updateModifiedKey('name', true)
               }}
               onPressEnter={() => {
-                this.state.modifiedKey['name'] && this.updateModifiedKey('name', false)
+                this.state.modifiedKey['name'] && this.confirm('name')
               }}
               className="item-li-val-input"
               value={this.state.userInfo.name}
@@ -111,7 +131,7 @@ class userInfo extends React.Component {
                 this.updateModifiedKey('email', true)
               }}
               onPressEnter={() => {
-                this.state.modifiedKey['email'] && this.updateModifiedKey('email', false)
+                this.state.modifiedKey['email'] && this.confirm('email')
               }}
               className="item-li-val-input"
               value={this.state.userInfo.email}
@@ -130,7 +150,7 @@ class userInfo extends React.Component {
                 this.updateModifiedKey('phone', true)
               }}
               onPressEnter={() => {
-                this.state.modifiedKey['phone'] && this.updateModifiedKey('phone', false)
+                this.state.modifiedKey['phone'] && this.confirm('phone')
               }}
               className="item-li-val-input"
               value={this.state.userInfo.phone}
