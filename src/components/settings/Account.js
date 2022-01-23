@@ -27,15 +27,16 @@ class Account extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      icon: props.userInfo.icon || '',
-      name: props.userInfo.name || ''
+      id     : props.userInfo.account || '',
+      icon   : props.userInfo.icon || '',
+      name   : props.userInfo.name || ''
     }
   }
 
   uploadButton() {
     return (
       <div className="icon-opt">
-        {this.state.loading ? <LoadingOutlined /> : <UploadOutlined />}
+        {this.state.loading ? <LoadingOutlined/> : <UploadOutlined/>}
       </div>
     )
   }
@@ -48,7 +49,7 @@ class Account extends React.Component {
 
   handleChange(info) {
     if (info.file.status === 'uploading') {
-      this.setState({ loading: true });
+      this.setState({loading: true});
       return;
     }
 
@@ -81,16 +82,20 @@ class Account extends React.Component {
               className="avatar-uploader"
               showUploadList={false}
               action={uploadPath}
+              data={{id: this.state.id}}
               headers={{'Authorization': window.localStorage.getItem('token')}}
               beforeUpload={beforeUpload}
-              onChange={(info) => {this.handleChange(info)}}>
-              {this.state.icon ? <img src={this.state.icon} alt="avatar" className="settings-page-con-account-icon-img" /> : this.uploadButton()}
+              onChange={(info) => {
+                this.handleChange(info)
+              }}>
+              {this.state.icon ? <img src={this.state.icon} alt="avatar"
+                                      className="settings-page-con-account-icon-img"/> : this.uploadButton()}
             </Upload>
           </ImgCrop>
         </div>
         <div className="settings-page-con-account-name">
           <div className="user-name">{this.state.name}</div>
-          <div className="user-vip"><CrownOutlined /></div>
+          <div className="user-vip"><CrownOutlined/></div>
         </div>
       </div>
     )
