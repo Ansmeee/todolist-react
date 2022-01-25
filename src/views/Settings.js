@@ -26,7 +26,6 @@ class Settings extends React.Component {
     }
 
     if (userInfo.account) {
-      console.log('htet', Date.now())
       this.loadUserInfo(userInfo.account)
     }
   }

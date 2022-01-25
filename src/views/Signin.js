@@ -4,7 +4,7 @@ import "../assets/style/sign.less"
 import {UserOutlined, LockOutlined} from "@ant-design/icons";
 import {browserHistory} from "react-router";
 import signApi from "../http/sign"
-import {initUserInfo} from "../utils/user";
+import {getUserInfoFromLocal, initUserInfo} from "../utils/user";
 
 class Signin extends React.Component {
   constructor(props) {
@@ -28,6 +28,13 @@ class Signin extends React.Component {
         message.error(response.msg || '登陆失败')
       }
     })
+  }
+
+  componentDidMount() {
+    var userInfo = getUserInfoFromLocal()
+    if (userInfo.account) {
+      browserHistory.push('/latest')
+    }
   }
 
   render() {
@@ -54,12 +61,12 @@ class Signin extends React.Component {
               style={{marginTop: "50px", textAlign: "right"}}
               name="auth"
               rules={[{required: true, message: '密码不能为空'}]}>
-              <Input
+              <Input.Password
                 className="signin-form-input"
                 prefix={<LockOutlined/>}
                 bordered={false}
                 placeholder="密码">
-              </Input>
+              </Input.Password>
             </Form.Item>
             <div className="signin-form-opt">
               <Button type="text">忘记密码</Button>

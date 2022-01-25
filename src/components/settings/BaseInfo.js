@@ -104,28 +104,10 @@ class userInfo extends React.Component {
           </div>
         </li>
         <li className="item-li">
-          <div className="item-li-label">用户名称</div>
-          <div className="item-li-val">
-            <Input
-              onChange={(e) => {
-                this.updateuserInfo('name', e.target.value)
-                this.updateModifiedKey('name', true)
-              }}
-              onPressEnter={() => {
-                this.state.modifiedKey['name'] && this.confirm('name')
-              }}
-              className="item-li-val-input"
-              value={this.state.userInfo.name}
-              placeholder="未填写"
-              bordered={false}>
-            </Input>
-            {this.getOptions('name')}
-          </div>
-        </li>
-        <li className="item-li">
           <div className="item-li-label">绑定邮箱</div>
           <div className="item-li-val">
             <Input
+              disabled={true}
               onChange={(e) => {
                 this.updateuserInfo('email', e.target.value)
                 this.updateModifiedKey('email', true)
@@ -139,6 +121,25 @@ class userInfo extends React.Component {
               bordered={false}>
             </Input>
             {this.getOptions('email')}
+          </div>
+        </li>
+        <li className="item-li">
+          <div className="item-li-label">用户名称</div>
+          <div className="item-li-val">
+            <Input
+              onChange={(e) => {
+                this.updateModifiedKey('name', true)
+                this.updateuserInfo('name', e.target.value)
+              }}
+              onPressEnter={() => {
+                this.state.modifiedKey['name'] && this.confirm('name')
+              }}
+              className="item-li-val-input"
+              value={this.state.userInfo.name}
+              placeholder="未填写"
+              bordered={false}>
+            </Input>
+            {this.getOptions('name')}
           </div>
         </li>
         <li className="item-li">

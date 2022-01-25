@@ -2,6 +2,7 @@ import React from "react"
 import {Button, Input} from "antd";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
 import {browserHistory} from "react-router";
+import {getUserInfoFromLocal} from "../utils/user";
 
 class Signup extends React.Component {
   constructor(props) {
@@ -29,6 +30,13 @@ class Signup extends React.Component {
     this.setState({msgSending: true})
   }
 
+  componentDidMount() {
+    var userInfo = getUserInfoFromLocal()
+    if (userInfo.account) {
+      browserHistory.push('/latest')
+    }
+  }
+
   render() {
     return (
       <div className="sign-page">
@@ -52,12 +60,12 @@ class Signup extends React.Component {
             placeholder="手机验证码">
           </Input>
 
-          <Input
+          <Input.Password
             className="signin-form-input"
             prefix={<LockOutlined/>}
             bordered={false}
             placeholder="密码">
-          </Input>
+          </Input.Password>
           <div className="signin-form-opt">
             <Button type="text">邮箱注册</Button>
             <Button type="text" onClick={() => {
