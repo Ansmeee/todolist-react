@@ -7,19 +7,30 @@ import Dir from "../views/Dir"
 import Signin from "../views/Signin"
 import Signup from "../views/Signup"
 import Settings from "../views/Settings"
+import ResetPass from "../views/ResetPass";
+import {getUserInfoFromLocal} from "../utils/user";
 class Routes extends React.Component {
+
+  checkAccess() {
+    var userInfo = getUserInfoFromLocal()
+    if (!userInfo) {
+      browserHistory.push('signin')
+    }
+  }
+
   render() {
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Home}>
           <IndexRoute component={Latest}/>
-          <Route path="/signin" component={Signin}/>
           <Route path="/signup" component={Signup}/>
-          <Route path="/latest" component={Latest}/>
-          <Route path="/done" component={Done}/>
-          <Route path="/dir/:id" component={Dir}/>
-          <Route path="/settings" component={Settings}/>
-          <Route path="*" component={Latest}/>
+          <Route path="/signin" component={Signin}/>
+          <Route path="/resetPass" component={ResetPass}/>
+          <Route path="/latest" component={Latest} onEnter={() => {this.checkAccess()}}/>
+          <Route path="/done" component={Done} onEnter={() => {this.checkAccess()}}/>
+          <Route path="/dir/:id" component={Dir} onEnter={() => {this.checkAccess()}}/>
+          <Route path="/settings" component={Settings} onEnter={() => {this.checkAccess()}}/>
+          <Route path="*" component={Latest} onEnter={() => {this.checkAccess()}}/>
         </Route>
       </Router>
     )

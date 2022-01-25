@@ -15,8 +15,14 @@ class Signin extends React.Component {
     }
   }
 
+  resetPass() {
+    browserHistory.push("/resetPass")
+    return
+  }
+
   signUpClick() {
     browserHistory.push("/signup")
+    return
   }
 
   onFinish(values) {
@@ -32,8 +38,9 @@ class Signin extends React.Component {
 
   componentDidMount() {
     var userInfo = getUserInfoFromLocal()
-    if (userInfo.account) {
+    if (userInfo && userInfo.account) {
       browserHistory.push('/latest')
+      return
     }
   }
 
@@ -58,7 +65,7 @@ class Signin extends React.Component {
               </Input>
             </Form.Item>
             <Form.Item
-              style={{marginTop: "50px", textAlign: "right"}}
+              style={{textAlign: "right"}}
               name="auth"
               rules={[{required: true, message: '密码不能为空'}]}>
               <Input.Password
@@ -69,7 +76,9 @@ class Signin extends React.Component {
               </Input.Password>
             </Form.Item>
             <div className="signin-form-opt">
-              <Button type="text">忘记密码</Button>
+              <Button type="text" onClick={()=> {
+                this.resetPass()
+              }}>忘记密码</Button>
               <Button type="text" onClick={() => {
                 this.signUpClick()
               }}>没有账号？</Button>

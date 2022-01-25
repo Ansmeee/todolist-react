@@ -29,13 +29,9 @@ class Head extends React.Component {
   }
 
   signout() {
+    window.localStorage.removeItem("token")
     signApi.signout().then(response => {
-      if (response.code === 200) {
-        window.localStorage.removeItem("token")
-        window.location.href = '/'
-      } else {
-        message.error(response.msg || '登出失败')
-      }
+      window.location.href = '/'
     })
   }
 

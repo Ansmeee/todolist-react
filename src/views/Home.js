@@ -35,12 +35,9 @@ class Home extends React.Component {
 
   componentDidMount() {
     var userInfo = getUserInfoFromLocal()
-    if (!userInfo) {
-      browserHistory.push("/signin")
-      return
+    if (userInfo) {
+      this.setState({account: userInfo.account, name: userInfo.name, icon: userInfo.icon})
     }
-
-    this.setState({account: userInfo.account, name: userInfo.name, icon: userInfo.icon})
   }
 
   getContent() {

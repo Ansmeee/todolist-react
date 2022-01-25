@@ -1,6 +1,7 @@
 import React from "react";
 import {Input, Button, message} from "antd";
 import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
+import {browserHistory} from "react-router";
 import userApi from '../../http/user';
 
 const _ = require('lodash');
@@ -89,6 +90,9 @@ class userInfo extends React.Component {
     }
   }
 
+  resetPass() {
+  }
+
   render() {
     return (
       <div className="baseinfo-page">
@@ -159,6 +163,12 @@ class userInfo extends React.Component {
               bordered={false}>
             </Input>
             {this.getOptions('phone')}
+          </div>
+        </li>
+        <li className="item-li">
+          <div className="item-li-label">用户密码</div>
+          <div>
+            <Button style={{paddingLeft: '0px'}} type="link" onClick={() => {this.resetPass()}}>重置密码</Button>
           </div>
         </li>
       </div>
