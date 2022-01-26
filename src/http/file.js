@@ -2,11 +2,11 @@ import index from './index'
 
 const fileApi = {
   fileList(params) {
-    return index.Get(`/list`, params)
+    return index.Get(`/rest/list`, params)
   },
 
   create(params){
-    return index.Post(`/list`, params)
+    return index.Post(`/rest/list`, params)
   }
 }
 
