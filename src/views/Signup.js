@@ -1,9 +1,10 @@
 import React from "react"
-import {Button, Input, Form} from "antd";
+import {Button, Input, Form, message} from "antd";
 import {browserHistory} from "react-router";
-import {getUserInfoFromLocal} from "../utils/user";
+import {getUserInfoFromLocal, initUserInfo} from "../utils/user";
 import Email from "../components/signup/Email";
 import Phone from "../components/signup/Phone";
+import signApi from "../http/sign";
 const _ = require('lodash');
 class Signup extends React.Component {
   constructor(props) {
@@ -12,7 +13,7 @@ class Signup extends React.Component {
       msgSending: false,
       interval: null,
       msgText: '',
-      signupWay:'phone'
+      signupWay:'email'
     }
   }
 
@@ -48,6 +49,21 @@ class Signup extends React.Component {
     this.setState({signupWay: newWay})
   }
 
+  onFinish(values) {
+    values.way = this.state.signupWay
+    signApi.signup(values).then(response => {
+      if (response.code === 200) {
+        initUserInfo(response.data.token)
+        window.location.href = '/'
+      } else if (response.code === 302) {
+        message.success('注册成功')
+        window.location.href = '/signin'
+      } else {
+        message.error(response.msg || '注册失败')
+      }
+    })
+  }
+
   componentDidMount() {
     var userInfo = getUserInfoFromLocal()
     if (userInfo && userInfo.account) {
@@ -59,14 +75,14 @@ class Signup extends React.Component {
   render() {
     return (
       <div className="sign-page">
-        <div className="signin-form">
-          <div className="signin-form-title">土豆清单 · 用户注册</div>
+        <div className="form">
+          <div className="form-title">土豆清单 · 用户注册</div>
           <Form
             onFinish={(values) => {
               this.onFinish(values)
             }}>
             {this.signupForm()}
-            <div className="signin-form-opt">
+            <div className="form-opt">
               <Button type="text" onClick={this.setSignupWay}>邮箱注册</Button>
               <Button type="text" onClick={() => {
                 this.signInClick()
@@ -74,7 +90,7 @@ class Signup extends React.Component {
             </div>
             <Form.Item>
               <Button
-                className="signin-form-submit"
+                className="form-submit"
                 htmlType="submit"
                 type="primary"
                 size="large">

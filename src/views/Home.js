@@ -27,7 +27,7 @@ class Home extends React.Component {
         <Head account={this.state.account} name={this.state.name} icon={this.state.icon}></Head>
         {this.getContent()}
         <Footer className="footer-con">
-          ToDoList ©2021 Created by Ansme
+          TooDo ©2021 Created by Ansme
         </Footer>
       </Layout>
     )

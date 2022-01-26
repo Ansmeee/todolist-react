@@ -15,6 +15,7 @@ class Routes extends React.Component {
     var userInfo = getUserInfoFromLocal()
     if (!userInfo) {
       browserHistory.push('signin')
+      return
     }
   }
 
@@ -22,7 +23,7 @@ class Routes extends React.Component {
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Home}>
-          <IndexRoute component={Latest}/>
+          <IndexRoute component={Latest} onEnter={() => {this.checkAccess()}}/>
           <Route path="/signup" component={Signup}/>
           <Route path="/signin" component={Signin}/>
           <Route path="/resetPass" component={ResetPass}/>

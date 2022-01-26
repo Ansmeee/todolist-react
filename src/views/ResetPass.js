@@ -3,6 +3,8 @@ import {getUserInfoFromLocal} from "../utils/user";
 import {Button, Form, Input} from "antd";
 import {browserHistory} from "react-router";
 import {LockOutlined, UserOutlined, SafetyOutlined} from "@ant-design/icons";
+import Pattern from "../utils/pattern";
+
 class ResetPass extends React.Component {
   constructor(props) {
     super(props);
@@ -40,14 +42,16 @@ class ResetPass extends React.Component {
     console.log(this.fo)
   }
 
-  signinClick() {
-    browserHistory.push("/signin")
+  signAction(action) {
+    browserHistory.push(`/${action}`)
+    return
   }
+
   render() {
     return (
       <div className="sign-page">
-        <div className="signin-form">
-          <div className="signin-form-title">土豆清单 · 密码重置</div>
+        <div className="form">
+          <div className="form-title">土豆清单<span className="form-title-split">·</span>密码重置</div>
           <Form
             onFinish={(values) => {
               this.onFinish(values)
@@ -56,9 +60,9 @@ class ResetPass extends React.Component {
             <Form.Item
               style={{textAlign: "right"}}
               name="password"
-              rules={[{required: true, message: '密码不能为空'}]}>
+              rules={[{required: true, message: '密码不能为空'}, Pattern('pwd')]}>
               <Input.Password
-                className="signin-form-input"
+                className="form-input"
                 prefix={<LockOutlined/>}
                 bordered={false}
                 placeholder="新密码">
@@ -67,25 +71,25 @@ class ResetPass extends React.Component {
             <Form.Item
               style={{textAlign: "right"}}
               name="auth"
-              rules={[{required: true, message: '密码不能为空'}]}>
+              rules={[{required: true, message: '密码不能为空'}, Pattern('pwd')]}>
               <Input.Password
-                className="signin-form-input"
+                className="form-input"
                 prefix={<SafetyOutlined/>}
                 bordered={false}
                 placeholder="新密码">
               </Input.Password>
             </Form.Item>
-            <div className="signin-form-opt">
+            <div className="form-opt">
               <Button type="text" onClick={()=> {
-                this.resetPass()
-              }}>忘记密码</Button>
+                this.signAction('signup')
+              }}>立即注册</Button>
               <Button type="text" onClick={() => {
-                this.signinClick()
+                this.signAction('signin')
               }}>前往登陆</Button>
             </div>
             <Form.Item>
               <Button
-                className="signin-form-submit"
+                className="form-submit"
                 size="large"
                 htmlType="submit"
                 type="primary">

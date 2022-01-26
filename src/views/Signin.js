@@ -47,8 +47,8 @@ class Signin extends React.Component {
   render() {
     return (
       <div className="sign-page">
-        <div className="signin-form">
-          <div className="signin-form-title">土豆清单 · 用户登陆</div>
+        <div className="form">
+          <div className="form-title">土豆清单<span className="form-title-split">·</span>用户登陆</div>
           <Form
             onFinish={(values) => {
               this.onFinish(values)
@@ -58,24 +58,24 @@ class Signin extends React.Component {
               style={{textAlign: "right"}}
               rules={[{required: true, message: '账号不能为空'}]}>
               <Input
-                className="signin-form-input"
-                prefix={<UserOutlined className="signin-form-input-prefix"/>}
+                className="form-input"
+                prefix={<UserOutlined className="form-input-prefix"/>}
                 bordered={false}
                 placeholder="手机号或邮箱">
               </Input>
             </Form.Item>
             <Form.Item
               style={{textAlign: "right"}}
-              name="auth"
+              name="password"
               rules={[{required: true, message: '密码不能为空'}]}>
               <Input.Password
-                className="signin-form-input"
+                className="form-input"
                 prefix={<LockOutlined/>}
                 bordered={false}
                 placeholder="密码">
               </Input.Password>
             </Form.Item>
-            <div className="signin-form-opt">
+            <div className="form-opt">
               <Button type="text" onClick={()=> {
                 this.resetPass()
               }}>忘记密码</Button>
@@ -85,7 +85,7 @@ class Signin extends React.Component {
             </div>
             <Form.Item>
               <Button
-                className="signin-form-submit"
+                className="form-submit"
                 size="large"
                 htmlType="submit"
                 type="primary">

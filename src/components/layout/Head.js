@@ -80,11 +80,10 @@ class Head extends React.Component {
           <Avatar src={icon}/>
         )
       } else {
-        var account = this.props.name
-          ? this.props.name.substring(0, 1).toUpperCase()
-          : this.props.account.substring(0, 1).toUpperCase()
+        var account = this.props.name ? this.props.name : ''
+        var avatar = account ? account.substring(0, 1).toUpperCase() : 'TooD'
         cusavatar = (
-          <Avatar>{account}</Avatar>
+          <Avatar>{avatar}</Avatar>
         )
       }
 

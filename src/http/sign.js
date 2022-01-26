@@ -4,6 +4,10 @@ const signApi = {
     return index.Post(`/user/signin`, params)
   },
 
+  signup(params) {
+    return index.Post(`/user/signup`, params)
+  },
+
   signout() {
     return index.Post(`/user/signout`)
   }
