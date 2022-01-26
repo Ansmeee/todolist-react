@@ -15,7 +15,7 @@ class Head extends React.Component {
           className="header-con-logo"
           onClick={() => {
             this.goHome()
-          }}>土豆清单
+          }}>TooDoo
         </div>
         <div className="header-con-opt">
           {this.getHeaderUser()}
