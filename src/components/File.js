@@ -48,7 +48,8 @@ class File extends React.Component {
       todoList: [],
       dirList: [],
       typeTitle: '',
-      TypePopVisible: false
+      TypePopVisible: false,
+      priorityPopVisible: false
     }
 
     this.priorityName2Key = {
@@ -402,6 +403,7 @@ class File extends React.Component {
     var currentTask = this.state.currentTask
     currentTask[key] = val
     this.setState({currentTask: currentTask})
+    this.setState({priorityPopVisible: false})
   }
 
   taskInfoListChange(value) {
@@ -542,6 +544,8 @@ class File extends React.Component {
             <Popover
               overlayClassName="pop-opt-con"
               placement="bottomLeft"
+              visible={this.state.priorityPopVisible}
+              onVisibleChange={(visible) => {this.setState({ priorityPopVisible: visible})}}
               content={this.taskInfoPopContent('priority')}
               trigger="click">
               <Input
@@ -608,6 +612,8 @@ class File extends React.Component {
           dirList.push({label: response.data.title, value: response.data.id})
           this.setState({dirList: dirList}, this.taskInfoListChange(response.data.id))
           this.setState({TypePopVisible: false})
+        } else {
+          message.error(response.msg || '保存失败')
         }
       })
     }
@@ -668,6 +674,7 @@ class File extends React.Component {
               {this.typeOptions()}
             </Select>
             <Popover
+              placement="bottom"
               visible={this.state.TypePopVisible}
               onVisibleChange={() => {this.typePopVisibleChange()}}
               trigger="click" title="新增分类"
