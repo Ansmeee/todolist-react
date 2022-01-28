@@ -5,7 +5,9 @@ import {getUserInfoFromLocal, initUserInfo} from "../utils/user";
 import Email from "../components/signup/Email";
 import Phone from "../components/signup/Phone";
 import signApi from "../http/sign";
+
 const _ = require('lodash');
+
 class Signup extends React.Component {
   constructor(props) {
     super(props);
@@ -13,7 +15,7 @@ class Signup extends React.Component {
       msgSending: false,
       interval: null,
       msgText: '',
-      signupWay:'email'
+      signupWay: 'email'
     }
   }
 
@@ -82,8 +84,8 @@ class Signup extends React.Component {
               this.onFinish(values)
             }}>
             {this.signupForm()}
-            <div className="form-opt">
-              <Button type="text" onClick={this.setSignupWay}>邮箱注册</Button>
+            <div style={{textAlign: 'right', marginTop: '-15px'}}>
+              {/*<Button type="text" onClick={this.setSignupWay}>邮箱注册</Button>*/}
               <Button type="text" onClick={() => {
                 this.signInClick()
               }}>已有账号？</Button>

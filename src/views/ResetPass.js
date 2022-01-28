@@ -28,8 +28,8 @@ class ResetPass extends React.Component {
           style={{textAlign: "right"}}
           rules={[{required: true, message: '请输入注册所使用的手机号或邮箱'}]}>
           <Input
-            className="signin-form-input"
-            prefix={<UserOutlined className="signin-form-input-prefix"/>}
+            className="form-input"
+            prefix={<UserOutlined className="form-input-prefix"/>}
             bordered={false}
             placeholder="手机号或邮箱">
           </Input>

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import httpConfig from '../config/http'
+import {clearUserInfo} from "../utils/user";
 
 const apiHost = httpConfig.host()
 const indexApi = {
@@ -8,6 +9,11 @@ const indexApi = {
   },
 
   handlerResponse(response) {
+    if (response.data.code == 499) {
+      clearUserInfo()
+      window.location.href = '/'
+    }
+
     return response.data ? response.data : {}
   },
 

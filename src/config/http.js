@@ -1,11 +1,11 @@
 const http = {
-  host () {
+  host() {
     let enviment = process.env.NODE_ENV
     let httpstr = !window.location.protocol ? 'http:' : window.location.protocol;
     let apiUrl = '';
     switch (enviment) {
       case "production":
-        apiUrl = `${httpstr}//visual.sohu-inc.com`;
+        apiUrl = `${httpstr}//todo.ansme.cc`;
         break;
       default:
         apiUrl = `${httpstr}//todo.com`;

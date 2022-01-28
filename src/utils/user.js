@@ -8,6 +8,13 @@ function initUserInfo(token) {
   window.localStorage.setItem("icon", payload.icon)
 }
 
+function clearUserInfo() {
+  window.localStorage.removeItem("token")
+  window.localStorage.removeItem("account")
+  window.localStorage.removeItem("name")
+  window.localStorage.removeItem("icon")
+}
+
 function setUserInfo(key, val) {
   window.localStorage.setItem(key, val)
 }
@@ -47,4 +54,4 @@ function getUserInfoFromLocal() {
   return {account: account, name: name, icon: icon}
 }
 
-export {getUserInfoFromLocal, setUserInfo, getUserInfo, initUserInfo}
+export {getUserInfoFromLocal, setUserInfo, getUserInfo, initUserInfo, clearUserInfo}
