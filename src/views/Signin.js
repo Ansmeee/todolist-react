@@ -67,6 +67,17 @@ class Signin extends React.Component {
               </Input>
             </Form.Item>
             <Form.Item
+              style={{textAlign: "right"}}
+              name="password"
+              rules={[{required: true, message: '密码不能为空'}]}>
+              <Input.Password
+                className="form-input"
+                prefix={<LockOutlined/>}
+                bordered={false}
+                placeholder="密码">
+              </Input.Password>
+            </Form.Item>
+            <Form.Item
               name="code"
               style={{textAlign: "right"}}
               rules={[{required: true, message: '验证码不能为空'}]}>
@@ -78,17 +89,6 @@ class Signin extends React.Component {
                 </Input>
                 <SecurityCode ref="securityCode"></SecurityCode>
               </div>
-            </Form.Item>
-            <Form.Item
-              style={{textAlign: "right"}}
-              name="password"
-              rules={[{required: true, message: '密码不能为空'}]}>
-              <Input.Password
-                className="form-input"
-                prefix={<LockOutlined/>}
-                bordered={false}
-                placeholder="密码">
-              </Input.Password>
             </Form.Item>
             <div className="form-opt">
               <Button type="text" onClick={() => {

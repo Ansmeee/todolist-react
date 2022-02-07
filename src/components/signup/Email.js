@@ -19,19 +19,6 @@ class Email extends React.Component {
           </Input>
         </Form.Item>
         <Form.Item
-          name="code"
-          style={{textAlign: "right"}}
-          rules={[{required: true, message: '验证码不能为空'}]}>
-          <div className="security-code-input">
-            <Input
-              prefix={<SafetyOutlined className="form-input-prefix"/>}
-              bordered={false}
-              placeholder="请输入验证码">
-            </Input>
-            <SecurityCode ref="securityCode"></SecurityCode>
-          </div>
-        </Form.Item>
-        <Form.Item
           name="password"
           rules={[{required: true, message: '密码不能为空'}, Pattern('pwd')]}
           style={{textAlign: "right"}}>
@@ -53,6 +40,20 @@ class Email extends React.Component {
             bordered={false}
             placeholder="确认密码">
           </Input.Password>
+        </Form.Item>
+
+        <Form.Item
+          name="code"
+          style={{textAlign: "right"}}
+          rules={[{required: true, message: '验证码不能为空'}]}>
+          <div className="security-code-input">
+            <Input
+              prefix={<SafetyOutlined className="form-input-prefix"/>}
+              bordered={false}
+              placeholder="请输入验证码">
+            </Input>
+            <SecurityCode ref="securityCode"></SecurityCode>
+          </div>
         </Form.Item>
       </div>
     )
