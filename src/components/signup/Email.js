@@ -2,6 +2,7 @@ import React from "react"
 import {Form, Input} from "antd";
 import {MailOutlined, LockOutlined, SafetyOutlined} from "@ant-design/icons";
 import Pattern from "../../utils/pattern";
+import SecurityCode from "../SecurityCode";
 class Email extends React.Component {
   render() {
     return (
@@ -16,6 +17,19 @@ class Email extends React.Component {
             bordered={false}
             placeholder="邮箱">
           </Input>
+        </Form.Item>
+        <Form.Item
+          name="code"
+          style={{textAlign: "right"}}
+          rules={[{required: true, message: '验证码不能为空'}]}>
+          <div className="security-code-input">
+            <Input
+              prefix={<SafetyOutlined className="form-input-prefix"/>}
+              bordered={false}
+              placeholder="请输入验证码">
+            </Input>
+            <SecurityCode ref="securityCode"></SecurityCode>
+          </div>
         </Form.Item>
         <Form.Item
           name="password"

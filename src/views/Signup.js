@@ -37,7 +37,7 @@ class Signup extends React.Component {
 
   signupForm() {
     if (this.state.signupWay === 'email') {
-      return (<Email></Email>)
+      return (<Email ref="email"></Email>)
     }
 
     if (this.state.signupWay === 'phone') {
@@ -53,6 +53,7 @@ class Signup extends React.Component {
 
   onFinish(values) {
     values.way = this.state.signupWay
+    values.nonce = this.refs.email.refs.securityCode.state.captchaid
     signApi.signup(values).then(response => {
       if (response.code === 200) {
         initUserInfo(response.data.token)

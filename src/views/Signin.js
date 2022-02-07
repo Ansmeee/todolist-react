@@ -1,10 +1,11 @@
 import React from "react"
 import {Button, Input, Form, message} from "antd";
 import "../assets/style/sign.less"
-import {UserOutlined, LockOutlined} from "@ant-design/icons";
+import {UserOutlined, LockOutlined, SafetyOutlined} from "@ant-design/icons";
 import {browserHistory} from "react-router";
 import signApi from "../http/sign"
 import {getUserInfoFromLocal, initUserInfo} from "../utils/user";
+import SecurityCode from "../components/SecurityCode";
 
 class Signin extends React.Component {
   constructor(props) {
@@ -26,6 +27,7 @@ class Signin extends React.Component {
   }
 
   onFinish(values) {
+    values.nonce = this.refs.securityCode.state.captchaid
     signApi.signin(values).then(response => {
       if (response.code === 200) {
         initUserInfo(response.data.token)
@@ -65,6 +67,19 @@ class Signin extends React.Component {
               </Input>
             </Form.Item>
             <Form.Item
+              name="code"
+              style={{textAlign: "right"}}
+              rules={[{required: true, message: '验证码不能为空'}]}>
+              <div className="security-code-input">
+                <Input
+                  prefix={<SafetyOutlined className="form-input-prefix"/>}
+                  bordered={false}
+                  placeholder="请输入验证码">
+                </Input>
+                <SecurityCode ref="securityCode"></SecurityCode>
+              </div>
+            </Form.Item>
+            <Form.Item
               style={{textAlign: "right"}}
               name="password"
               rules={[{required: true, message: '密码不能为空'}]}>
@@ -76,7 +91,7 @@ class Signin extends React.Component {
               </Input.Password>
             </Form.Item>
             <div className="form-opt">
-              <Button type="text" onClick={()=> {
+              <Button type="text" onClick={() => {
                 this.resetPass()
               }}>忘记密码</Button>
               <Button type="text" onClick={() => {

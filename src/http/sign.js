@@ -10,6 +10,14 @@ const signApi = {
 
   signout() {
     return index.Post(`/rest/user/signout`)
+  },
+
+  captchaid() {
+    return index.Get('/rest/user/captchaid')
+  },
+
+  captchaimg(source) {
+    return index.Host() + `/rest/user/captchaimg?source=${source}`
   }
 }
 
