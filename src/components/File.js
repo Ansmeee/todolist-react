@@ -706,6 +706,8 @@ class File extends React.Component {
         </div>
       )
     }
+
+    return (<div className="no-task-info-con">点击任务标题查看详情</div>)
   }
 
   render() {
