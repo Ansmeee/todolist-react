@@ -10,7 +10,8 @@ import {
   DeleteOutlined,
   CheckCircleOutlined,
   UnorderedListOutlined,
-  CheckOutlined
+  CheckOutlined,
+  SelectOutlined
 } from "@ant-design/icons";
 import {Row, Col, Input, Select, Button, Popover, List, Skeleton, DatePicker, message} from "antd";
 import todoApi from "../http/todo";
@@ -707,7 +708,7 @@ class File extends React.Component {
       )
     }
 
-    return (<div className="no-task-info-con">点击任务标题查看详情</div>)
+    return (<div className="no-task-info-con"><div><SelectOutlined className="no-task-info-con-icon" /></div><div>点击任务标题查看详情</div></div>)
   }
 
   render() {
