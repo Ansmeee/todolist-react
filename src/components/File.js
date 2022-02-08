@@ -546,7 +546,9 @@ class File extends React.Component {
               overlayClassName="pop-opt-con"
               placement="bottomLeft"
               visible={this.state.priorityPopVisible}
-              onVisibleChange={(visible) => {this.setState({ priorityPopVisible: visible})}}
+              onVisibleChange={(visible) => {
+                this.setState({priorityPopVisible: visible})
+              }}
               content={this.taskInfoPopContent('priority')}
               trigger="click">
               <Input
@@ -655,7 +657,7 @@ class File extends React.Component {
   }
 
   typePopVisibleChange(visible) {
-    this.setState({ TypePopVisible: visible})
+    this.setState({TypePopVisible: visible})
   }
 
   getCreateTaskForm() {
@@ -677,7 +679,9 @@ class File extends React.Component {
             <Popover
               placement="bottom"
               visible={this.state.TypePopVisible}
-              onVisibleChange={() => {this.typePopVisibleChange()}}
+              onVisibleChange={() => {
+                this.typePopVisibleChange()
+              }}
               trigger="click" title="新增分类"
               content={() => this.typePopoverContent()}>
               <Button type="text"><PlusOutlined/></Button>
@@ -708,7 +712,12 @@ class File extends React.Component {
       )
     }
 
-    return (<div className="no-task-info-con"><div><SelectOutlined className="no-task-info-con-icon" /></div><div>点击任务标题查看详情</div></div>)
+    return (
+      <div className="no-task-info-con">
+        <SelectOutlined className="no-task-info-con-icon"/>
+        <span>点击任务标题查看详情</span>
+      </div>
+    )
   }
 
   render() {
