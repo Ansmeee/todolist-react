@@ -11,7 +11,12 @@ const fileApi = {
 
   delete(id) {
     return index.Delete(`/rest/list/${id}`)
+  },
+
+  update(id, params) {
+    return index.Put(`/rest/list/${id}`, params)
   }
+
 }
 
 export default fileApi
