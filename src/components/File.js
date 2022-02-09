@@ -773,6 +773,7 @@ class File extends React.Component {
             }}
             size="small"
             itemLayout="vertical"
+            loading={this.state.loading}
             dataSource={this.state.todoList}
             className="file-item-con"
             renderItem={item => (
@@ -780,11 +781,9 @@ class File extends React.Component {
                 key={item.id}
                 extra={this.getListExtras(item)}
                 actions={this.getListActions(item)}>
-                <Skeleton loading={this.state.loading} active>
-                  <div onClick={() => {
-                    this.itemClick(item)
-                  }}>{item.title}</div>
-                </Skeleton>
+                <div onClick={() => {
+                  this.itemClick(item)
+                }}>{item.title}</div>
               </List.Item>
             )}
           />
