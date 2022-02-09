@@ -742,7 +742,7 @@ class File extends React.Component {
               <Popover
                 overlayClassName="pop-opt-con"
                 placement="bottomLeft"
-                title="排序方式"
+                title={<span><SortAscendingOutlined style={{marginRight: '3px'}}/>排序方式</span>}
                 content={this.sortPopContent()}
                 trigger="click">
                 <Button type={this.state.filterForm.sort_by ? 'link' : 'text'} className="filter-form-opt">
@@ -752,7 +752,7 @@ class File extends React.Component {
               <Popover
                 overlayClassName="pop-opt-con"
                 placement="bottomLeft"
-                title="展示内容"
+                title={<span><FilterOutlined style={{marginRight: '3px'}}/>展示内容</span>}
                 content={this.filterPopContent()}
                 trigger="click">
                 <Button type={this.state.filterForm.rules.length > 0 ? 'link' : 'text'} className="filter-form-opt">
