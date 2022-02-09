@@ -43,7 +43,7 @@ const indexApi = {
 
   Delete(path, params) {
     var headers = {'Authorization': window.localStorage.getItem('token')}
-    return axios.delete(apiHost + path, params, {headers: headers}).then((response) => {
+    return axios.delete(apiHost + path, {headers: headers, params: params}).then((response) => {
       return this.handlerResponse(response)
     }).catch((error) => {
     })

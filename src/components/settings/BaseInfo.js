@@ -1,7 +1,6 @@
 import React from "react";
 import {Input, Button, message} from "antd";
 import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
-import {browserHistory} from "react-router";
 import userApi from '../../http/user';
 
 const _ = require('lodash');

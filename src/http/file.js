@@ -7,6 +7,10 @@ const fileApi = {
 
   create(params){
     return index.Post(`/rest/list`, params)
+  },
+
+  delete(id) {
+    return index.Delete(`/rest/list/${id}`)
   }
 }
 

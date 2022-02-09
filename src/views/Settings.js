@@ -2,7 +2,7 @@ import React from "react"
 import {Collapse, message} from 'antd'
 import "../assets/style/settings.less"
 import Account from "../components/settings/Account"
-import System from "../components/settings/System";
+import Mydir from "../components/settings/Mydir";
 import BaseInfo from "../components/settings/BaseInfo";
 import userApi from "../http/user";
 import _ from "lodash";
@@ -72,7 +72,7 @@ class Settings extends React.Component {
             {this.baseInfo()}
           </Panel>
           <Panel header="系统设置" key="2">
-            <System></System>
+            <Mydir></Mydir>
           </Panel>
         </Collapse>
       </div>
