@@ -316,7 +316,7 @@ class File extends React.Component {
           </div>
         </div>
         <div className="item-opt-li item-opt-del">
-          <div onClick={() => {
+          <div className="item-opt-del-del" onClick={() => {
             this.removeTodo(item)
           }}><DeleteOutlined/> 删除
           </div>
