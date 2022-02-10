@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Input, Popconfirm, message} from "antd";
+import {Button, Input, Popover, message} from "antd";
 import fileApi from "../../http/file";
 import {CheckOutlined, CloseOutlined, DeleteOutlined} from "@ant-design/icons";
 
@@ -11,7 +11,8 @@ class Mydir extends React.Component {
     this.state = {
       dirList: [],
       originList: [],
-      modifyIndex: {}
+      modifyIndex: {},
+      delPopVisible: {},
     }
   }
 
@@ -22,7 +23,8 @@ class Mydir extends React.Component {
   loadDirList() {
     fileApi.fileList({}).then(response => {
       if (response.code === 200) {
-        this.setState({dirList: response.data.list})
+        var originList = _.cloneDeep(response.data.list)
+        this.setState({dirList: response.data.list, originList: originList})
       }
     })
   }
@@ -38,21 +40,46 @@ class Mydir extends React.Component {
           }}>
           <CheckOutlined className="item-li-val-success"/>
         </Button>,
-        <Button type="text" onClick={() => {
+        <Button type="text" onClick={(e) => {
+          this.updateDir(index, this.state.originList[index].title)
           this.updateModifyIndex(index, false)
         }}><CloseOutlined className="item-li-val-danger"/></Button>
       ]
     }
 
+    const delContent = <div>
+      <span>确认删除吗？文件夹下的文件不会被删除</span>
+      <CheckOutlined
+        onClick={() => {
+          var visibles = this.state.delPopVisible
+          visibles[index] = false
+          this.setState({delPopVisible: visibles})
+          this.delDir(dir, index)
+        }}
+        style={{cursor: "pointer", color: "rgb(56, 158, 13)", margin: "0px 20px"}}/>
+      <CloseOutlined
+        onClick={() => {
+          var visibles = this.state.delPopVisible
+          visibles[index] = false
+          this.setState({delPopVisible: visibles})
+        }}
+        style={{cursor: "pointer", color: "rgb(255, 77, 79)"}}/>
+    </div>
 
-    const delOpt =
-      <Popconfirm title="确认删除这条记录吗？" onConfirm={() => {this.delDir(dir, index)}} okText="删除" cancelText="取消">
-        <Button type="text"><DeleteOutlined className="item-li-val-danger"/>
-        </Button>
-      </Popconfirm>
+    const delOpt = <Popover visible={this.state.delPopVisible[index]} onVisibleChange={(visible) => {
+      var visibles = this.state.delPopVisible
+      visibles[index] = visible
+      this.setState({delPopVisible: visibles})
+    }} content={delContent} trigger="click">
+      <Button type="text"><DeleteOutlined className="item-li-val-danger"/></Button>
+    </Popover>
 
     options.push(delOpt)
     return options
+  }
+
+  delPopVisibleChange(visible) {
+    this.setState({delPopVisible: visible})
   }
 
   confirm(dir, index) {
@@ -100,6 +127,9 @@ class Mydir extends React.Component {
             onChange={(e) => {
               this.updateModifyIndex(index)
               this.updateDir(index, e.target.value)
+            }}
+            onPressEnter={(e) => {
+              this.confirm(item, index)
             }}
             value={item.title}>
           </Input>
