@@ -48,7 +48,7 @@ class Mydir extends React.Component {
     }
 
     const delContent = <div>
-      <span>确认删除吗？文件夹下的文件不会被删除</span>
+      <span>文件夹删除后文件会被保留，是否继续？</span>
       <CheckOutlined
         onClick={() => {
           var visibles = this.state.delPopVisible
