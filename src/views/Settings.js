@@ -67,14 +67,18 @@ class Settings extends React.Component {
     return (
       <div  className="settings-page-con">
         {this.accountInfo()}
-        <Collapse bordered={false} defaultActiveKey={['1']}>
-          <Panel header="基本信息" key="1">
-            {this.baseInfo()}
-          </Panel>
-          <Panel header="系统设置" key="2">
-            <Mydir></Mydir>
-          </Panel>
-        </Collapse>
+        <div style={{overflowY: "auto", height: document.documentElement.clientHeight - 65 - 70 - 150 - 48}}>
+          <Collapse
+            bordered={false}
+            defaultActiveKey={['1']}>
+            <Panel header="基本信息" key="1">
+              {this.baseInfo()}
+            </Panel>
+            <Panel header="系统设置" key="2">
+              <Mydir></Mydir>
+            </Panel>
+          </Collapse>
+        </div>
       </div>
     )
   }
