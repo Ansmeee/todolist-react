@@ -70,10 +70,10 @@ class Settings extends React.Component {
           <Collapse
             bordered={false}
             defaultActiveKey={['1']}>
-            <Panel header="基本信息" key="1">
+            <Panel header={<span style={{fontWeight: "bolder"}}>基本信息</span>} key="1">
               {this.baseInfo()}
             </Panel>
-            <Panel header="系统设置" key="2">
+            <Panel header={<span style={{fontWeight: "bolder"}}>系统设置</span>} key="2">
               <Mydir></Mydir>
             </Panel>
           </Collapse>
