@@ -2,6 +2,7 @@ import React from "react";
 import {Input, Button, message} from "antd";
 import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
 import userApi from '../../http/user';
+import {setUserInfo} from "../../utils/user";
 
 const _ = require('lodash');
 
@@ -48,10 +49,13 @@ class userInfo extends React.Component {
 
     userApi.updateAttr(params).then(response => {
       if (response.code === 200) {
-        message.success('已更新')
+        message.success('已保存')
         this.updateModifiedKey(key, false)
+        if (key === 'name') {
+          setUserInfo("name", this.state.userInfo[key])
+        }
       } else {
-        message.error(response.msg || '更新失败')
+        message.error(response.msg || '保存失败')
         this.updateModifiedKey(key, false)
       }
     })

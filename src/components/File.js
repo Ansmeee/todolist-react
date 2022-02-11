@@ -236,10 +236,10 @@ class File extends React.Component {
   updateAttr(params) {
     todoApi.updateAttr(params).then(response => {
       if (response.code === 200) {
-        message.success('已更新')
+        message.success('已保存')
         this.updateTodoList(response.data)
       } else {
-        message.error(response.msg || '更新失败')
+        message.error(response.msg || '保存失败')
       }
     })
   }

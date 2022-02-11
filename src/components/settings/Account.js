@@ -3,6 +3,7 @@ import {LoadingOutlined, UploadOutlined, CrownOutlined} from "@ant-design/icons"
 import {Upload, message} from "antd";
 import ImgCrop from 'antd-img-crop';
 import userApi from "../../http/user";
+import {setUserInfo} from "../../utils/user";
 
 function uploadPath() {
   return userApi.iconUploadPath()
@@ -57,7 +58,7 @@ class Account extends React.Component {
       if (info.file.response.code === 200) {
         message.success('上传成功')
         var iconPath = info.file.response.data
-
+        setUserInfo("icon", iconPath)
         this.getBase64(info.file.originFileObj, icon =>
           this.setState({
             icon,

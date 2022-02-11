@@ -77,7 +77,7 @@ class Head extends React.Component {
       var icon = this.props.icon
       if (icon) {
         var cusavatar = (
-          <Avatar src={icon}/>
+          <Avatar id="user-icon" src={icon}/>
         )
       } else {
         var account = this.props.name ? this.props.name : ''
@@ -96,7 +96,7 @@ class Head extends React.Component {
             placement="bottom"
             trigger="click">
             {cusavatar}
-            <span className="header-con-username">{name}</span>
+            <span className="header-con-username" id="user-name">{name}</span>
             <DownOutlined style={{fontSize: '14px'}} />
           </Popover>
         </div>

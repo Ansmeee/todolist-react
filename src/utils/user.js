@@ -44,9 +44,9 @@ function getUserInfoFromLocal() {
     return null
   }
 
-  var name = payload.name
-  var icon = payload.icon
-  var account = payload.account
+  var name = getUserInfo("name")
+  var icon = getUserInfo("icon")
+  var account = getUserInfo("account")
   if (!account) {
     return null
   }
