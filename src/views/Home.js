@@ -1,6 +1,5 @@
 import React from "react";
 import "../assets/style/home.less"
-import {browserHistory} from 'react-router'
 import {Layout} from 'antd';
 import Head from "../components/layout/Head";
 import Side from "../components/layout/Side";
@@ -27,7 +26,7 @@ class Home extends React.Component {
         <Head account={this.state.account} name={this.state.name} icon={this.state.icon}></Head>
         {this.getContent()}
         <Footer className="footer-con">
-          TooDoo ©2021 Created by Ansme
+          ToDoo ©2021 Created by Ansme
         </Footer>
       </Layout>
     )
