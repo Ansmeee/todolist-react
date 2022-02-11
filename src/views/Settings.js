@@ -11,7 +11,6 @@ import {browserHistory} from "react-router";
 const { Panel } = Collapse
 class Settings extends React.Component {
   constructor(props) {
-    console.log('hhhh', Date.now())
     super(props);
     this.state = {
       userInfo: null

@@ -610,7 +610,7 @@ class File extends React.Component {
       fileApi.create(params).then(response => {
         if (response.code === 200) {
           message.success('已保存')
-
+          window.sessionStorage.setItem("menuChange", "1")
           var dirList = this.state.dirList
           dirList.push({label: response.data.title, value: response.data.id})
           this.setState({dirList: dirList}, this.taskInfoListChange(response.data.id))
@@ -682,7 +682,8 @@ class File extends React.Component {
               onVisibleChange={() => {
                 this.typePopVisibleChange()
               }}
-              trigger="click" title="新增分类"
+              trigger="click"
+              title="新增分类"
               content={() => this.typePopoverContent()}>
               <Button type="text"><PlusOutlined/></Button>
             </Popover>
