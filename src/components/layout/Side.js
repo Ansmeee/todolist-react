@@ -50,17 +50,16 @@ class Side extends React.Component {
           style={{height: '100%'}}
           mode="inline">
           <Menu.Item key="/latest">最近查看</Menu.Item>
-          <SubMenu key="dir" title="我的文件夹">
+          <SubMenu key="dir" title="我的文件夹" onTitleClick={() => {
+            window.sessionStorage.getItem("menuChange") && this.loadMenuList()
+            window.sessionStorage.removeItem("menuChange")
+          }}>
             {this.state.menuList}
           </SubMenu>
           <Menu.Item key="/done">已完成</Menu.Item>
         </Menu>
       )
     }
-  }
-
-  menuItems() {
-    return this.state.menuList
   }
 
   loadMenuList() {

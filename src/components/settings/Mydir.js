@@ -36,27 +36,33 @@ class Mydir extends React.Component {
         <Button
           type="text"
           onClick={() => {
+            this.dirChange()
             this.confirm(dir, index)
           }}>
           <CheckOutlined className="item-li-val-success"/>
         </Button>,
-        <Button type="text" onClick={(e) => {
-          this.updateDir(index, this.state.originList[index].title)
-          this.updateModifyIndex(index, false)
-        }}><CloseOutlined className="item-li-val-danger"/></Button>
+        <Button
+          type="text"
+          onClick={() => {
+            this.updateDir(index, this.state.originList[index].title)
+            this.updateModifyIndex(index, false)
+          }}>
+          <CloseOutlined className="item-li-val-danger"/>
+        </Button>
       ]
     }
 
     const delContent = <div>
       <span>文件夹删除后文件会被保留，是否继续？</span>
       <CheckOutlined
+        style={{cursor: "pointer", color: "rgb(56, 158, 13)", margin: "0px 20px"}}
         onClick={() => {
           var visibles = this.state.delPopVisible
           visibles[index] = false
           this.setState({delPopVisible: visibles})
           this.delDir(dir, index)
-        }}
-        style={{cursor: "pointer", color: "rgb(56, 158, 13)", margin: "0px 20px"}}/>
+          this.dirChange()
+        }}/>
       <CloseOutlined
         onClick={() => {
           var visibles = this.state.delPopVisible
@@ -80,6 +86,10 @@ class Mydir extends React.Component {
 
   delPopVisibleChange(visible) {
     this.setState({delPopVisible: visible})
+  }
+
+  dirChange() {
+    window.sessionStorage.setItem("menuChange", "1")
   }
 
   confirm(dir, index) {
@@ -129,6 +139,7 @@ class Mydir extends React.Component {
               this.updateDir(index, e.target.value)
             }}
             onPressEnter={(e) => {
+              this.dirChange()
               this.confirm(item, index)
             }}
             value={item.title}>
