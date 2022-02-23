@@ -50,6 +50,7 @@ class Side extends React.Component {
           style={{height: '100%'}}
           mode="inline">
           <Menu.Item key="/latest">最近查看</Menu.Item>
+          <Menu.Item key="/calendar">我的日程</Menu.Item>
           <SubMenu key="dir" title="我的文件夹" onTitleClick={() => {
             window.sessionStorage.getItem("menuChange") && this.loadMenuList()
             window.sessionStorage.removeItem("menuChange")

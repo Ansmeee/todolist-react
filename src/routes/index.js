@@ -2,6 +2,7 @@ import React from 'react'
 import {browserHistory, Route, Router, IndexRoute} from "react-router";
 import Home from "../views/Home"
 import Latest from "../views/Latest"
+import Calendar from "../views/Calendar"
 import Done from "../views/Done"
 import Dir from "../views/Dir"
 import Signin from "../views/Signin"
@@ -27,6 +28,7 @@ class Routes extends React.Component {
           <Route path="/signup" component={Signup}/>
           <Route path="/signin" component={Signin}/>
           <Route path="/resetPass" component={ResetPass}/>
+          <Route path="/calendar" component={Calendar} onEnter={() => {this.checkAccess()}}/>
           <Route path="/latest" component={Latest} onEnter={() => {this.checkAccess()}}/>
           <Route path="/done" component={Done} onEnter={() => {this.checkAccess()}}/>
           <Route path="/dir/:id" component={Dir} onEnter={() => {this.checkAccess()}}/>
