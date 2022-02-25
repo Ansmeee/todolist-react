@@ -5,7 +5,6 @@ import Account from "../components/settings/Account"
 import Mydir from "../components/settings/Mydir";
 import BaseInfo from "../components/settings/BaseInfo";
 import userApi from "../http/user";
-import _ from "lodash";
 import {getUserInfoFromLocal} from "../utils/user";
 import {browserHistory} from "react-router";
 const { Panel } = Collapse
