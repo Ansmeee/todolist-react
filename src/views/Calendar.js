@@ -94,16 +94,15 @@ class MyCalendar extends React.Component {
       disabled = false
       var date = this.state.currentYear + '-' + this.state.currentMonth + '-' + today
     } else {
-      const perWeek = (this.lastDateOfMonth() - (6 - this.firstDayOffset() + 1)) / 7
-      if (perWeek > 4) {
 
-      } else {
-        today = (day - this.lastDayOffset() === 1) ? (this.state.currentMonth === 12 ? '1月1日' : (this.state.currentMonth + 1) + '月1日') : day - this.lastDayOffset()
-        disabled = true
-        const currentY = this.state.currentMonth === 12 ? this.state.currentYear + 1 : this.state.currentYear
-        const currentM = this.state.currentMonth === 12 ? 1 : this.state.currentMonth + 1
-        var date = currentY + '-' + currentM + '-' + day - this.lastDayOffset()
-      }
+      const offsetDay = (week * 7 + day + 1) - this.lastDateOfMonth() - this.firstDayOffset()
+
+      today = offsetDay === 1 ? (this.state.currentMonth === 12 ? '1月1日' : (this.state.currentMonth + 1) + '月1日') : offsetDay
+      disabled = true
+      const currentY = this.state.currentMonth === 12 ? this.state.currentYear + 1 : this.state.currentYear
+      const currentM = this.state.currentMonth === 12 ? 1 : this.state.currentMonth + 1
+      var date = currentY + '-' + currentM + '-' + offsetDay
+
     }
 
     return {
