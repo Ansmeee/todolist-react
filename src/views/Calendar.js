@@ -1,17 +1,18 @@
 import React from "react"
 import "../assets/style/calendar.less"
-import {Table, Radio, Button} from "antd";
+import {CaretRightOutlined, CaretLeftOutlined} from '@ant-design/icons';
+import {Table, Button} from "antd";
 
 class MyCalendar extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentYear: new Date().getFullYear(),
-      currentMonth: new Date().getMonth() + 1,
-      currentDay: new Date(),
-      lastMonth: new Date().getMonth() == 0 ? 12 : new Date().getMonth(),
-      currentMonthString: new Date().getFullYear() + '年' + (new Date().getMonth() + 1) + '月',
+      currentYear: new Date("2021-12-1").getFullYear(),
+      currentMonth: new Date("2021-12-1").getMonth() + 1,
+      currentDay: new Date("2021-12-1"),
+      lastMonth: new Date("2021-12-1").getMonth() == 0 ? 12 : new Date("2021-12-1").getMonth(),
+      currentMonthString: new Date("2021-12-1").getFullYear() + '年' + (new Date("2021-12-1").getMonth() + 1) + '月',
       days: [],
       weekDays: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
     }
@@ -40,7 +41,7 @@ class MyCalendar extends React.Component {
 
   setDays() {
     var days = []
-    for (var week = 0; week < 5; week++) {
+    for (var week = 0; week < 6; week++) {
       var currentWeek = {
         'week-0': '', 'week-1': '', 'week-2': '', 'week-3': '',
         'week-4': '', 'week-5': '', 'week-6': '',
@@ -57,20 +58,33 @@ class MyCalendar extends React.Component {
   }
 
   getDay(week, day) {
+    const newDate = new Date()
+    const currentDate = newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate()
     var today
     var disabled
     if (week === 0) {
       if (this.firstDayOffset() <= day) {
         today = this.firstDayOffset() === day ? this.state.currentMonth + '月' + 1 + '日' : 1 + (day - this.firstDayOffset())
         disabled = false
+        var date = this.state.currentYear + '-' + this.state.currentMonth + '-' + (this.firstDayOffset() === day ? 1 : today)
       } else {
         today = this.lastDateOfLastMonth() - (this.firstDayOffset() - 1 - day)
         disabled = true
+
+        const currentY = this.state.currentMonth === 1 ? this.state.currentYear - 1 : this.state.currentYear
+        const currentM = this.state.currentMonth === 1 ? 12 : this.state.currentMonth - 1
+        var date = currentY + '-' + currentM + '-' + today
       }
 
+      const isToday = (currentDate === this.state.currentYear + '-' + this.state.currentMonth + '-' + today)
+        || (currentDate === this.state.currentYear + '-' + (this.state.currentMonth - 1) + '-' + today)
+        || (currentDate === (this.state.currentYear - 1) + '-' + (this.state.currentMonth - 1) + '-' + today)
+
       return {
-        value: today,
-        disabled: disabled
+        day: today,
+        disabled: disabled,
+        today: isToday ? true : false,
+        date: date
       }
     }
 
@@ -78,14 +92,25 @@ class MyCalendar extends React.Component {
     if (thisDay <= this.lastDateOfMonth()) {
       today = thisDay
       disabled = false
+      var date = this.state.currentYear + '-' + this.state.currentMonth + '-' + today
     } else {
-      today = this.lastDayOffset() + (day - this.lastDayOffset() - 1)
-      disabled = true
+      const perWeek = (this.lastDateOfMonth() - (6 - this.firstDayOffset() + 1)) / 7
+      if (perWeek > 4) {
+
+      } else {
+        today = (day - this.lastDayOffset() === 1) ? (this.state.currentMonth === 12 ? '1月1日' : (this.state.currentMonth + 1) + '月1日') : day - this.lastDayOffset()
+        disabled = true
+        const currentY = this.state.currentMonth === 12 ? this.state.currentYear + 1 : this.state.currentYear
+        const currentM = this.state.currentMonth === 12 ? 1 : this.state.currentMonth + 1
+        var date = currentY + '-' + currentM + '-' + day - this.lastDayOffset()
+      }
     }
 
     return {
-      value: today,
-      disabled: disabled
+      day: today,
+      disabled: disabled,
+      date: date,
+      today: currentDate === this.state.currentYear + '-' + this.state.currentMonth + '-' + today ? true : false,
     }
   }
 
@@ -94,12 +119,20 @@ class MyCalendar extends React.Component {
   }
 
   getDayCell(record, index) {
-    const value = record['week-' + index].value
+    const currentDay = record['week-' + index]
     return (
-      <div style={{height: (document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 55 - 55) / 5}}>
-        {value}
+      <div className={"calendar-day " + `${currentDay.disabled ? 'disabled' : ''}`}
+           style={{height: (document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 60) / 6}}>
+        <span className={`${currentDay.today ? 'today' : ''}`}>{currentDay.day}</span>
+        <div className="calendar-item-con">
+          {this.getDayTasks(currentDay.date)}
+        </div>
       </div>
     )
+  }
+
+  getDayTasks(date) {
+    console.log(date)
   }
 
   lastMonth() {
@@ -154,25 +187,25 @@ class MyCalendar extends React.Component {
           <div>
             <Button type="text" onClick={() => {
               this.lastMonth()
-            }}>上月</Button>
+            }}><CaretLeftOutlined style={{fontSize: '15px'}}/></Button>
             <Button type="text" onClick={() => {
               this.thisMonth()
             }}>今天</Button>
             <Button type="text" onClick={() => {
               this.nextMonth()
-            }}>下月</Button>
+            }}><CaretRightOutlined style={{fontSize: '15px'}}/></Button>
           </div>
         </div>
 
         <Table
-          style={{height: '100%'}}
+          className="calendar-table"
           bordered={true}
           pagination={false}
           columns={columns}
           ellipsis={true}
           scroll={
             document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 55 < 500
-              ? {y: document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 55 } : null
+              ? {y: document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 55} : null
           }
           dataSource={this.state.days}>
         </Table>
