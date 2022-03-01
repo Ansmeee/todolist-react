@@ -2,6 +2,7 @@ import React from "react"
 import "../assets/style/calendar.less"
 import {CaretRightOutlined, CaretLeftOutlined} from '@ant-design/icons';
 import {Table, Button} from "antd";
+import todoApi from "../http/todo";
 
 class MyCalendar extends React.Component {
   constructor(props) {
@@ -15,6 +16,9 @@ class MyCalendar extends React.Component {
       currentMonthString: new Date().getFullYear() + '年' + (new Date().getMonth() + 1) + '月',
       days: [],
       weekDays: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+      firstDate: '',
+      lastDate: '',
+      taskList: []
     }
   }
 
@@ -41,6 +45,8 @@ class MyCalendar extends React.Component {
 
   setDays() {
     var days = []
+    var firstDate = ''
+    var lastDate = ''
     for (var week = 0; week < 6; week++) {
       var currentWeek = {
         'week-0': '', 'week-1': '', 'week-2': '', 'week-3': '',
@@ -48,13 +54,23 @@ class MyCalendar extends React.Component {
       }
 
       for (var day = 0; day < 7; day++) {
-        currentWeek["week-" + day] = this.getDay(week, day)
+        const currentDay = this.getDay(week, day)
+        currentWeek["week-" + day] = currentDay
+        if (week === 0 && day === 0) {
+          firstDate = currentDay.date
+        }
+
+        if (week === 5 && day === 6) {
+          lastDate = currentDay.date
+        }
       }
 
       days.push(currentWeek)
     }
 
-    this.setState({days: days})
+    this.setState({days: days, firstDate: firstDate, lastDate: lastDate}, () => {
+      this.loadMyTasks()
+    })
   }
 
   getDay(week, day) {
@@ -116,7 +132,9 @@ class MyCalendar extends React.Component {
     return (
       <div className={"calendar-day " + `${currentDay.disabled ? 'disabled' : ''}`}
            style={{height: (document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 60) / 6}}>
-        <div className="calendar-date-con">{this.getDate(currentDay)}</div>
+        <div className="calendar-date-con">
+          {this.getDate(currentDay)}
+        </div>
         <div className="calendar-item-con">
           {this.getDayTasks(currentDay.date)}
         </div>
@@ -125,8 +143,8 @@ class MyCalendar extends React.Component {
   }
 
   getDate(currentDay) {
-    const Today = <span className={"day" + `${currentDay.today ? ' today' : ''}`}>{currentDay.day}</span>
     const thisDate = new Date(currentDay.date)
+    const Today = <span className={"day" + `${currentDay.today ? ' today' : ''}`}>{currentDay.day}</span>
     if (thisDate.getDate() === 1) {
       var month = thisDate.getMonth() + 1
 
@@ -139,6 +157,7 @@ class MyCalendar extends React.Component {
 
     return Today
   }
+
   getDayTasks(date) {
     console.log(date)
   }
@@ -174,6 +193,18 @@ class MyCalendar extends React.Component {
       lastMonth: date.getMonth() == 0 ? 12 : date.getMonth(),
     }, () => {
       this.setDays()
+    })
+  }
+
+  loadMyTasks() {
+    var params = {
+      first_date: this.state.firstDate,
+      last_date: this.state.lastDate
+    }
+    todoApi.todoList(params).then(response => {
+      if (response.code === 200) {
+        this.state.taskList = response.data
+      }
     })
   }
 
