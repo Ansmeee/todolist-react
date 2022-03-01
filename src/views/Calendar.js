@@ -8,11 +8,11 @@ class MyCalendar extends React.Component {
     super(props);
 
     this.state = {
-      currentYear: new Date("2021-12-1").getFullYear(),
-      currentMonth: new Date("2021-12-1").getMonth() + 1,
-      currentDay: new Date("2021-12-1"),
-      lastMonth: new Date("2021-12-1").getMonth() == 0 ? 12 : new Date("2021-12-1").getMonth(),
-      currentMonthString: new Date("2021-12-1").getFullYear() + '年' + (new Date("2021-12-1").getMonth() + 1) + '月',
+      currentYear: new Date().getFullYear(),
+      currentMonth: new Date().getMonth() + 1,
+      currentDay: new Date(),
+      lastMonth: new Date().getMonth() == 0 ? 12 : new Date().getMonth(),
+      currentMonthString: new Date().getFullYear() + '年' + (new Date().getMonth() + 1) + '月',
       days: [],
       weekDays: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
     }
@@ -64,26 +64,21 @@ class MyCalendar extends React.Component {
     var disabled
     if (week === 0) {
       if (this.firstDayOffset() <= day) {
-        today = this.firstDayOffset() === day ? this.state.currentMonth + '月' + 1 + '日' : 1 + (day - this.firstDayOffset())
         disabled = false
+        today = this.firstDayOffset() === day ? 1 : 1 + (day - this.firstDayOffset())
         var date = this.state.currentYear + '-' + this.state.currentMonth + '-' + (this.firstDayOffset() === day ? 1 : today)
       } else {
-        today = this.lastDateOfLastMonth() - (this.firstDayOffset() - 1 - day)
         disabled = true
-
+        today = this.lastDateOfLastMonth() - (this.firstDayOffset() - 1 - day)
         const currentY = this.state.currentMonth === 1 ? this.state.currentYear - 1 : this.state.currentYear
         const currentM = this.state.currentMonth === 1 ? 12 : this.state.currentMonth - 1
         var date = currentY + '-' + currentM + '-' + today
       }
 
-      const isToday = (currentDate === this.state.currentYear + '-' + this.state.currentMonth + '-' + today)
-        || (currentDate === this.state.currentYear + '-' + (this.state.currentMonth - 1) + '-' + today)
-        || (currentDate === (this.state.currentYear - 1) + '-' + (this.state.currentMonth - 1) + '-' + today)
-
       return {
         day: today,
         disabled: disabled,
-        today: isToday ? true : false,
+        today: currentDate === date ? true : false,
         date: date
       }
     }
@@ -95,10 +90,9 @@ class MyCalendar extends React.Component {
       var date = this.state.currentYear + '-' + this.state.currentMonth + '-' + today
     } else {
 
-      const offsetDay = (week * 7 + day + 1) - this.lastDateOfMonth() - this.firstDayOffset()
-
-      today = offsetDay === 1 ? (this.state.currentMonth === 12 ? '1月1日' : (this.state.currentMonth + 1) + '月1日') : offsetDay
       disabled = true
+      var offsetDay = (week * 7 + day + 1) - this.lastDateOfMonth() - this.firstDayOffset()
+      today = offsetDay === 1 ? 1 : offsetDay
       const currentY = this.state.currentMonth === 12 ? this.state.currentYear + 1 : this.state.currentYear
       const currentM = this.state.currentMonth === 12 ? 1 : this.state.currentMonth + 1
       var date = currentY + '-' + currentM + '-' + offsetDay
@@ -109,7 +103,7 @@ class MyCalendar extends React.Component {
       day: today,
       disabled: disabled,
       date: date,
-      today: currentDate === this.state.currentYear + '-' + this.state.currentMonth + '-' + today ? true : false,
+      today: currentDate === date ? true : false,
     }
   }
 
@@ -122,7 +116,7 @@ class MyCalendar extends React.Component {
     return (
       <div className={"calendar-day " + `${currentDay.disabled ? 'disabled' : ''}`}
            style={{height: (document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 60) / 6}}>
-        <span className={`${currentDay.today ? 'today' : ''}`}>{currentDay.day}</span>
+        <div className="calendar-date-con">{this.getDate(currentDay)}</div>
         <div className="calendar-item-con">
           {this.getDayTasks(currentDay.date)}
         </div>
@@ -130,6 +124,21 @@ class MyCalendar extends React.Component {
     )
   }
 
+  getDate(currentDay) {
+    const Today = <span className={"day" + `${currentDay.today ? ' today' : ''}`}>{currentDay.day}</span>
+    const thisDate = new Date(currentDay.date)
+    if (thisDate.getDate() === 1) {
+      var month = thisDate.getMonth() + 1
+
+      if (currentDay.today) {
+        return <div className="today-is-firstday">{month}月{Today}日</div>
+      }
+
+      return <div>{month}月{currentDay.day}日</div>
+    }
+
+    return Today
+  }
   getDayTasks(date) {
     console.log(date)
   }
