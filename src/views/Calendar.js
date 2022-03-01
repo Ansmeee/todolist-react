@@ -135,7 +135,7 @@ class MyCalendar extends React.Component {
       <div className={"calendar-day " + `${currentDay.disabled ? 'disabled' : ''}`}
            style={{
              height: (document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 60) / 6,
-             minHeight: 80,
+             minHeight: 90,
              maxHeight: 300
            }}>
         <div className="calendar-date-con">
@@ -165,13 +165,23 @@ class MyCalendar extends React.Component {
   }
 
   getDayTasks(date) {
+    var conHeight = parseInt((document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 60) / 6)
+    var height = conHeight <= 90 ? 90 : (conHeight >= 300 ? 300 : conHeight)
+    var maxNum = parseInt((height - 40) / 18) - 1
     var currentDate = moment(date).format("yyyy-MM-DD")
-    const tasks = this.state.taskList.map(item => {
+
+    console.log(height, maxNum)
+    var tasks = []
+    this.state.taskList.forEach(item => {
       if (item.deadline == currentDate) {
-        return <span className={"task-title" + ` priority-${item.priority}`}>{item.title}</span>
+        tasks.push(<span className={"task-title" + ` priority-${item.priority}`}>{item.title}</span>)
       }
     })
 
+    if (tasks.length > maxNum) {
+      tasks.splice(maxNum)
+      tasks.push(<span className="task-title">查看更多...</span>)
+    }
     return (tasks)
   }
 
