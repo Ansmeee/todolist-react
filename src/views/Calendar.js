@@ -131,10 +131,10 @@ class MyCalendar extends React.Component {
       var month = thisDate.getMonth() + 1
 
       if (currentDay.today) {
-        return <div className="today-is-firstday">{month}月{Today}日</div>
+        return <span className="today-is-firstday">{month}月{Today}日</span>
       }
 
-      return <div>{month}月{currentDay.day}日</div>
+      return <span>{month}月{currentDay.day}日</span>
     }
 
     return Today
