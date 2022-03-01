@@ -24,7 +24,7 @@ class Routes extends React.Component {
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Home}>
-          <IndexRoute component={Latest} onEnter={() => {this.checkAccess()}}/>
+          <IndexRoute component={Calendar} onEnter={() => {this.checkAccess()}}/>
           <Route path="/signup" component={Signup}/>
           <Route path="/signin" component={Signin}/>
           <Route path="/resetPass" component={ResetPass}/>
