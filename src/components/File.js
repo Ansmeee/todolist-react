@@ -39,7 +39,7 @@ class File extends React.Component {
         content: '',
         deadline: '',
         priority: '',
-        list_id: 0
+        list_id: ''
       },
       datePickerVisible: false,
       createModalVisible: false,
@@ -409,7 +409,7 @@ class File extends React.Component {
 
   taskInfoListChange(value) {
     var currentTask = this.state.currentTask
-    currentTask.list_id = parseInt(value)
+    currentTask.list_id = value
     this.setState({currentTask: currentTask})
   }
 
@@ -673,7 +673,7 @@ class File extends React.Component {
               onChange={(value) => {
                 this.taskInfoListChange(value)
               }}
-              value={this.state.currentTask.list_id}>
+              value={this.state.currentTask.list_id ? this.state.currentTask.list_id.toString() : null}>
               {this.typeOptions()}
             </Select>
             <Popover
