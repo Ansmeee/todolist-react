@@ -55,6 +55,42 @@
 
       .calendar-day {
         padding: 2px;
+
+        .calendar-item-con {
+          width: 100%;
+          padding: 0px 5px;
+          .task-title {
+            display: block;
+            width: 100%;
+            height: 16px;
+            line-height: 16px;
+            border-radius: 5px;
+            margin: 2px;
+            padding: 0px 4px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #ffffff;
+          }
+
+          .priority-3 {
+            background-color: rgb(255, 77, 79);
+          }
+
+          .priority-2 {
+            background-color: rgb(250, 173, 20);
+          }
+
+          .priority-1 {
+            background-color: rgb(24, 144, 255);
+          }
+
+          .priority-0 {
+            background-color: rgb(56, 158, 13)
+          }
+        }
       }
 
       .disabled {

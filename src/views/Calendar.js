@@ -3,6 +3,7 @@ import "../assets/style/calendar.less"
 import {CaretRightOutlined, CaretLeftOutlined} from '@ant-design/icons';
 import {Table, Button} from "antd";
 import todoApi from "../http/todo";
+import moment from "moment";
 
 class MyCalendar extends React.Component {
   constructor(props) {
@@ -18,7 +19,8 @@ class MyCalendar extends React.Component {
       weekDays: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
       firstDate: '',
       lastDate: '',
-      taskList: []
+      taskList: [],
+      loadTask: 0,
     }
   }
 
@@ -131,7 +133,11 @@ class MyCalendar extends React.Component {
     const currentDay = record['week-' + index]
     return (
       <div className={"calendar-day " + `${currentDay.disabled ? 'disabled' : ''}`}
-           style={{height: (document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 60) / 6}}>
+           style={{
+             height: (document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 60) / 6,
+             minHeight: 80,
+             maxHeight: 300
+           }}>
         <div className="calendar-date-con">
           {this.getDate(currentDay)}
         </div>
@@ -159,7 +165,14 @@ class MyCalendar extends React.Component {
   }
 
   getDayTasks(date) {
-    console.log(date)
+    var currentDate = moment(date).format("yyyy-MM-DD")
+    const tasks = this.state.taskList.map(item => {
+      if (item.deadline == currentDate) {
+        return <span className={"task-title" + ` priority-${item.priority}`}>{item.title}</span>
+      }
+    })
+
+    return (tasks)
   }
 
   lastMonth() {
@@ -199,11 +212,13 @@ class MyCalendar extends React.Component {
   loadMyTasks() {
     var params = {
       first_date: this.state.firstDate,
-      last_date: this.state.lastDate
+      last_date: this.state.lastDate,
+      sort_order: 'desc',
+      sort_by: 'priority'
     }
     todoApi.todoList(params).then(response => {
       if (response.code === 200) {
-        this.state.taskList = response.data
+        this.setState({taskList: response.data.list && response.data.list.length > 0 ? response.data.list : []})
       }
     })
   }
@@ -243,8 +258,8 @@ class MyCalendar extends React.Component {
           columns={columns}
           ellipsis={true}
           scroll={
-            document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 55 < 500
-              ? {y: document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 55} : null
+            document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 60 < 500
+              ? {y: document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 60} : null
           }
           dataSource={this.state.days}>
         </Table>
