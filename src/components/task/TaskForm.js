@@ -29,6 +29,11 @@ class TaskForm extends React.Component {
   }
 
   componentDidMount() {
+    if (this.props.date) {
+      var currentTask = this.props.currentTask
+      currentTask.deadline = moment(this.props.date).format("YYYY-MM-DD")
+      this.setState({currentTask: currentTask})
+    }
     this.setDirList()
   }
 

@@ -6,12 +6,23 @@ import todoApi from "../http/todo";
 import moment from "moment";
 import fileApi from "../http/file";
 import common from "../components/Common"
+import TaskForm from "../components/task/TaskForm";
+import _ from "lodash";
 
 class MyCalendar extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      priorityKey2Name: {3: '高', 2: '中', 1: '低', 0: '无'},
+      currentTask: {
+        id: '',
+        title: '',
+        content: '',
+        deadline: '',
+        priority: '',
+        list_id: ''
+      },
       currentYear: new Date().getFullYear(),
       currentMonth: new Date().getMonth() + 1,
       currentDay: new Date(),
@@ -23,7 +34,7 @@ class MyCalendar extends React.Component {
       lastDate: '',
       taskList: [],
       loadTask: 0,
-      dirList: []
+      dirList: [],
     }
   }
 
@@ -158,14 +169,13 @@ class MyCalendar extends React.Component {
     this.setState({dirList: dirList})
   }
 
+  onTaskCreated = (task) => {
+    console.log(task)
+  }
+
   getDayCell(record, index) {
     const currentDay = record['week-' + index]
-
-    const createTaskPopCon = (
-      <div>
-
-      </div>
-    )
+    const taskPopForm = (<TaskForm date={currentDay.date} currentTask={this.state.currentTask} onTaskCreated={this.onTaskCreated}></TaskForm>)
 
     return (
       <div className={"calendar-day " + `${currentDay.disabled ? 'disabled' : ''}`}
@@ -176,7 +186,9 @@ class MyCalendar extends React.Component {
            }}>
         <div className="calendar-date-con">
           {this.getDate(currentDay)}
-          <Popover content={createTaskPopCon} title="新建日程" trigger="click" placement="rightTop">
+          <Popover
+            content={taskPopForm}
+            title="新建日程" trigger="click" placement="rightTop">
             <EllipsisOutlined className="day calendar-date-opt"/>
           </Popover>
         </div>
