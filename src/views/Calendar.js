@@ -1,9 +1,11 @@
 import React from "react"
 import "../assets/style/calendar.less"
-import {CaretRightOutlined, CaretLeftOutlined} from '@ant-design/icons';
-import {Table, Button} from "antd";
+import {CaretRightOutlined, CaretLeftOutlined, EllipsisOutlined} from '@ant-design/icons';
+import {Table, Button, Popover, Menu} from "antd";
 import todoApi from "../http/todo";
 import moment from "moment";
+import fileApi from "../http/file";
+import common from "../components/Common"
 
 class MyCalendar extends React.Component {
   constructor(props) {
@@ -21,6 +23,7 @@ class MyCalendar extends React.Component {
       lastDate: '',
       taskList: [],
       loadTask: 0,
+      dirList: []
     }
   }
 
@@ -127,10 +130,43 @@ class MyCalendar extends React.Component {
 
   componentDidMount() {
     this.setDays()
+    this.setDirList()
+  }
+
+  setDirList() {
+    const dirString = window.localStorage.getItem("menu")
+
+    if (!dirString) {
+      fileApi.fileList({}).then(response => {
+        if (response.code === 200) {
+          window.localStorage.setItem("menu", JSON.stringify(response.data.list))
+          const dirList = response.data.list.map(item => {
+            return {label: item.title, value: item.id}
+          })
+
+          this.setState({dirList: dirList})
+        }
+      })
+      return
+    }
+
+    const dir = JSON.parse(dirString)
+    var dirList = dir.map(item => {
+      return {label: item.title, value: item.id}
+    })
+
+    this.setState({dirList: dirList})
   }
 
   getDayCell(record, index) {
     const currentDay = record['week-' + index]
+
+    const createTaskPopCon = (
+      <div>
+
+      </div>
+    )
+
     return (
       <div className={"calendar-day " + `${currentDay.disabled ? 'disabled' : ''}`}
            style={{
@@ -140,12 +176,20 @@ class MyCalendar extends React.Component {
            }}>
         <div className="calendar-date-con">
           {this.getDate(currentDay)}
+          <Popover content={createTaskPopCon} title="新建日程" trigger="click" placement="rightTop">
+            <EllipsisOutlined className="day calendar-date-opt"/>
+          </Popover>
         </div>
         <div className="calendar-item-con">
           {this.getDayTasks(currentDay.date)}
         </div>
       </div>
     )
+  }
+
+  createTask(currentDay) {
+    const thisDate = moment(currentDay).format('yyyy-MM-DD')
+    console.log(thisDate)
   }
 
   getDate(currentDay) {
@@ -170,7 +214,6 @@ class MyCalendar extends React.Component {
     var maxNum = parseInt((height - 40) / 18) - 1
     var currentDate = moment(date).format("yyyy-MM-DD")
 
-    console.log(height, maxNum)
     var tasks = []
     this.state.taskList.forEach(item => {
       if (item.deadline == currentDate) {

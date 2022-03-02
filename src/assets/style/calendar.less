@@ -30,11 +30,25 @@
         background: none !important;
       }
 
+      .calendar-day:hover {
+        .calendar-date-con .calendar-date-opt {
+          opacity: 1;
+          cursor: pointer;
+        }
+      }
+
       .calendar-day {
         padding: 2px;
-
         .calendar-date-con {
           margin-bottom: 2px;
+          display: flex;
+          justify-content: space-between;
+
+          .calendar-date-opt {
+            opacity: 0;
+            cursor: pointer;
+          }
+
           .today-is-firstday {
             height: 30px;
             line-height: 30px;

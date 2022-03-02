@@ -27,7 +27,6 @@ class Side extends React.Component {
   componentDidMount() {
     if (this.props.account) {
       this.setSelectedMenu()
-      this.loadMenuList()
     }
   }
 
@@ -35,7 +34,7 @@ class Side extends React.Component {
     if (this.props.account) {
       var currentPathName = browserHistory.getCurrentLocation().pathname
       var defaultOpenKey = ''
-      var defaultSelectedKey = currentPathName ? currentPathName : '/latest'
+      var defaultSelectedKey = currentPathName != '/' ? currentPathName : '/calendar'
       if (currentPathName.indexOf('dir') >= 0) {
         defaultOpenKey = 'dir'
       }
@@ -52,8 +51,7 @@ class Side extends React.Component {
           <Menu.Item key="/calendar">我的日程</Menu.Item>
           <Menu.Item key="/latest">最近查看</Menu.Item>
           <SubMenu key="dir" title="我的文件夹" onTitleClick={() => {
-            window.sessionStorage.getItem("menuChange") && this.loadMenuList()
-            window.sessionStorage.removeItem("menuChange")
+            this.setMenuList()
           }}>
             {this.state.menuList}
           </SubMenu>
@@ -63,15 +61,27 @@ class Side extends React.Component {
     }
   }
 
-  loadMenuList() {
-    fileApi.fileList({}).then(response => {
-      if (response.code === 200) {
-        var menuList = response.data.list.map(item => {
-          return <Menu.Item key={'/dir/' + item.id}>{item.title}</Menu.Item>
-        })
-        this.setState({menuList: menuList})
-      }
+  setMenuList() {
+    const menuString = window.localStorage.getItem("menu")
+    if (!menuString) {
+      fileApi.fileList({}).then(response => {
+        if (response.code === 200) {
+          window.localStorage.setItem("menu", JSON.stringify(response.data.list))
+          var menuList = response.data.list.map(item => {
+            return <Menu.Item key={'/dir/' + item.id}>{item.title}</Menu.Item>
+          })
+          this.setState({menuList: menuList})
+        }
+      })
+      return
+    }
+
+    const menu = JSON.parse(menuString)
+    var menuList = menu.map(item => {
+      return <Menu.Item key={'/dir/' + item.id}>{item.title}</Menu.Item>
     })
+
+    this.setState({menuList: menuList})
   }
 
   menuClick(e) {
@@ -84,6 +94,7 @@ class Side extends React.Component {
     var defaultOpenKey = ''
     if (currentPathName.indexOf('dir') >= 0) {
       defaultOpenKey = 'dir'
+      this.setMenuList()
     }
 
     this.setState({defaultOpenKey: defaultOpenKey, defaultSelectedMenuKey: currentPathName})

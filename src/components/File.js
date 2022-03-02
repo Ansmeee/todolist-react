@@ -5,24 +5,19 @@ import {
   CarryOutOutlined,
   SortAscendingOutlined,
   FilterOutlined,
-  CalendarOutlined,
   MoreOutlined,
   DeleteOutlined,
   CheckCircleOutlined,
   UnorderedListOutlined,
-  CheckOutlined,
   SelectOutlined
 } from "@ant-design/icons";
-import {Row, Col, Input, Select, Button, Popover, List, Skeleton, DatePicker, message} from "antd";
+import {Row, Col, Input, Button, Popover, List, message} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
-import fileApi from "../http/file";
+import TaskForm from "./task/TaskForm";
 
 const _ = require('lodash');
-
-const {TextArea} = Input;
-const {Option} = Select;
 
 class File extends React.Component {
   constructor(props) {
@@ -41,30 +36,11 @@ class File extends React.Component {
         priority: '',
         list_id: ''
       },
-      datePickerVisible: false,
-      createModalVisible: false,
-      datePickerTimer: {},
       from: props.state.from,
       loading: false,
       todoList: [],
-      dirList: [],
-      typeTitle: '',
-      TypePopVisible: false,
-      priorityPopVisible: false
-    }
-
-    this.priorityName2Key = {
-      '高': 3,
-      '中': 2,
-      '低': 1,
-      '无': 0
-    }
-
-    this.priorityKey2Name = {
-      3: '高',
-      2: '中',
-      1: '低',
-      0: '无',
+      priorityPopVisible: false,
+      priorityKey2Name: {3: '高', 2: '中', 1: '低', 0: '无'}
     }
   }
 
@@ -88,11 +64,6 @@ class File extends React.Component {
         this.setState({todoList: response.data.list})
       }
     })
-  }
-
-  createBTNClick() {
-    this.setState({currentTask: {}, createTask: true})
-    this.loadDirList()
   }
 
   searchChange(e) {
@@ -145,10 +116,9 @@ class File extends React.Component {
 
   itemClick(item) {
     var currentTask = _.cloneDeep(item)
-    currentTask.priority = this.priorityKey2Name[item.priority]
+    currentTask.priority = this.state.priorityKey2Name[item.priority]
     currentTask.deadline = currentTask.deadline ? currentTask.deadline : moment().format('YYYY-MM-DD')
     this.setState({currentTask: currentTask, createTask: true})
-    this.loadDirList()
   }
 
   filterPopContent() {
@@ -244,7 +214,7 @@ class File extends React.Component {
     })
   }
 
-  removeTodo(item) {
+  deleteTodo(item) {
     todoApi.delete(item.id).then(response => {
       if (response.code === 200) {
         var todoList = this.state.todoList
@@ -258,7 +228,7 @@ class File extends React.Component {
     })
   }
 
-  getListExtras(item) {
+  listExtras(item) {
     var menu = (
       <div>
         <div className="item-opt-li item-opt-mul">
@@ -317,7 +287,7 @@ class File extends React.Component {
         </div>
         <div className="item-opt-li item-opt-del">
           <div className="item-opt-del-del" onClick={() => {
-            this.removeTodo(item)
+            this.deleteTodo(item)
           }}><DeleteOutlined/> 删除
           </div>
         </div>
@@ -333,7 +303,7 @@ class File extends React.Component {
     )
   }
 
-  getListActions(item) {
+  listActions(item) {
     var currentDate = Date.now()
     var expireDate = new Date(item.deadline).getTime()
     var remainDate = expireDate - currentDate
@@ -400,25 +370,6 @@ class File extends React.Component {
     ]
   }
 
-  taskInfoOptClick(key, val) {
-    var currentTask = this.state.currentTask
-    currentTask[key] = val
-    this.setState({currentTask: currentTask})
-    this.setState({priorityPopVisible: false})
-  }
-
-  taskInfoListChange(value) {
-    var currentTask = this.state.currentTask
-    currentTask.list_id = value
-    this.setState({currentTask: currentTask})
-  }
-
-  taskInfoChange(e, key) {
-    var currentTask = this.state.currentTask
-    currentTask[key] = e.target.value
-    this.setState({currentTask: currentTask})
-  }
-
   updateTodoList(todo) {
     var todoList = this.state.todoList
     var index = todoList.findIndex(item => {
@@ -434,283 +385,9 @@ class File extends React.Component {
     this.setState({todoList: todoList})
   }
 
-  updateTask() {
-    var params = _.cloneDeep(this.state.currentTask)
-    params.priority = this.priorityName2Key[params.priority]
-    todoApi.update(params).then(response => {
-      if (response.code === 200) {
-        message.success('已保存')
-        this.updateTodoList(response.data)
-      } else {
-        message.error(response.msg || '保存失败')
-      }
-    })
-  }
-
-  createTask() {
-    var params = this.state.currentTask
-    params.priority = this.priorityName2Key[params.priority]
-    todoApi.create(params).then(response => {
-      if (response.code === 200) {
-        message.success('已保存');
-        var todoList = this.state.todoList
-
-        var todo = response.data
-        todoList.unshift(todo)
-        this.setState({todoList: todoList})
-
-        var currentTask = _.cloneDeep(todo)
-        currentTask.priority = this.priorityKey2Name[todo.priority]
-        this.setState({currentTask: currentTask})
-      } else {
-        message.error(response.msg || '保存失败')
-      }
-    })
-  }
-
-  saveTaskClick() {
-    if (this.state.currentTask.id) {
-      this.updateTask()
-    } else {
-      this.createTask()
-    }
-  }
-
-  getTaskOPTClassName() {
-    if (this.state.currentTask.priority === '高') {
-      return "task-info-opt task-info-opt-danger"
-    }
-
-    if (this.state.currentTask.priority === '中') {
-      return "task-info-opt task-info-opt-warning"
-    }
-
-    if (this.state.currentTask.priority === '低') {
-      return "task-info-opt task-info-opt-primary"
-    }
-
-    return "task-info-opt"
-  }
-
-  taskInfoPopContent(opt) {
-    if (opt === 'priority') {
-      return (
-        <div>
-          <Button
-            block
-            className="pop-opt-danger"
-            type={this.state.currentTask.priority === '高' ? 'link' : 'text'}
-            onClick={() => {
-              this.taskInfoOptClick('priority', '高')
-            }}>
-            高优先级
-          </Button>
-          <Button
-            block
-            className="pop-opt-warning"
-            type={this.state.currentTask.priority === '中' ? 'link' : 'text'}
-            onClick={() => {
-              this.taskInfoOptClick('priority', '中')
-            }}>
-            中优先级
-          </Button>
-          <Button
-            block
-            className="pop-opt-primary"
-            type={this.state.currentTask.priority === '低' ? 'link' : 'text'}
-            onClick={() => {
-              this.taskInfoOptClick('priority', '低')
-            }}>
-            低优先级
-          </Button>
-          <Button
-            block
-            type={this.state.currentTask.priority === '无' ? 'link' : 'text'}
-            onClick={() => {
-              this.taskInfoOptClick('priority', '无')
-            }}>
-            无优先级
-          </Button>
-        </div>
-      )
-    }
-  }
-
-  getTaskOptCon() {
-    return (
-      <div className="task-info-opt-con">
-        <div className="task-info-opt-pre">
-          <span className={this.getTaskOPTClassName()}>
-            <FlagOutlined className="task-info-opt-icon"/>
-            <Popover
-              overlayClassName="pop-opt-con"
-              placement="bottomLeft"
-              visible={this.state.priorityPopVisible}
-              onVisibleChange={(visible) => {
-                this.setState({priorityPopVisible: visible})
-              }}
-              content={this.taskInfoPopContent('priority')}
-              trigger="click">
-              <Input
-                style={{maxWidth: '65px', minWidth: '20px'}}
-                bordered={false}
-                readOnly={true}
-                placeholder="优先级"
-                value={this.state.currentTask.priority}/>
-            </Popover>
-          </span>
-          <span className={this.state.currentTask.deadline ? 'task-info-opt task-info-opt-primary' : 'task-info-opt'}>
-            <CalendarOutlined className="task-info-opt-icon"/>
-            <DatePicker
-              onChange={(date, dateString) => {
-                this.taskInfoOptClick('deadline', dateString)
-              }}
-              bordered={false}
-              picker="date"
-              value={moment(this.state.currentTask.deadline)}
-              style={{maxWidth: '110px', minWidth: '110px'}}
-              inputReadOnly={true}
-              placeholder="时间"
-              allowClear={false}
-              suffixIcon={null}/>
-          </span>
-        </div>
-        <div className="task-info-opt-end">
-          <Button type="primary" onClick={() => {
-            this.saveTaskClick()
-          }}>保 存</Button>
-        </div>
-      </div>
-    )
-  }
-
-  loadDirList() {
-    fileApi.fileList({}).then(response => {
-      if (response.code === 200) {
-        var dirList = []
-        response.data.list.forEach(item => {
-          dirList.push({
-            label: item.title,
-            value: item.id,
-          })
-        })
-
-        this.setState({dirList: dirList})
-      }
-    })
-  }
-
-
-  createType() {
-    if (this.state.typeTitle) {
-      var params = {
-        title: this.state.typeTitle
-      }
-
-      fileApi.create(params).then(response => {
-        if (response.code === 200) {
-          message.success('已保存')
-          window.sessionStorage.setItem("menuChange", "1")
-          var dirList = this.state.dirList
-          dirList.push({label: response.data.title, value: response.data.id})
-          this.setState({dirList: dirList}, this.taskInfoListChange(response.data.id))
-          this.setState({TypePopVisible: false})
-        } else {
-          message.error(response.msg || '保存失败')
-        }
-      })
-    }
-  }
-
-  typeTitleChange(e) {
-    this.setState({typeTitle: e.target.value})
-  }
-
-  typePopoverContent() {
-    return (
-      <div style={{display: 'flex', justifyContent: 'space-evenly'}}>
-        <Input
-          placeholder="分类描述"
-          maxLength="10"
-          bordered={false}
-          onChange={(e) => {
-            this.typeTitleChange(e)
-          }}
-          onPressEnter={() => {
-            this.createType()
-          }}></Input>
-        <Button
-          type="text"
-          onClick={() => {
-            this.createType()
-          }}>
-          <CheckOutlined style={{color: 'rgb(56, 158, 13)'}}/>
-        </Button>
-      </div>
-    )
-  }
-
-  typeOptions() {
-    return this.state.dirList.map(element =>
-      <Option key={element.value} value={element.value}> {element.label}</Option>
-    );
-  }
-
-  typePopVisibleChange(visible) {
-    this.setState({TypePopVisible: visible})
-  }
-
-  getCreateTaskForm() {
+  taskForm() {
     if (this.state.createTask) {
-      return (
-        <div className="task-info-con">
-          {this.getTaskOptCon()}
-          <div className="task-info-con-type">
-            <Select
-              bordered={false}
-              style={{width: '100%'}}
-              placeholder="选择一个分类"
-              onChange={(value) => {
-                this.taskInfoListChange(value)
-              }}
-              value={this.state.currentTask.list_id ? this.state.currentTask.list_id.toString() : null}>
-              {this.typeOptions()}
-            </Select>
-            <Popover
-              placement="bottom"
-              visible={this.state.TypePopVisible}
-              onVisibleChange={() => {
-                this.typePopVisibleChange()
-              }}
-              trigger="click"
-              title="新增分类"
-              content={() => this.typePopoverContent()}>
-              <Button type="text"><PlusOutlined/></Button>
-            </Popover>
-          </div>
-
-          <TextArea
-            minRows={2}
-            autoSize={true}
-            value={this.state.currentTask.title}
-            bordered={false}
-            placeholder="准备做什么事？"
-            onChange={(e) => {
-              this.taskInfoChange(e, 'title')
-            }}>
-          </TextArea>
-          <TextArea
-            minRows={4}
-            autoSize={true}
-            value={this.state.currentTask.content}
-            bordered={false}
-            placeholder="详细信息。。。"
-            onChange={(e) => {
-              this.taskInfoChange(e, 'content')
-            }}>
-          </TextArea>
-        </div>
-      )
+      return (<TaskForm currentTask={this.state.currentTask} onTaskUpdated={this.onTaskUpdated} onTaskCreated={this.onTaskCreated}></TaskForm>)
     }
 
     return (
@@ -719,6 +396,20 @@ class File extends React.Component {
         <span>点击任务标题查看详情</span>
       </div>
     )
+  }
+
+  onTaskUpdated = (todo) => {
+    this.updateTodoList(todo)
+  }
+
+  onTaskCreated = (todo) => {
+    var currentTask = _.cloneDeep(todo)
+    currentTask.priority = this.state.priorityKey2Name[todo.priority]
+    this.setState({currentTask: currentTask})
+
+    var todoList = this.state.todoList
+    todoList.unshift(todo)
+    this.setState({todoList: todoList})
   }
 
   render() {
@@ -767,7 +458,7 @@ class File extends React.Component {
             </Col>
             <Col span={4} style={{textAlign: 'right', paddingRight: '16px'}}>
               <Button type="primary" icon={<PlusOutlined/>} onClick={() => {
-                this.createBTNClick()
+                this.setState({currentTask: {}, createTask: true})
               }}>新 建</Button>
             </Col>
           </Row>
@@ -784,8 +475,8 @@ class File extends React.Component {
             renderItem={item => (
               <List.Item
                 key={item.id}
-                extra={this.getListExtras(item)}
-                actions={this.getListActions(item)}>
+                extra={this.listExtras(item)}
+                actions={this.listActions(item)}>
                 <div onClick={() => {
                   this.itemClick(item)
                 }}>{item.title}</div>
@@ -794,7 +485,7 @@ class File extends React.Component {
           />
         </Col>
         <Col span={9}>
-          {this.getCreateTaskForm()}
+          {this.taskForm()}
         </Col>
       </Row>
     )
