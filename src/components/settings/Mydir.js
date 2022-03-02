@@ -17,16 +17,26 @@ class Mydir extends React.Component {
   }
 
   componentDidMount() {
-    this.loadDirList()
+    this.setDirList()
   }
 
-  loadDirList() {
-    fileApi.fileList({}).then(response => {
-      if (response.code === 200) {
-        var originList = _.cloneDeep(response.data.list)
-        this.setState({dirList: response.data.list, originList: originList})
-      }
-    })
+  setDirList() {
+    const dirString = window.sessionStorage.getItem("menu")
+
+    if (!dirString) {
+      fileApi.fileList({}).then(response => {
+        if (response.code === 200) {
+          var originList = _.cloneDeep(response.data.list)
+          this.setState({dirList: response.data.list, originList: originList})
+          window.sessionStorage.setItem("menu", JSON.stringify(response.data.list))
+        }
+      })
+      return
+    }
+
+    var dirList = JSON.parse(dirString)
+    var originList = _.cloneDeep(dirList)
+    this.setState({dirList: dirList, originList: originList})
   }
 
   options(dir, index) {
@@ -36,7 +46,6 @@ class Mydir extends React.Component {
         <Button
           type="text"
           onClick={() => {
-            this.dirChange()
             this.confirm(dir, index)
           }}>
           <CheckOutlined className="item-li-val-success"/>
@@ -61,7 +70,6 @@ class Mydir extends React.Component {
           visibles[index] = false
           this.setState({delPopVisible: visibles})
           this.delDir(dir, index)
-          this.dirChange()
         }}/>
       <CloseOutlined
         onClick={() => {
@@ -84,19 +92,12 @@ class Mydir extends React.Component {
     return options
   }
 
-  delPopVisibleChange(visible) {
-    this.setState({delPopVisible: visible})
-  }
-
-  dirChange() {
-    window.sessionStorage.setItem("menuChange", "1")
-  }
-
   confirm(dir, index) {
     var params = {title: dir.title}
     fileApi.update(dir.id, params).then(response => {
       if (response.code === 200) {
         message.success('已保存')
+        this.updateDirList(this.state.dirList)
         this.updateModifyIndex(index, false)
       } else {
         message.error('保存失败')
@@ -107,11 +108,16 @@ class Mydir extends React.Component {
   delDir(dir, index) {
     fileApi.delete(dir.id).then(response => {
       if (response.code === 200) {
-        var dirList = _.cloneDeep(this.state.dirList)
-        index >= 0 && dirList.splice(index, 1) && this.setState({dirList: dirList})
         message.success("已删除")
+        var dirList = _.cloneDeep(this.state.dirList)
+        index >= 0 && dirList.splice(index, 1) && this.updateDirList(dirList)
       }
     })
+  }
+
+  updateDirList(dirList) {
+    window.sessionStorage.setItem("menu", JSON.stringify(dirList))
+    this.setState({dirList: dirList})
   }
 
   updateDir(index, value) {
@@ -126,7 +132,7 @@ class Mydir extends React.Component {
     this.setState({modifyIndex: indexes})
   }
 
-  dirList() {
+  render() {
     const dirlist = this.state.dirList.map((item, index) => {
       return (
         <div className="item-li-val">
@@ -139,7 +145,6 @@ class Mydir extends React.Component {
               this.updateDir(index, e.target.value)
             }}
             onPressEnter={(e) => {
-              this.dirChange()
               this.confirm(item, index)
             }}
             value={item.title}>
@@ -149,15 +154,11 @@ class Mydir extends React.Component {
       )
     })
 
-    return <div style={{paddingTop: '9px'}}>{dirlist}</div>
-  }
-
-  render() {
     return (
       <div className="baseinfo-page">
         <li className="item-li">
           <div className="item-li-label">我的文件夹</div>
-          {this.dirList()}
+          <div style={{paddingTop: '9px'}}>{dirlist}</div>
         </li>
       </div>
     )

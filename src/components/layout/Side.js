@@ -62,11 +62,11 @@ class Side extends React.Component {
   }
 
   setMenuList() {
-    const menuString = window.localStorage.getItem("menu")
+    const menuString = window.sessionStorage.getItem("menu")
     if (!menuString) {
       fileApi.fileList({}).then(response => {
         if (response.code === 200) {
-          window.localStorage.setItem("menu", JSON.stringify(response.data.list))
+          window.sessionStorage.setItem("menu", JSON.stringify(response.data.list))
           var menuList = response.data.list.map(item => {
             return <Menu.Item key={'/dir/' + item.id}>{item.title}</Menu.Item>
           })

@@ -78,11 +78,11 @@ class TaskForm extends React.Component {
         if (response.code === 200) {
           message.success('已保存')
 
-          var dirString = window.localStorage.getItem("menu")
+          var dirString = window.sessionStorage.getItem("menu")
           if (dirString) {
             var dir = JSON.parse(dirString)
             dir.push(response.data)
-            window.localStorage.setItem("menu", JSON.stringify(dir))
+            window.sessionStorage.setItem("menu", JSON.stringify(dir))
           }
 
           var dirList = this.state.dirList
@@ -205,12 +205,12 @@ class TaskForm extends React.Component {
   }
 
   setDirList() {
-    const dirString = window.localStorage.getItem("menu")
+    const dirString = window.sessionStorage.getItem("menu")
 
     if (!dirString) {
       fileApi.fileList({}).then(response => {
         if (response.code === 200) {
-          window.localStorage.setItem("menu", JSON.stringify(response.data.list))
+          window.sessionStorage.setItem("menu", JSON.stringify(response.data.list))
           const dirList = response.data.list.map(item => {
             return {label: item.title, value: item.id}
           })
