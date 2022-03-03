@@ -249,11 +249,7 @@ class MyCalendar extends React.Component {
 
       if (tasks[currentDate].length > maxNum) {
         tasks[currentDate].splice(maxNum)
-        tasks[currentDate].push(
-          <Popover trigger="click" placement="rightTop" content={this.getTaskList(item.deadline)}>
-            <span className="task-title">查看更多...</span>
-          </Popover>
-        )
+        tasks[currentDate].push(<span className="task-title">查看更多...</span>)
         continue;
       }
 
@@ -265,22 +261,6 @@ class MyCalendar extends React.Component {
     }
 
     this.setState({taskMap: tasks})
-  }
-
-  getTaskList(date) {
-    var tasks = []
-
-    this.state.taskList.forEach(item => {
-      if (item.deadline === date) {
-        tasks.push(
-          <Popover trigger="click" placement="rightTop" content={this.taskForm(item)}>
-            <span className={"task-title" + ` priority-${item.priority}`}>{item.title}</span>
-          </Popover>
-        )
-      }
-    })
-
-    return (<div className="calendar-item-con">{tasks}</div>)
   }
 
   taskForm(task) {
