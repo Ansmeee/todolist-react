@@ -33,7 +33,7 @@ class MyCalendar extends React.Component {
       firstDate: '',
       lastDate: '',
       taskList: [],
-      loadTask: 0,
+      taskMap: {},
       dirList: [],
     }
   }
@@ -85,7 +85,7 @@ class MyCalendar extends React.Component {
     }
 
     this.setState({days: days, firstDate: firstDate, lastDate: lastDate}, () => {
-      this.loadMyTasks()
+      this.loadTasks()
     })
   }
 
@@ -170,12 +170,18 @@ class MyCalendar extends React.Component {
   }
 
   onTaskCreated = (task) => {
-    console.log(task)
+    this.loadTasks(task)
   }
 
   getDayCell(record, index) {
     const currentDay = record['week-' + index]
-    const taskPopForm = (<TaskForm date={currentDay.date} currentTask={this.state.currentTask} onTaskCreated={this.onTaskCreated}></TaskForm>)
+    const taskPopForm = (
+      <TaskForm
+        date={currentDay.date}
+        currentTask={this.state.currentTask}
+        onTaskCreated={this.onTaskCreated}>
+      </TaskForm>
+    )
 
     return (
       <div className={"calendar-day " + `${currentDay.disabled ? 'disabled' : ''}`}
@@ -187,21 +193,88 @@ class MyCalendar extends React.Component {
         <div className="calendar-date-con">
           {this.getDate(currentDay)}
           <Popover
+            onVisibleChange={(visible) => {
+              if (!visible) {
+                this.setState({
+                  currentTask: {
+                    id: '',
+                    title: '',
+                    content: '',
+                    deadline: '',
+                    priority: '',
+                    list_id: ''
+                  },
+                })
+              }
+            }}
             content={taskPopForm}
             title="新建日程" trigger="click" placement="rightTop">
             <EllipsisOutlined className="day calendar-date-opt"/>
           </Popover>
         </div>
         <div className="calendar-item-con">
-          {this.getDayTasks(currentDay.date)}
+          {this.state.taskMap[currentDay.date]}
         </div>
       </div>
     )
   }
 
-  createTask(currentDay) {
-    const thisDate = moment(currentDay).format('yyyy-MM-DD')
-    console.log(thisDate)
+  setTasks(taskList) {
+    const conHeight = parseInt((document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 60) / 6)
+    const height = conHeight <= 90 ? 90 : (conHeight >= 300 ? 300 : conHeight)
+    const maxNum = parseInt((height - 40) / 18) - 1
+
+    var tasks = {}
+    for (var i = 0; i < taskList.length; i++) {
+      var item = taskList[i]
+      let currentDate = moment(item.deadline).format("YYYY-M-D")
+      if (!tasks[currentDate]) {
+        tasks[currentDate] = []
+      }
+
+      if (tasks[currentDate].length > maxNum) {
+        tasks[currentDate].splice(maxNum)
+        tasks[currentDate].push(<span className="task-title">查看更多...</span>)
+        continue;
+      }
+
+      tasks[currentDate].push(<span className={"task-title" + ` priority-${item.priority}`}>{item.title}</span>)
+    }
+
+    this.setState({taskMap: tasks})
+  }
+
+  loadTasks(newTask) {
+    var taskList = this.state.taskList
+    if (taskList.length === 0) {
+      var params = {
+        first_date: this.state.firstDate,
+        last_date: this.state.lastDate,
+        sort_order: 'desc',
+        sort_by: 'priority'
+      }
+      todoApi.todoList(params).then(response => {
+        if (response.code === 200) {
+          const taskList = response.data.list && response.data.list.length > 0 ? response.data.list : []
+          this.setState({taskList: taskList}, () => {
+            this.setTasks(taskList)
+          })
+        }
+      })
+      return
+    }
+
+    if (newTask) {
+      taskList.push(newTask)
+      this.setState({taskList: taskList}, () => {
+        this.setTasks(taskList)
+      })
+
+      return
+    }
+
+    this.setTasks(taskList)
+    return
   }
 
   getDate(currentDay) {
@@ -218,26 +291,6 @@ class MyCalendar extends React.Component {
     }
 
     return Today
-  }
-
-  getDayTasks(date) {
-    var conHeight = parseInt((document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 60) / 6)
-    var height = conHeight <= 90 ? 90 : (conHeight >= 300 ? 300 : conHeight)
-    var maxNum = parseInt((height - 40) / 18) - 1
-    var currentDate = moment(date).format("yyyy-MM-DD")
-
-    var tasks = []
-    this.state.taskList.forEach(item => {
-      if (item.deadline == currentDate) {
-        tasks.push(<span className={"task-title" + ` priority-${item.priority}`}>{item.title}</span>)
-      }
-    })
-
-    if (tasks.length > maxNum) {
-      tasks.splice(maxNum)
-      tasks.push(<span className="task-title">查看更多...</span>)
-    }
-    return (tasks)
   }
 
   lastMonth() {
@@ -283,7 +336,9 @@ class MyCalendar extends React.Component {
     }
     todoApi.todoList(params).then(response => {
       if (response.code === 200) {
-        this.setState({taskList: response.data.list && response.data.list.length > 0 ? response.data.list : []})
+        this.setState({taskList: response.data.list && response.data.list.length > 0 ? response.data.list : []}, () => {
+          this.setTasks()
+        })
       }
     })
   }
@@ -293,7 +348,6 @@ class MyCalendar extends React.Component {
     this.state.weekDays.forEach((day, index) => {
       columns.push({
         title: day,
-        key: index,
         render: (record) => this.getDayCell(record, index),
         ellipsis: true
       })
