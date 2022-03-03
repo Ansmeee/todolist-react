@@ -5,7 +5,6 @@ import {Table, Button, Popover, Menu} from "antd";
 import todoApi from "../http/todo";
 import moment from "moment";
 import fileApi from "../http/file";
-import common from "../components/Common"
 import TaskForm from "../components/task/TaskForm";
 import _ from "lodash";
 
@@ -173,14 +172,30 @@ class MyCalendar extends React.Component {
     this.loadTasks(task)
   }
 
+  onTaskUpdated = (task) => {
+    var taskList = this.state.taskList
+    var index = taskList.findIndex(item => {
+      return item.id === task.id
+    })
+
+    if (index >= 0) {
+      taskList[index] = task
+      this.setState({taskList: taskList}, () => {
+        this.setTasks(taskList)
+      })
+    }
+  }
+
   getDayCell(record, index) {
     const currentDay = record['week-' + index]
     const taskPopForm = (
-      <TaskForm
-        date={currentDay.date}
-        currentTask={this.state.currentTask}
-        onTaskCreated={this.onTaskCreated}>
-      </TaskForm>
+      <div style={{width: '400px', maxHeight: '400px', overflowY: 'auto'}}>
+        <TaskForm
+          date={currentDay.date}
+          currentTask={this.state.currentTask}
+          onTaskCreated={this.onTaskCreated}>
+        </TaskForm>
+      </div>
     )
 
     return (
@@ -234,14 +249,52 @@ class MyCalendar extends React.Component {
 
       if (tasks[currentDate].length > maxNum) {
         tasks[currentDate].splice(maxNum)
-        tasks[currentDate].push(<span className="task-title">查看更多...</span>)
+        tasks[currentDate].push(
+          <Popover trigger="click" placement="rightTop" content={this.getTaskList(item.deadline)}>
+            <span className="task-title">查看更多...</span>
+          </Popover>
+        )
         continue;
       }
 
-      tasks[currentDate].push(<span className={"task-title" + ` priority-${item.priority}`}>{item.title}</span>)
+      tasks[currentDate].push(
+        <Popover trigger="click" placement="rightTop" content={this.taskForm(item)}>
+          <span className={"task-title" + ` priority-${item.priority}`}>{item.title}</span>
+        </Popover>
+      )
     }
 
     this.setState({taskMap: tasks})
+  }
+
+  getTaskList(date) {
+    var tasks = []
+
+    this.state.taskList.forEach(item => {
+      if (item.deadline === date) {
+        tasks.push(
+          <Popover trigger="click" placement="rightTop" content={this.taskForm(item)}>
+            <span className={"task-title" + ` priority-${item.priority}`}>{item.title}</span>
+          </Popover>
+        )
+      }
+    })
+
+    return (<div className="calendar-item-con">{tasks}</div>)
+  }
+
+  taskForm(task) {
+    var currentTask = _.cloneDeep(task)
+    currentTask.priority = this.state.priorityKey2Name[currentTask.priority]
+    return (
+      <div style={{width: '400px', maxHeight: '400px', overflowY: 'auto'}}>
+        <TaskForm
+          currentTask={currentTask}
+          onTaskUpdated={this.onTaskUpdated}
+          onTaskCreated={this.onTaskCreated}>
+        </TaskForm>
+      </div>
+    )
   }
 
   loadTasks(newTask) {
