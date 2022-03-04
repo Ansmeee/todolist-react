@@ -6,6 +6,7 @@ import Email from "../components/signup/Email";
 import Phone from "../components/signup/Phone";
 import signApi from "../http/sign";
 
+const md5 = require('js-md5');
 const _ = require('lodash');
 
 class Signup extends React.Component {
@@ -54,6 +55,12 @@ class Signup extends React.Component {
   onFinish(values) {
     values.way = this.state.signupWay
     values.nonce = this.refs.email.refs.securityCode.state.captchaid
+
+    if (this.state.signupWay === 'email') {
+      values.password = md5(values.password)
+      values.auth = md5(values.auth)
+    }
+
     signApi.signup(values).then(response => {
       if (response.code === 200) {
         initUserInfo(response.data.token)

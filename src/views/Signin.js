@@ -7,6 +7,8 @@ import signApi from "../http/sign"
 import {getUserInfoFromLocal, initUserInfo} from "../utils/user";
 import SecurityCode from "../components/SecurityCode";
 
+const md5 = require('js-md5');
+
 class Signin extends React.Component {
   constructor(props) {
     super(props);
@@ -28,6 +30,8 @@ class Signin extends React.Component {
 
   onFinish(values) {
     values.nonce = this.refs.securityCode.state.captchaid
+
+    values.password = md5(values.password)
     signApi.signin(values).then(response => {
       if (response.code === 200) {
         initUserInfo(response.data.token)
