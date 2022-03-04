@@ -1,13 +1,26 @@
 import React from "react";
 import {BellOutlined, QuestionCircleOutlined, ExportOutlined, UserOutlined, DownOutlined} from "@ant-design/icons";
-import {Avatar, Badge, Button, Layout, message, Popover} from "antd";
+import {Avatar, Badge, Button, Layout, List, Popover} from "antd";
 import "../../assets/style/head.less"
 import {browserHistory} from "react-router";
 import signApi from "../../http/sign";
+import msgApi from "../../http/msg";
 
 const {Header} = Layout;
 
 class Head extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      msgList: [],
+      msgContent: []
+    }
+  }
+
+  componentDidMount() {
+    this.setMsg()
+  }
+
   render() {
     return (
       <Header className="header-con">
@@ -26,6 +39,17 @@ class Head extends React.Component {
         </div>
       </Header>
     )
+  }
+
+  setMsg() {
+    if (this.state.msgList.length === 0) {
+      msgApi.list({}).then(response => {
+        if (response.code === 200) {
+          var data = response.data && response.data.length > 0 ? response.data : []
+          this.setState({msgList: data})
+        }
+      })
+    }
   }
 
   signout() {
@@ -56,7 +80,7 @@ class Head extends React.Component {
           onClick={() => {
             this.accountOptClick('settings')
           }}>
-          <UserOutlined />
+          <UserOutlined/>
           个人中心
         </Button>
         <Button
@@ -65,7 +89,7 @@ class Head extends React.Component {
           onClick={() => {
             this.accountOptClick('signout')
           }}>
-          <ExportOutlined />
+          <ExportOutlined/>
           退出登陆
         </Button>
       </div>
@@ -97,7 +121,7 @@ class Head extends React.Component {
             trigger="click">
             {cusavatar}
             <span className="header-con-username" id="user-name">{name}</span>
-            <DownOutlined style={{fontSize: '14px'}} />
+            <DownOutlined style={{fontSize: '14px'}}/>
           </Popover>
         </div>
       )
@@ -106,9 +130,27 @@ class Head extends React.Component {
 
   getHeaderNotice() {
     if (this.props.account) {
+      const content = (
+        <List
+          className="demo-loadmore-list"
+          itemLayout="horizontal"
+          dataSource={this.state.msgList}
+          renderItem={item => (
+            <List.Item key={item.id}>
+              <List.Item.Meta description={item.content}/>
+            </List.Item>
+          )}
+        />
+      )
       return (
         <div className="header-con-opt-notice">
-          <Badge count={5} size="small"><BellOutlined style={{fontSize: '14px'}}/></Badge>
+          <Popover
+            overlayClassName="user-notice-pop"
+            title="通知"
+            content={content}
+            trigger="click">
+            <Badge count={5} size="small"><BellOutlined style={{fontSize: '14px'}}/></Badge>
+          </Popover>
         </div>
       )
     }

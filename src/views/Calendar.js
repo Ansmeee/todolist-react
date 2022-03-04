@@ -215,7 +215,7 @@ class MyCalendar extends React.Component {
                     id: '',
                     title: '',
                     content: '',
-                    deadline: moment().format("YYYY-MM-DD"),
+                    deadline: moment(currentDay.date).format("YYYY-MM-DD"),
                     priority: '',
                     list_id: ''
                   },
