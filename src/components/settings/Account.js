@@ -10,9 +10,9 @@ function uploadPath() {
 }
 
 function beforeUpload(file) {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg'
   if (!isJpgOrPng) {
-    message.error('仅自持 .png 或 .jpg 格式的图片')
+    message.error('仅支持 .png, .jpg, .jpeg 格式的图片')
   }
 
   const isLt2M = file.size / 1024 / 1024 < 2
@@ -28,9 +28,9 @@ class Account extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      id     : props.userInfo.account || '',
-      icon   : props.userInfo.icon || '',
-      name   : props.userInfo.name || ''
+      id: props.userInfo.account || '',
+      icon: props.userInfo.icon || '',
+      name: props.userInfo.name || ''
     }
   }
 
@@ -83,14 +83,17 @@ class Account extends React.Component {
               className="avatar-uploader"
               showUploadList={false}
               action={uploadPath}
+              accept=".jpg, .jpeg, .png"
               data={{id: this.state.id}}
               headers={{'Authorization': window.localStorage.getItem('token')}}
               beforeUpload={beforeUpload}
               onChange={(info) => {
                 this.handleChange(info)
               }}>
-              {this.state.icon ? <img src={this.state.icon} alt="avatar"
-                                      className="settings-page-con-account-icon-img"/> : this.uploadButton()}
+              {this.state.icon
+                ? <img src={this.state.icon} alt="avatar" className="settings-page-con-account-icon-img"/>
+                : this.uploadButton()
+              }
             </Upload>
           </ImgCrop>
         </div>

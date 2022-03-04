@@ -81,7 +81,7 @@ class Head extends React.Component {
         )
       } else {
         var account = this.props.name ? this.props.name : ''
-        var avatar = account ? account.substring(0, 1).toUpperCase() : 'TooD'
+        var avatar = account ? account.substring(0, 1).toUpperCase() : 'ToDoo'
         cusavatar = (
           <Avatar>{avatar}</Avatar>
         )
