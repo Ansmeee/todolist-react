@@ -15,7 +15,13 @@ class Head extends React.Component {
     this.state = {
       msgList: [],
       msgContent: [],
-      msgloading: false
+      msgloading: false,
+      page: 1,
+      msgForm: {
+        page: 1,
+        page_size: 10
+      },
+      more: true
     }
   }
 
@@ -41,11 +47,13 @@ class Head extends React.Component {
 
   setMsg() {
     this.setState({msgloading: true}, () => {
-      msgApi.list({}).then(response => {
+      msgApi.list(this.state.msgForm).then(response => {
         this.setState({msgloading: false})
         if (response.code === 200) {
           var data = response.data && response.data.length > 0 ? response.data : []
-          this.setState({msgList: data})
+          var msgList = this.state.msgList
+          msgList.push(...data)
+          this.setState({msgList: msgList, more: data.length > 0})
         }
       })
     })
@@ -136,16 +144,32 @@ class Head extends React.Component {
   }
 
   onLoadMore() {
+    if (this.state.more) {
+      var form = this.state.msgForm
+      form.page = form.page + 1
+      this.setState({msgForm: form}, () => {
+        this.setMsg()
+      })
+    }
 
   }
 
   loadMore() {
     if (this.state.msgList.length > 0) {
-      return (
-        <div style={{textAlign: 'center', 'marginTop': '20px'}}>
-          <Button type="text" onClick={this.onLoadMore} style={{'fontSize': '12px'}}>查看更多</Button>
-        </div>
-      )
+      if (this.state.more) {
+        return (
+          <div style={{textAlign: 'center', 'marginTop': '20px'}}>
+            <Button type="text" onClick={() => {this.onLoadMore()}} style={{'fontSize': '12px'}}>查看更多</Button>
+          </div>
+        )
+      } else {
+        return (
+          <div style={{textAlign: 'center', 'marginTop': '20px'}}>
+            <span className="msg-item">没有更多消息了</span>
+          </div>
+        )
+      }
+
     }
 
     return null
@@ -178,6 +202,8 @@ class Head extends React.Component {
             onVisibleChange={(visivle) => {
               if (visivle) {
                 this.setMsg()
+              } else {
+                this.setState({more: true, msgList: [], msgForm:{page: 1, page_size: 10}})
               }
             }}
             overlayClassName="user-notice-pop"
