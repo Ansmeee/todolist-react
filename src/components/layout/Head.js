@@ -5,6 +5,7 @@ import "../../assets/style/head.less"
 import {browserHistory} from "react-router";
 import signApi from "../../http/sign";
 import msgApi from "../../http/msg";
+import moment from "moment";
 
 const {Header} = Layout;
 
@@ -13,12 +14,9 @@ class Head extends React.Component {
     super(props);
     this.state = {
       msgList: [],
-      msgContent: []
+      msgContent: [],
+      msgloading: false
     }
-  }
-
-  componentDidMount() {
-    this.setMsg()
   }
 
   render() {
@@ -42,14 +40,15 @@ class Head extends React.Component {
   }
 
   setMsg() {
-    if (this.state.msgList.length === 0) {
+    this.setState({msgloading: true}, () => {
       msgApi.list({}).then(response => {
+        this.setState({msgloading: false})
         if (response.code === 200) {
           var data = response.data && response.data.length > 0 ? response.data : []
           this.setState({msgList: data})
         }
       })
-    }
+    })
   }
 
   signout() {
@@ -128,6 +127,34 @@ class Head extends React.Component {
     }
   }
 
+  getMsgItem(item) {
+    if (item.status === 0) {
+      return <span className="msg-item"><Badge color="red"/>{item.content}</span>
+    }
+
+    return <span className="msg-item">{item.content}</span>
+  }
+
+  onLoadMore() {
+
+  }
+
+  loadMore() {
+    if (this.state.msgList.length > 0) {
+      return (
+        <div style={{textAlign: 'center', 'marginTop': '20px'}}>
+          <Button type="text" onClick={this.onLoadMore} style={{'fontSize': '12px'}}>查看更多</Button>
+        </div>
+      )
+    }
+
+    return null
+  }
+
+  getMsgTime(item) {
+    return <span className="msg-item">{moment(item.created_at).format("YYYY-MM-DD")}</span>
+  }
+
   getHeaderNotice() {
     if (this.props.account) {
       const content = (
@@ -135,9 +162,12 @@ class Head extends React.Component {
           className="demo-loadmore-list"
           itemLayout="horizontal"
           dataSource={this.state.msgList}
+          loading={this.state.msgloading}
+          loadMore={this.loadMore()}
+          locale={{emptyText: "暂无消息"}}
           renderItem={item => (
-            <List.Item key={item.id}>
-              <List.Item.Meta description={item.content}/>
+            <List.Item key={item.id} style={{cursor: 'pointer'}}>
+              <List.Item.Meta title={this.getMsgTime(item)} description={this.getMsgItem(item)}/>
             </List.Item>
           )}
         />
@@ -145,6 +175,11 @@ class Head extends React.Component {
       return (
         <div className="header-con-opt-notice">
           <Popover
+            onVisibleChange={(visivle) => {
+              if (visivle) {
+                this.setMsg()
+              }
+            }}
             overlayClassName="user-notice-pop"
             title="通知"
             content={content}
