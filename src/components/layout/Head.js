@@ -13,6 +13,7 @@ class Head extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      msgCount: 0,
       msgList: [],
       msgContent: [],
       msgloading: false,
@@ -210,7 +211,7 @@ class Head extends React.Component {
             title="通知"
             content={content}
             trigger="click">
-            <Badge count={5} size="small"><BellOutlined style={{fontSize: '14px'}}/></Badge>
+            <Badge count={this.state.msgCount} size="small"><BellOutlined style={{fontSize: '14px'}}/></Badge>
           </Popover>
         </div>
       )
