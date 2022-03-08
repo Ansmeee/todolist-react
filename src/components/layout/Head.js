@@ -146,9 +146,25 @@ class Head extends React.Component {
     }
   }
 
+  readMsg(item) {
+    msgApi.updateAttr(item.id, {name: 'status', value: "1"}).then(response => {
+      if (response.code === 200) {
+        item.status = 1
+        var msgList = this.state.msgList
+        var index = msgList.findIndex(i => {
+          return i.id === item.id
+        })
+
+        if (index >= 0) {
+          msgList[index] = item
+          this.setState({msgList: msgList})
+        }
+      }
+    })
+  }
   getMsgItem(item) {
     if (item.status === 0) {
-      return <span className="msg-item"><Badge color="red"/>{item.content}</span>
+      return <span className="msg-item" onClick={() => {this.readMsg(item)}}><Badge color="red"/>{item.content}</span>
     }
 
     return <span className="msg-item">{item.content}</span>
