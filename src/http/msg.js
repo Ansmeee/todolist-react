@@ -4,6 +4,10 @@ const msgApi = {
     return index.Get(`/rest/msg`, params)
   },
 
+  msgCount() {
+    return index.Get(`/rest/msg/unread`)
+  },
+
   updateAttr(id, params) {
     return index.Put(`/rest/msg/${id}`, params)
   }

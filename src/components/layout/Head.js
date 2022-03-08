@@ -26,6 +26,16 @@ class Head extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      this.loadMsgCount()
+    }, 5000)
+  }
+
+  componentWillUnmount() {
+    this.timer && clearInterval(this.timer)
+  }
+
   render() {
     return (
       <Header className="header-con">
@@ -178,6 +188,16 @@ class Head extends React.Component {
 
   getMsgTime(item) {
     return <span className="msg-item">{moment(item.created_at).format("YYYY-MM-DD")}</span>
+  }
+
+  loadMsgCount() {
+    if (this.props.account) {
+      msgApi.msgCount().then(response => {
+        if (response.code === 200) {
+          this.setState({msgCount: response.data.count})
+        }
+      })
+    }
   }
 
   getHeaderNotice() {
