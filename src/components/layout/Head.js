@@ -29,7 +29,7 @@ class Head extends React.Component {
   componentDidMount() {
     this.timer = setInterval(() => {
       this.loadMsgCount()
-    }, 5000)
+    }, 10000)
   }
 
   componentWillUnmount() {
