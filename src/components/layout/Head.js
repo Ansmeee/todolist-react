@@ -1,9 +1,9 @@
 import React from "react";
-import {QuestionCircleOutlined} from "@ant-design/icons";
 import {Layout} from "antd";
 import "../../assets/style/head.less"
 import Notice from "./Head/Notice";
 import User from "./Head/User";
+import Feedback from "./Head/Feedback";
 
 class Head extends React.Component {
   constructor(props) {
@@ -22,12 +22,16 @@ class Head extends React.Component {
         <div className="header-con-opt">
           {this.userContent()}
           {this.noticeContent()}
-          <div className="header-con-opt-notice">
-            <QuestionCircleOutlined style={{fontSize: '14px'}}/>
-          </div>
+          {this.feedbackContent()}
         </div>
       </Layout.Header>
     )
+  }
+
+  feedbackContent() {
+    if (this.props.account) {
+      return <Feedback account={this.props.account}></Feedback>
+    }
   }
 
   noticeContent() {
