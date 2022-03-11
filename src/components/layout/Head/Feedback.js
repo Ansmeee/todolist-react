@@ -34,7 +34,6 @@ class Feedback extends React.Component {
     const imgList = this.state.imgList
     const formData = new FormData();
     imgList.forEach(file => {
-      console.log(file)
       formData.append('imgs[]', file.originFileObj)
     })
 
