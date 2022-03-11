@@ -1,8 +1,11 @@
 import React from "react";
-import {Input, Button, message} from "antd";
-import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
+import {Input, Button, message, Form} from "antd";
+import {CheckOutlined, CloseOutlined, LockOutlined, SafetyOutlined} from "@ant-design/icons";
 import userApi from '../../http/user';
 import {setUserInfo} from "../../utils/user";
+import Modal from "antd/es/modal/Modal";
+import Pattern from "../../utils/pattern";
+import md5 from "js-md5";
 
 const _ = require('lodash');
 
@@ -11,25 +14,30 @@ class userInfo extends React.Component {
     super(props);
 
     this.state = {
-      userInfo   : {
+      userInfo: {
         account: '',
-        name   : '',
-        email  : '',
-        phone  : '',
-        icon   : ''
+        name: '',
+        email: '',
+        phone: '',
+        icon: ''
       },
-      originInfo : {
+      originInfo: {
         account: '',
-        name   : '',
-        email  : '',
-        phone  : '',
-        icon   : ''
+        name: '',
+        email: '',
+        phone: '',
+        icon: ''
       },
       modifiedKey: {
         account: false,
-        name   : false,
-        email  : false,
-        phone  : false
+        name: false,
+        email: false,
+        phone: false
+      },
+      resetPassModal: false,
+      resetPassForm: {
+        password: '',
+        auth: ''
       }
     }
   }
@@ -42,8 +50,8 @@ class userInfo extends React.Component {
 
   confirm(key) {
     var params = {
-      id   : this.state.userInfo.account,
-      key  : key,
+      id: this.state.userInfo.account,
+      key: key,
       value: this.state.userInfo[key]
     }
 
@@ -62,13 +70,13 @@ class userInfo extends React.Component {
   }
 
   updateModifiedKey(key, value) {
-    var modifiedKey  = this.state.modifiedKey
+    var modifiedKey = this.state.modifiedKey
     modifiedKey[key] = value
     this.setState({modifiedKey: modifiedKey})
   }
 
   updateuserInfo(key, value) {
-    var userInfo  = this.state.userInfo
+    var userInfo = this.state.userInfo
     userInfo[key] = value
     this.setState({userInfo: userInfo})
   }
@@ -94,6 +102,26 @@ class userInfo extends React.Component {
   }
 
   resetPass() {
+    this.setState({resetPassModal: true})
+  }
+
+  onFinish(values) {
+    values.password = md5(values.password)
+    values.auth = md5(values.auth)
+    values.account = this.state.userInfo.account
+    userApi.resetPass(values).then(response => {
+      if (response.code === 200) {
+        message.success("重置成功，请重新登陆")
+        window.localStorage.removeItem("token")
+        window.location.href = '/'
+      } else {
+        message.error(response.msg || "重置失败")
+      }
+    })
+  }
+
+  cancel = () => {
+    this.setState({resetPassModal: false, resetPassForm: {password: '', auth: ''}})
   }
 
   render() {
@@ -171,9 +199,53 @@ class userInfo extends React.Component {
         <li className="item-li">
           <div className="item-li-label">用户密码</div>
           <div>
-            <Button style={{paddingLeft: '0px'}} type="link" onClick={() => {this.resetPass()}}>重置密码</Button>
+            <Button style={{paddingLeft: '0px'}} type="link" onClick={() => {
+              this.resetPass()
+            }}>重置密码</Button>
           </div>
         </li>
+
+
+        <Modal
+          title="密码重置"
+          maskClosable={false}
+          visible={this.state.resetPassModal}
+          okText="重置"
+          cancelText="取消"
+          okButtonProps={{htmlType: 'submit', form: 'resetPassForm'}}
+          onCancel={this.cancel}>
+          <div className="reset-pass-form">
+            <Form
+              id="resetPassForm"
+              onFinish={(values) => {
+                this.onFinish(values)
+              }}>
+              <Form.Item
+                name="password"
+                rules={[{required: true, message: '密码不能为空'}, Pattern('pwd')]}
+                style={{textAlign: "right"}}>
+                <Input.Password
+                  className="form-input"
+                  prefix={<LockOutlined/>}
+                  bordered={false}
+                  placeholder="新密码">
+                </Input.Password>
+              </Form.Item>
+
+              <Form.Item
+                name="auth"
+                rules={[{required: true, message: '密码不能为空'}, Pattern('pwd')]}
+                style={{textAlign: "right"}}>
+                <Input.Password
+                  className="form-input"
+                  prefix={<SafetyOutlined/>}
+                  bordered={false}
+                  placeholder="确认密码">
+                </Input.Password>
+              </Form.Item>
+            </Form>
+          </div>
+        </Modal>
       </div>
     )
   }

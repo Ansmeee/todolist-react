@@ -11,6 +11,9 @@ const userApi = {
 
   updateAttr(params) {
     return index.Put('/rest/user/attr', params)
+  },
+  resetPass(params) {
+    return index.Put('/rest/user/pass', params)
   }
 }
 
