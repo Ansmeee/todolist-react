@@ -1,9 +1,8 @@
 import React from "react";
-import {LockOutlined, PlusOutlined, QuestionCircleOutlined} from "@ant-design/icons";
-import {Button, Form, Input, message, Popover, Upload} from "antd";
+import {PlusOutlined, QuestionCircleOutlined} from "@ant-design/icons";
+import {Form, Input, message, Upload} from "antd";
 import Modal from "antd/es/modal/Modal";
 import feedbackApi from "../../../http/feedback";
-import Pattern from "../../../utils/pattern";
 
 class Feedback extends React.Component {
   constructor(props) {
@@ -47,7 +46,7 @@ class Feedback extends React.Component {
                 rules={[{required: true, message: '请输入您的宝贵建议'}]}
                 style={{textAlign: "right"}}>
                 <Input.TextArea
-                  autoSize={{minRows: 5, maxRows: 5}}
+                  autoSize={{minRows: 4, maxRows: 4}}
                   bordered={false}
                   maxLength={150}
                   placeholder="输入您想说的话">

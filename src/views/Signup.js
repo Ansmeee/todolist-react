@@ -1,5 +1,5 @@
 import React from "react"
-import {Button, Input, Form, message} from "antd";
+import {Button, Form, message} from "antd";
 import {browserHistory} from "react-router";
 import {getUserInfoFromLocal, initUserInfo} from "../utils/user";
 import Email from "../components/signup/Email";
