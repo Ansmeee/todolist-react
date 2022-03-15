@@ -1,8 +1,9 @@
 import React from "react";
-import {PlusOutlined, QuestionCircleOutlined} from "@ant-design/icons";
-import {Button, Input, message, Popover, Upload} from "antd";
+import {LockOutlined, PlusOutlined, QuestionCircleOutlined} from "@ant-design/icons";
+import {Button, Form, Input, message, Popover, Upload} from "antd";
 import Modal from "antd/es/modal/Modal";
 import feedbackApi from "../../../http/feedback";
+import Pattern from "../../../utils/pattern";
 
 class Feedback extends React.Component {
   constructor(props) {
@@ -16,39 +17,103 @@ class Feedback extends React.Component {
       previewImage: '',
       previewVisible: false,
       previewTitle: '',
-      uploading: false
+      uploading: false,
+      feedbackDia: false
     }
   }
 
   render() {
     return (
       <div className="header-con-opt-notice">
-        <Popover trigger="click" title="反馈与建议" content={this.popContent}>
-          <QuestionCircleOutlined style={{fontSize: '14px'}}/>
-        </Popover>
+        <QuestionCircleOutlined onClick={this.showFeedPop} style={{fontSize: '14px'}}/>
+        <Modal
+          width={600}
+          title="反馈与建议"
+          maskClosable={false}
+          visible={this.state.feedbackDia}
+          okText="提交"
+          cancelText="取消"
+          okButtonProps={{htmlType: 'submit', form: 'feedbackForm', disabled: this.state.uploading}}
+          onCancel={this.cancel}>
+          <div className="feed-back-pop">
+            <Form
+              id="feedbackForm"
+              ref="feedbackForm"
+              onFinish={(values) => {
+                this.onFinish(values)
+              }}>
+              <Form.Item
+                name="content"
+                rules={[{required: true, message: '请输入您的宝贵建议'}]}
+                style={{textAlign: "right"}}>
+                <Input.TextArea
+                  autoSize={{minRows: 5, maxRows: 5}}
+                  bordered={false}
+                  maxLength={150}
+                  placeholder="输入您想说的话">
+                </Input.TextArea>
+              </Form.Item>
+              <div style={{marginTop: '10px', marginBottom: '10px'}}>
+                <Upload
+                  multiple={true}
+                  name="imgs"
+                  listType="picture-card"
+                  fileList={this.state.imgList}
+                  onPreview={this.handlePreview}
+                  beforeUpload={() => {
+                    return false
+                  }}
+                  onChange={({fileList: newFileList}) => {
+                    this.setState({imgList: newFileList})
+                  }}>
+                  {this.state.imgList.length >= 4 ? null : <PlusOutlined/>}
+                </Upload>
+              </div>
+            </Form>
+          </div>
+        </Modal>
+
+        <Modal
+          visible={this.state.previewVisible}
+          title={this.state.previewTitle}
+          footer={null}
+          onCancel={() => {
+            this.setState({previewVisible: false, previewImage: ''})
+          }}>
+          <img alt="example" style={{width: '100%'}} src={this.state.previewImage}/>
+        </Modal>
       </div>
     )
   }
 
-  doUpload = () => {
+  onFinish(values) {
     const imgList = this.state.imgList
     const formData = new FormData();
     imgList.forEach(file => {
       formData.append('imgs[]', file.originFileObj)
     })
 
-    formData.append('content', this.state.form.content)
+    formData.append('content', values.content)
     this.setState({uploading: true}, () => {
       feedbackApi.submit(formData).then(response => {
         if (response.code = 200) {
-          message.success('已提交')
-          this.setState({uploading: false, form: {content: ''}, imgList: []})
+          message.success('已提交，感谢您的反馈建议')
+          this.refs.feedbackForm.resetFields()
+          this.setState({feedbackDia: false, uploading: false, form: {content: ''}, imgList: []})
         } else {
           message.success('提交失败，再试一次吧')
           this.setState({uploading: false})
         }
       })
     });
+  }
+
+  cancel = () => {
+    this.setState({feedbackDia: false})
+  }
+
+  showFeedPop = () => {
+    this.setState({feedbackDia: true})
   }
 
   getBase64(file) {
@@ -70,54 +135,6 @@ class Feedback extends React.Component {
       previewVisible: true,
       previewTitle: file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
     })
-  }
-
-  popContent = () => {
-    return (
-      <div className="feed-back-pop">
-        <Input.TextArea
-          autoSize={{minRows: 5, maxRows: 5}}
-          bordered={false}
-          maxLength={150}
-          value={this.state.form.content}
-          placeholder="输入您想说的话"
-          onChange={(e) => {
-            var currentForm = this.state.form
-            currentForm['content'] = e.target.value
-            this.setState({form: currentForm})
-          }}>
-        </Input.TextArea>
-        <div style={{marginTop: '10px', marginBottom: '10px'}}>
-          <Upload
-            multiple={true}
-            name="imgs"
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            listType="picture-card"
-            fileList={this.state.imgList}
-            onPreview={this.handlePreview}
-            beforeUpload={() => {
-              return false
-            }}
-            onChange={({fileList: newFileList}) => {
-              this.setState({imgList: newFileList})
-            }}>
-            {this.state.imgList.length >= 4 ? null : <PlusOutlined/>}
-          </Upload>
-        </div>
-        <div style={{width: '100%', textAlign: 'right'}}>
-          <Button type="primary" onClick={this.doUpload} disabled={this.state.uploading}>立即提交</Button>
-        </div>
-        <Modal
-          visible={this.state.previewVisible}
-          title={this.state.previewTitle}
-          footer={null}
-          onCancel={() => {
-            this.setState({previewVisible: false, previewImage: ''})
-          }}>
-          <img alt="example" style={{width: '100%'}} src={this.state.previewImage}/>
-        </Modal>
-      </div>
-    )
   }
 }
 
