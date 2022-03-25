@@ -189,7 +189,7 @@ class TaskForm extends React.Component {
   }
 
   createTask() {
-    var params = this.props.currentTask
+    var params = _.clone(this.props.currentTask)
     params.priority = this.priorityName2Key[params.priority]
     todoApi.create(params).then(response => {
       if (response.code === 200) {
