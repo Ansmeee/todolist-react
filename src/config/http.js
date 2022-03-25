@@ -5,7 +5,8 @@ const http = {
     let apiUrl = '';
     switch (enviment) {
       case "production":
-        apiUrl = `${httpstr}//todoo.ansme.cc`;
+        let host = window.location.hostname
+        apiUrl = `${httpstr}//${host}`;
         break;
       default:
         apiUrl = `${httpstr}//todo.com`;
