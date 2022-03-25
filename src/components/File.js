@@ -387,7 +387,13 @@ class File extends React.Component {
 
   taskForm() {
     if (this.state.createTask) {
-      return (<TaskForm currentTask={this.state.currentTask} onTaskUpdated={this.onTaskUpdated} onTaskCreated={this.onTaskCreated}></TaskForm>)
+      return (
+        <TaskForm
+          currentTask={this.state.currentTask}
+          onTaskUpdated={this.onTaskUpdated}
+          onTaskCreated={this.onTaskCreated}>
+        </TaskForm>
+      )
     }
 
     return (
@@ -417,7 +423,7 @@ class File extends React.Component {
       <Row className="file-page-con">
         <Col span={15} className="file-list-con">
           <Row className="file-filter-con">
-            <Col span={16}>
+            <Col span={14}>
               <div style={{borderBottom: '1px solid #d9d9d9'}}>
                 <Input
                   bordered={false}
@@ -430,7 +436,7 @@ class File extends React.Component {
                   }}/>
               </div>
             </Col>
-            <Col span={4} style={{paddingLeft: '10px'}}>
+            <Col span={6} style={{paddingLeft: '10px'}}>
               <Popover
                 overlayClassName="pop-opt-con"
                 placement="bottomLeft"
@@ -464,7 +470,7 @@ class File extends React.Component {
           </Row>
           <List
             style={{
-              height: document.documentElement.clientHeight - 60 - 32 - 22 - 70 - 48 - 55,
+              height: document.documentElement.clientHeight - 65 - 70 - 48 - 55,
               overflowY: 'auto'
             }}
             size="small"
@@ -484,7 +490,7 @@ class File extends React.Component {
             )}
           />
         </Col>
-        <Col span={9}>
+        <Col span={9} style={{height: document.documentElement.clientHeight - 65 - 70 - 55}}>
           {this.taskForm()}
         </Col>
       </Row>
