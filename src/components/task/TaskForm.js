@@ -6,6 +6,8 @@ import fileApi from "../../http/file";
 import moment from "moment";
 import _ from "lodash";
 import todoApi from "../../http/todo";
+import Editor from "./Editor";
+import Vditor from "vditor";
 
 const {TextArea} = Input;
 const {Option} = Select;
@@ -20,6 +22,8 @@ class TaskForm extends React.Component {
       priorityPopVisible: false
     }
 
+    this.editor = null
+
     this.priorityName2Key = {
       '高': 3,
       '中': 2,
@@ -29,12 +33,19 @@ class TaskForm extends React.Component {
   }
 
   componentDidMount() {
+    this.createVidtor({value: this.props.currentTask.content})
     if (this.props.date) {
       var currentTask = this.props.currentTask
       currentTask.deadline = moment(this.props.date).format("YYYY-MM-DD")
       this.setState({currentTask: currentTask})
     }
     this.setDirList()
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.currentTask.id !== prevProps.currentTask.id) {
+      this.editor.setValue(this.props.currentTask.content)
+    }
   }
 
   typeChange(value) {
@@ -114,6 +125,12 @@ class TaskForm extends React.Component {
     this.setState({priorityPopVisible: false})
   }
 
+  setContent(value) {
+    var currentTask = this.props.currentTask
+    currentTask['content'] = value.getValue()
+    this.setState({currentTask: currentTask})
+  }
+
   getTaskOPTClassName() {
     if (this.props.currentTask.priority === '高') {
       return "task-info-opt task-info-opt-danger"
@@ -178,6 +195,7 @@ class TaskForm extends React.Component {
   updateTask() {
     var params = _.cloneDeep(this.props.currentTask)
     params.priority = this.priorityName2Key[params.priority]
+
     todoApi.update(params).then(response => {
       if (response.code === 200) {
         message.success('已保存')
@@ -234,9 +252,27 @@ class TaskForm extends React.Component {
     this.setState({dirList: dirList})
   }
 
+  createVidtor = params => {
+    let {value} = params;
+    value = value ? value : "";
+    var that = this
+    var vditor = new Vditor("vditor", {
+      placeholder: "具体要怎么做。。。",
+      toolbar:[],
+      classes: "task-editor",
+      after() {
+        vditor.setValue(value);
+      },
+      blur() {
+        that.setContent(vditor)
+      },
+    })
+    this.editor = vditor
+  }
+
   render() {
     return (
-      <div className="task-info-con">
+      <div className="task-info-con" style={{height: '100%', overflowY: 'auto'}}>
         <div className="task-info-opt-con">
           <div className="task-info-opt-pre">
             <span className={this.getTaskOPTClassName()}>
@@ -280,51 +316,21 @@ class TaskForm extends React.Component {
             }}>保 存</Button>
           </div>
         </div>
-        <div className="task-info-con-type">
-          <Select
+        <div>
+          <TextArea
+            autoSize={{minRows: 1, maxRows: 2}}
+            value={this.props.currentTask.title}
             bordered={false}
-            style={{width: '100%'}}
-            placeholder="选择一个分类"
-            onChange={(value) => {
-              this.typeChange(value)
-            }}
-            value={this.props.currentTask.list_id ? this.props.currentTask.list_id.toString() : null}>
-            {this.typeOptions()}
-          </Select>
-          <Popover
-            placement="bottom"
-            visible={this.state.TypePopVisible}
-            onVisibleChange={(visible) => {
-              this.setState({TypePopVisible: visible})
-            }}
-            trigger="click"
-            title="新增分类"
-            content={() => this.typePopoverContent()}>
-            <Button type="text"><PlusOutlined/></Button>
-          </Popover>
+            placeholder="准备做什么事？"
+            onChange={(e) => {
+              this.taskInfoChange(e, 'title')
+            }}>
+          </TextArea>
+
+          <div className="editorWrap">
+            <div id="vditor"/>
+          </div>
         </div>
-
-        <TextArea
-          minrows={2}
-          autoSize={true}
-          value={this.props.currentTask.title}
-          bordered={false}
-          placeholder="准备做什么事？"
-          onChange={(e) => {
-            this.taskInfoChange(e, 'title')
-          }}>
-        </TextArea>
-
-        <TextArea
-          minrows={4}
-          autoSize={true}
-          value={this.props.currentTask.content}
-          bordered={false}
-          placeholder="详细信息。。。"
-          onChange={(e) => {
-            this.taskInfoChange(e, 'content')
-          }}>
-        </TextArea>
       </div>
     )
   }
