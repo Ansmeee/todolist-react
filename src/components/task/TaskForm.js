@@ -6,8 +6,8 @@ import fileApi from "../../http/file";
 import moment from "moment";
 import _ from "lodash";
 import todoApi from "../../http/todo";
-import Editor from "./Editor";
 import Vditor from "vditor";
+import "vditor/dist/index.css";
 
 const {TextArea} = Input;
 const {Option} = Select;
