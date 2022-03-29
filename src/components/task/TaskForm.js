@@ -258,10 +258,11 @@ class TaskForm extends React.Component {
     var that = this
     var vditor = new Vditor("vditor", {
       placeholder: "具体要怎么做。。。",
-      toolbar:[],
+      toolbar: [],
       classes: "task-editor",
       after() {
-        vditor.setValue(vditor.html2md(value));
+        let md = value ? vditor.html2md(value) : ''
+        vditor.setValue(md);
       },
       blur() {
         that.setContent(vditor)
@@ -317,6 +318,29 @@ class TaskForm extends React.Component {
           </div>
         </div>
         <div>
+          <div className="task-info-con-type">
+            <Select
+              bordered={false}
+              style={{width: '100%'}}
+              placeholder="选择一个分类"
+              onChange={(value) => {
+                this.typeChange(value)
+              }}
+              value={this.props.currentTask.list_id ? this.props.currentTask.list_id.toString() : null}>
+              {this.typeOptions()}
+            </Select>
+            <Popover
+              placement="bottom"
+              visible={this.state.TypePopVisible}
+              onVisibleChange={(visible) => {
+                this.setState({TypePopVisible: visible})
+              }}
+              trigger="click"
+              title="新增分类"
+              content={() => this.typePopoverContent()}>
+              <Button type="text"><PlusOutlined/></Button>
+            </Popover>
+          </div>
           <TextArea
             autoSize={{minRows: 1, maxRows: 2}}
             value={this.props.currentTask.title}
