@@ -9,7 +9,8 @@ import {
   DeleteOutlined,
   CheckCircleOutlined,
   UnorderedListOutlined,
-  SelectOutlined
+  SelectOutlined,
+  ClearOutlined
 } from "@ant-design/icons";
 import {Row, Col, Input, Button, Popover, List, message} from "antd";
 import todoApi from "../http/todo";
@@ -418,6 +419,19 @@ class File extends React.Component {
     this.setState({todoList: todoList})
   }
 
+  clearFilters() {
+    this.setState({filterForm: {rules: []}}, () => {
+      this.loadtodoList()
+    })
+  }
+
+  clearOpt() {
+    if (this.state.filterForm.rules.length > 0 || this.state.filterForm.sort_by) {
+      return (<Button type='link'><ClearOutlined onClick={() => {this.clearFilters()}}/></Button>)
+    }
+
+    return null
+  }
   render() {
     return (
       <Row className="file-page-con">
@@ -437,6 +451,7 @@ class File extends React.Component {
               </div>
             </Col>
             <Col span={6} style={{paddingLeft: '10px'}}>
+              {this.clearOpt()}
               <Popover
                 overlayClassName="pop-opt-con"
                 placement="bottomLeft"
