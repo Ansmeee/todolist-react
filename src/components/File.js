@@ -25,6 +25,7 @@ class File extends React.Component {
     super(props)
 
     this.state = {
+      keywords: '',
       filterForm: {
         rules: [],
       },
@@ -420,18 +421,21 @@ class File extends React.Component {
   }
 
   clearFilters() {
-    this.setState({filterForm: {rules: []}}, () => {
+    this.setState({filterForm: {rules: []}, keywords: ''}, () => {
       this.loadtodoList()
     })
   }
 
   clearOpt() {
-    if (this.state.filterForm.rules.length > 0 || this.state.filterForm.sort_by) {
-      return (<Button type='link'><ClearOutlined onClick={() => {this.clearFilters()}}/></Button>)
+    if (this.state.filterForm.keywords || this.state.filterForm.rules.length > 0 || this.state.filterForm.sort_by) {
+      return (<ClearOutlined style={{color: "rgb(24, 144, 255)"}} onClick={() => {
+        this.clearFilters()
+      }}/>)
     }
 
     return null
   }
+
   render() {
     return (
       <Row className="file-page-con">
@@ -442,8 +446,13 @@ class File extends React.Component {
                 <Input
                   bordered={false}
                   placeholder="输入关键字搜索"
+                  suffix={this.clearOpt()}
                   onBlur={(e) => {
                     this.searchChange(e)
+                  }}
+                  value={this.state.keywords}
+                  onChange={(e) => {
+                    this.setState({keywords: e.target.value})
                   }}
                   onPressEnter={(e) => {
                     this.searchChange(e)
@@ -451,7 +460,6 @@ class File extends React.Component {
               </div>
             </Col>
             <Col span={6} style={{paddingLeft: '10px'}}>
-              {this.clearOpt()}
               <Popover
                 overlayClassName="pop-opt-con"
                 placement="bottomLeft"
