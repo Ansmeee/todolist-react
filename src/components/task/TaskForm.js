@@ -44,7 +44,7 @@ class TaskForm extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.currentTask.id !== prevProps.currentTask.id) {
-      this.editor.setValue(this.props.currentTask.content)
+      this.editor.setValue(this.editor.html2md(this.props.currentTask.content))
     }
   }
 
@@ -261,7 +261,7 @@ class TaskForm extends React.Component {
       toolbar:[],
       classes: "task-editor",
       after() {
-        vditor.setValue(value);
+        vditor.setValue(vditor.html2md(value));
       },
       blur() {
         that.setContent(vditor)
