@@ -127,7 +127,7 @@ class TaskForm extends React.Component {
 
   setContent(value) {
     var currentTask = this.props.currentTask
-    currentTask['content'] = value.getValue()
+    currentTask['content'] = value.getHTML()
     this.setState({currentTask: currentTask})
   }
 
