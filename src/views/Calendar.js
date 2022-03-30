@@ -188,11 +188,21 @@ class MyCalendar extends React.Component {
 
   getDayCell(record, index) {
     const currentDay = record['week-' + index]
+
+    const currentTask = {
+      id: '',
+      title: '',
+      content: '',
+      deadline: moment(currentDay.date).format("YYYY-MM-DD"),
+      priority: '',
+      list_id: ''
+    }
+
     const taskPopForm = (
       <div style={{width: '400px', maxHeight: '400px', overflowY: 'auto'}}>
         <TaskForm
           date={currentDay.date}
-          currentTask={this.state.currentTask}
+          currentTask={currentTask}
           onTaskCreated={this.onTaskCreated}>
         </TaskForm>
       </div>
@@ -208,20 +218,7 @@ class MyCalendar extends React.Component {
         <div className="calendar-date-con">
           {this.getDate(currentDay)}
           <Popover
-            onVisibleChange={(visible) => {
-              if (!visible) {
-                this.setState({
-                  currentTask: {
-                    id: '',
-                    title: '',
-                    content: '',
-                    deadline: moment(currentDay.date).format("YYYY-MM-DD"),
-                    priority: '',
-                    list_id: ''
-                  },
-                })
-              }
-            }}
+            destroyTooltipOnHide={true}
             content={taskPopForm}
             title="新建日程" trigger="click" placement="rightTop">
             <EllipsisOutlined className="day calendar-date-opt"/>
@@ -254,7 +251,7 @@ class MyCalendar extends React.Component {
       }
 
       tasks[currentDate].push(
-        <Popover trigger="click" placement="rightTop" content={this.taskForm(item)}>
+        <Popover destroyTooltipOnHide={true} trigger="click" placement="rightTop" content={this.taskForm(item)}>
           <span className={"task-title" + ` priority-${item.priority}`}>{item.title}</span>
         </Popover>
       )

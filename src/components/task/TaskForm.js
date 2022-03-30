@@ -44,7 +44,9 @@ class TaskForm extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.currentTask.id !== prevProps.currentTask.id) {
-      this.editor.setValue(this.editor.html2md(this.props.currentTask.content))
+      let value = this.props.currentTask.content
+      let md = value ? this.editor.html2md(value) : ''
+      this.editor.setValue(md)
     }
   }
 
@@ -72,7 +74,7 @@ class TaskForm extends React.Component {
           }}
           onPressEnter={() => {
             this.createType()
-          }}></Input>
+          }}/>
         <Button
           type="text"
           onClick={() => {
