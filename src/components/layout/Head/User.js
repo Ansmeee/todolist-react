@@ -5,11 +5,6 @@ import {browserHistory} from "react-router";
 import signApi from "../../../http/sign";
 
 class User extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-
   accountOptClick(opt) {
     if (opt === 'signout') {
       window.localStorage.removeItem("token")
@@ -51,9 +46,10 @@ class User extends React.Component {
   }
 
   render() {
+    var cusavatar = null
     var icon = this.props.icon
     if (icon) {
-      var cusavatar = (
+      cusavatar = (
         <Avatar id="user-icon" src={icon}/>
       )
     } else {

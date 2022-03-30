@@ -153,17 +153,18 @@ class Month extends React.Component {
     const currentDate = newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate()
     var today
     var disabled
+    var date
     if (week === 0) {
       if (this.firstDayOffset() <= day) {
         disabled = false
         today = this.firstDayOffset() === day ? 1 : 1 + (day - this.firstDayOffset())
-        var date = this.props.currentYear + '-' + this.props.currentMonth + '-' + (this.firstDayOffset() === day ? 1 : today)
+        date = this.props.currentYear + '-' + this.props.currentMonth + '-' + (this.firstDayOffset() === day ? 1 : today)
       } else {
         disabled = true
         today = this.lastDateOfLastMonth() - (this.firstDayOffset() - 1 - day)
         const currentY = this.props.currentMonth === 1 ? this.props.currentYear - 1 : this.props.currentYear
         const currentM = this.props.currentMonth === 1 ? 12 : this.props.currentMonth - 1
-        var date = currentY + '-' + currentM + '-' + today
+        date = currentY + '-' + currentM + '-' + today
       }
 
       return {
@@ -178,7 +179,7 @@ class Month extends React.Component {
     if (thisDay <= this.lastDateOfMonth()) {
       today = thisDay
       disabled = false
-      var date = this.props.currentYear + '-' + this.props.currentMonth + '-' + today
+      date = this.props.currentYear + '-' + this.props.currentMonth + '-' + today
     } else {
 
       disabled = true
@@ -186,8 +187,7 @@ class Month extends React.Component {
       today = offsetDay === 1 ? 1 : offsetDay
       const currentY = this.props.currentMonth === 12 ? this.props.currentYear + 1 : this.props.currentYear
       const currentM = this.props.currentMonth === 12 ? 1 : this.props.currentMonth + 1
-      var date = currentY + '-' + currentM + '-' + offsetDay
-
+      date = currentY + '-' + currentM + '-' + offsetDay
     }
 
     return {
@@ -252,7 +252,7 @@ class Month extends React.Component {
 
       tasks[currentDate].push(
         <Popover destroyTooltipOnHide={true} trigger="click" placement="rightTop" content={this.taskForm(item)}>
-          <span className={"task-title" + ` priority-${item.priority}`}>{item.title}</span>
+          <span className={`task-title priority-${item.priority}`}>{item.title}</span>
         </Popover>
       )
     }
@@ -294,7 +294,7 @@ class Month extends React.Component {
 
   getDate(currentDay) {
     const thisDate = new Date(currentDay.date)
-    const Today = <span className={"day" + `${currentDay.today ? ' today' : ''}`}>{currentDay.day}</span>
+    const Today = <span className={`day ${currentDay.today ? ' today' : ''}`}>{currentDay.day}</span>
     if (thisDate.getDate() === 1) {
       var month = thisDate.getMonth() + 1
 
@@ -321,7 +321,7 @@ class Month extends React.Component {
     )
 
     return (
-      <div className={"calendar-day " + `${currentDay.disabled ? 'disabled' : ''}`}
+      <div className={`calendar-day ${currentDay.disabled ? 'disabled' : ''}`}
            style={{
              height: (document.documentElement.clientHeight - 65 - 70 - 50 - 42 - 60) / 6,
              minHeight: 90,

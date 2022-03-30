@@ -25,7 +25,7 @@ class SecurityCode extends React.Component{
   render() {
     if (this.state.captchaid) {
       var source = `${this.state.captchaid}.png`
-      return (<img onClick={() => {this.refreshCode()}} height="24px" style={{cursor: 'pointer', }} src={signApi.captchaimg(source)}/>)
+      return (<img alt="" onClick={() => {this.refreshCode()}} height="24px" style={{cursor: 'pointer', }} src={signApi.captchaimg(source)}/>)
     }
 
     return <div></div>

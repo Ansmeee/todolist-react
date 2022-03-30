@@ -95,7 +95,7 @@ class Feedback extends React.Component {
     formData.append('content', values.content)
     this.setState({uploading: true}, () => {
       feedbackApi.submit(formData).then(response => {
-        if (response.code = 200) {
+        if (response.code === 200) {
           message.success('已提交，感谢您的反馈建议')
           this.refs.feedbackForm.resetFields()
           this.setState({feedbackDia: false, uploading: false, form: {content: ''}, imgList: []})

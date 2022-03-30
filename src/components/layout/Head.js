@@ -6,10 +6,6 @@ import User from "./Head/User";
 import Feedback from "./Head/Feedback";
 
 class Head extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <Layout.Header className="header-con">

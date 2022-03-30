@@ -19,8 +19,8 @@ class MyCalendar extends React.Component {
 
   lastDate() {
     if (this.state.dateType === 'month') {
-      const currentMonth = this.state.currentMonth == 1 ? 12 : this.state.currentMonth - 1
-      const currentYear = this.state.currentMonth == 1 ? this.state.currentYear - 1 : this.state.currentYear
+      const currentMonth = this.state.currentMonth === 1 ? 12 : this.state.currentMonth - 1
+      const currentYear = this.state.currentMonth === 1 ? this.state.currentYear - 1 : this.state.currentYear
       const dateString = `${currentYear}年${currentMonth}月`
       const date = new Date(`${currentYear}-${currentMonth}`)
       this.monthChange(date, dateString)
@@ -42,8 +42,8 @@ class MyCalendar extends React.Component {
 
   nextDate() {
     if (this.state.dateType === 'month') {
-      const currentMonth = this.state.currentMonth == 12 ? 1 : this.state.currentMonth + 1
-      const currentYear = this.state.currentMonth == 12 ? this.state.currentYear + 1 : this.state.currentYear
+      const currentMonth = this.state.currentMonth === 12 ? 1 : this.state.currentMonth + 1
+      const currentYear = this.state.currentMonth === 12 ? this.state.currentYear + 1 : this.state.currentYear
       const dateString = `${currentYear}年${currentMonth}月`
       const date = new Date(`${currentYear}-${currentMonth}`)
       this.monthChange(date, dateString)

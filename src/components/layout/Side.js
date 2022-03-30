@@ -34,7 +34,7 @@ class Side extends React.Component {
     if (this.props.account) {
       var currentPathName = browserHistory.getCurrentLocation().pathname
       var defaultOpenKey = ''
-      var defaultSelectedKey = currentPathName != '/' ? currentPathName : '/calendar'
+      var defaultSelectedKey = currentPathName !== '/' ? currentPathName : '/calendar'
       if (currentPathName.indexOf('dir') >= 0) {
         defaultOpenKey = 'dir'
       }

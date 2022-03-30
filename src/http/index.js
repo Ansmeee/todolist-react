@@ -9,7 +9,7 @@ const indexApi = {
   },
 
   handlerResponse(response) {
-    if (response.data.code == 499) {
+    if (response.data.code === 499) {
       clearUserInfo()
       window.location.href = '/'
     }
