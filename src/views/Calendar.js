@@ -66,19 +66,11 @@ class MyCalendar extends React.Component {
         <div className="calendar-page-con-opt">
           <div className="title">{this.state.currentDateString}</div>
           <div>
-            <Radio.Group defaultValue="month" onChange={(e) => {
-              let dateType = e.target.value
+            <Button type="text" onClick={() => {
               let date = new Date()
-              let dateString = dateType === 'month'
-                ? date.getFullYear() + '年' + (date.getMonth() + 1) + '月'
-                : date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日'
-              this.setState({dateType: dateType, currentDateString: dateString})
-            }}>
-              <Radio.Button value="month">月</Radio.Button>
-              <Radio.Button value="day">日</Radio.Button>
-            </Radio.Group>
-          </div>
-          <div>
+              let dateString = date.getFullYear() + '年' + (date.getMonth() + 1) + '月'
+              this.setState({dateType: 'month', currentDateString: dateString})
+            }}>月</Button>
             <Button type="text" onClick={() => {
               this.lastDate()
             }}><CaretLeftOutlined style={{fontSize: '15px'}}/></Button>
