@@ -69,18 +69,17 @@ class Notice extends React.Component {
   }
 
   getMsgTime(item) {
-    return <span className="msg-item">{moment(item.created_at).format("YYYY-MM-DD")}</span>
+    return <span className="msg-opt">{moment(item.created_at).format("YYYY-MM-DD")}</span>
   }
 
   msgOptions(item) {
-    console.log(item)
     if (item.link) {
       return <span className="msg-opt">查看详情</span>
     }
   }
 
   getMsgItem(item) {
-    if (item.status === 0) {
+    if (item.status === 1) {
       return <span className="msg-item" onClick={() => {
         this.readMsg(item)
       }}><Badge color="red"/>{item.content}</span>
@@ -90,9 +89,9 @@ class Notice extends React.Component {
   }
 
   readMsg(item) {
-    msgApi.updateAttr(item.id, {name: 'status', value: "1"}).then(response => {
+    msgApi.updateAttr(item.id, {name: 'status', value: "2"}).then(response => {
       if (response.code === 200) {
-        item.status = 1
+        item.status = 2
         var msgList = this.state.msgList
         var index = msgList.findIndex(i => {
           return i.id === item.id
@@ -116,8 +115,8 @@ class Notice extends React.Component {
 
   forceMsg() {
     var params = {
-      status: 0,
-      force: 1
+      status: 1,
+      force: 2
     }
     msgApi.list(params).then(response => {
       if (response.code === 200) {
@@ -178,7 +177,7 @@ class Notice extends React.Component {
               <Button type='text'>{this.getMsgTime(item)}</Button>,
               <Button type='text'>{this.msgOptions(item)}</Button>
             ]}>
-            <List.Item.Meta title={this.getMsgTime(item)} description={this.getMsgItem(item)}/>
+            <List.Item.Meta description={this.getMsgItem(item)}/>
           </List.Item>
         )}
       />
