@@ -68,6 +68,11 @@ class MyCalendar extends React.Component {
           <div>
             <Button type="text" onClick={() => {
               let date = new Date()
+              let dateString = date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日'
+              this.setState({dateType: 'day', currentDateString: dateString})
+            }}>日</Button>
+            <Button type="text" onClick={() => {
+              let date = new Date()
               let dateString = date.getFullYear() + '年' + (date.getMonth() + 1) + '月'
               this.setState({dateType: 'month', currentDateString: dateString})
             }}>月</Button>

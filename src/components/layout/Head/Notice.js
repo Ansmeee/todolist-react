@@ -1,8 +1,9 @@
 import React from "react";
-import {Badge, Button, List, Popover} from "antd";
-import {BellOutlined} from "@ant-design/icons";
+import {Badge, Button, List, notification, Popover} from "antd";
+import {BellOutlined, ExclamationCircleOutlined} from "@ant-design/icons";
 import moment from "moment";
 import msgApi from "../../../http/msg";
+import {browserHistory} from "react-router";
 
 class Notice extends React.Component {
   constructor(props) {
@@ -71,6 +72,13 @@ class Notice extends React.Component {
     return <span className="msg-item">{moment(item.created_at).format("YYYY-MM-DD")}</span>
   }
 
+  msgOptions(item) {
+    console.log(item)
+    if (item.link) {
+      return <span className="msg-opt">查看详情</span>
+    }
+  }
+
   getMsgItem(item) {
     if (item.status === 0) {
       return <span className="msg-item" onClick={() => {
@@ -106,8 +114,44 @@ class Notice extends React.Component {
     })
   }
 
+  forceMsg() {
+    var params = {
+      status: 0,
+      force: 1
+    }
+    msgApi.list(params).then(response => {
+      if (response.code === 200) {
+        var data = response.data && response.data.length > 0 ? response.data : []
+        data.forEach(item => {
+          var btn = null
+          if (item.link) {
+            btn = (
+              <Button type="link" size="small" onClick={() => {
+                this.readMsg(item)
+                notification.close(item.id)
+                if (item.link) {
+                  browserHistory.push(item.link)
+                }
+              }}>立即查看</Button>
+            );
+          }
+
+          notification.open({
+            key: item.id,
+            duration: 0,
+            message: '系统消息',
+            description: item.content,
+            icon: <ExclamationCircleOutlined style={{color: 'rgb(250, 173, 20)'}}/>,
+            btn
+          });
+        })
+      }
+    })
+  }
+
   componentDidMount() {
     this.loadMsgCount()
+    this.forceMsg()
     this.timer = setInterval(() => {
       this.loadMsgCount()
     }, 10000)
@@ -121,13 +165,19 @@ class Notice extends React.Component {
     const content = (
       <List
         className="demo-loadmore-list"
-        itemLayout="horizontal"
+        itemLayout="vertical"
         dataSource={this.state.msgList}
         loading={this.state.msgloading}
         loadMore={this.loadMore()}
         locale={{emptyText: "暂无消息"}}
         renderItem={item => (
-          <List.Item key={item.id} style={{cursor: 'pointer'}}>
+          <List.Item
+            key={item.id}
+            style={{cursor: 'pointer'}}
+            actions={[
+              <Button type='text'>{this.getMsgTime(item)}</Button>,
+              <Button type='text'>{this.msgOptions(item)}</Button>
+            ]}>
             <List.Item.Meta title={this.getMsgTime(item)} description={this.getMsgItem(item)}/>
           </List.Item>
         )}
@@ -152,6 +202,12 @@ class Notice extends React.Component {
         </Popover>
       </div>
     )
+  }
+
+  viewMsg(link = '') {
+    if (link) {
+      browserHistory.push(link)
+    }
   }
 }
 
