@@ -74,7 +74,7 @@ class Notice extends React.Component {
 
   msgOptions(item) {
     if (item.link) {
-      return <span className="msg-opt">查看详情</span>
+      return <span className="msg-opt" onClick={()=>{ browserHistory.push(item.link) }}>查看详情</span>
     }
   }
 
