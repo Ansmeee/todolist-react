@@ -74,7 +74,7 @@ class Notice extends React.Component {
 
   msgOptions(item) {
     if (item.link) {
-      return <span className="msg-opt" onClick={()=>{ browserHistory.push(item.link) }}>查看详情</span>
+      return <span className="msg-opt islink" onClick={()=>{ browserHistory.push(item.link) }}>查看详情</span>
     }
   }
 
@@ -174,8 +174,8 @@ class Notice extends React.Component {
             key={item.id}
             style={{cursor: 'pointer'}}
             actions={[
-              <Button type='text'>{this.getMsgTime(item)}</Button>,
-              <Button type='text'>{this.msgOptions(item)}</Button>
+              <div>{this.getMsgTime(item)}</div>,
+              <div style={{marginLeft: '20px'}}>{this.msgOptions(item)}</div>
             ]}>
             <List.Item.Meta description={this.getMsgItem(item)}/>
           </List.Item>
