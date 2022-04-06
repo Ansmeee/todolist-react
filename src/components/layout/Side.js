@@ -46,7 +46,7 @@ class Side extends React.Component {
           }}
           defaultSelectedKeys={[defaultSelectedKey]}
           defaultOpenKeys={[defaultOpenKey]}
-          style={{height: '100%'}}
+          style={{height: document.documentElement.clientHeight - 65 - 70, overflowY: 'auto', overflowX: 'hidden'}}
           mode="inline">
           <Menu.Item key="/calendar">我的日程</Menu.Item>
           <Menu.Item key="/latest">最近查看</Menu.Item>
