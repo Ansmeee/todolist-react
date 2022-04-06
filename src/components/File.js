@@ -1,4 +1,5 @@
 import React from "react";
+import {browserHistory} from "react-router";
 import {
   PlusOutlined,
   FlagOutlined,
@@ -42,7 +43,8 @@ class File extends React.Component {
       loading: false,
       todoList: [],
       priorityPopVisible: false,
-      priorityKey2Name: {3: '高', 2: '中', 1: '低', 0: '无'}
+      priorityKey2Name: {3: '高', 2: '中', 1: '低', 0: '无'},
+      needFilter: true,
     }
   }
 
@@ -51,7 +53,7 @@ class File extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.state.from !== this.props.state.from) {
+    if (prevProps.state.from !== this.props.state.from || prevProps.state.sid !== this.props.state.sid) {
       this.loadtodoList()
     }
   }
@@ -60,10 +62,19 @@ class File extends React.Component {
     this.setState({loading: true})
     let params = this.state.filterForm
     params.from = this.props.state.from
+
+
+    if (this.props.state.sid && this.state.needFilter) {
+      params.id = this.props.state.sid
+    }
+
     todoApi.todoList(params).then(response => {
       this.setState({loading: false})
       if (response.code === 200) {
         this.setState({todoList: response.data.list})
+        if (params.id) {
+          this.itemClick(response.data.list[0])
+        }
       }
     })
   }
@@ -421,13 +432,19 @@ class File extends React.Component {
   }
 
   clearFilters() {
-    this.setState({filterForm: {rules: []}, keywords: ''}, () => {
+    this.setState({filterForm: {rules: []}, keywords: '', needFilter: false}, () => {
+      if (this.props.state.sid) {
+        window.history.replaceState(null, "", `/dir/${this.props.state.from}`)
+      }
       this.loadtodoList()
     })
   }
 
   clearOpt() {
-    if (this.state.filterForm.keywords || this.state.filterForm.rules.length > 0 || this.state.filterForm.sort_by) {
+    if (this.state.filterForm.keywords
+      || this.state.filterForm.rules.length > 0
+      || this.state.filterForm.sort_by
+      || this.props.state.sid) {
       return (<ClearOutlined style={{color: "rgb(24, 144, 255)"}} onClick={() => {
         this.clearFilters()
       }}/>)
