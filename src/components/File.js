@@ -70,10 +70,9 @@ class File extends React.Component {
 
   loadtodoList() {
     this.setState({loading: true})
-    let params = this.state.filterForm
+    let params = _.cloneDeep(this.state.filterForm)
     params.from = this.props.state.from
-
-
+    
     if (this.props.state.sid && this.state.needFilter) {
       params.id = this.props.state.sid
     }
@@ -82,7 +81,7 @@ class File extends React.Component {
       this.setState({loading: false})
       if (response.code === 200) {
         this.setState({todoList: response.data.list})
-        if (params.id) {
+        if (params.id && response.data.list[0]) {
           this.itemClick(response.data.list[0])
         }
       }
