@@ -54,6 +54,16 @@ class File extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.state.from !== this.props.state.from || prevProps.state.sid !== this.props.state.sid) {
+      this.preLoad()
+    }
+  }
+
+  preLoad() {
+    if (this.props.state.sid) {
+      this.setState({needFilter: true}, () => {
+        this.loadtodoList()
+      })
+    } else {
       this.loadtodoList()
     }
   }
@@ -433,9 +443,7 @@ class File extends React.Component {
 
   clearFilters() {
     this.setState({filterForm: {rules: []}, keywords: '', needFilter: false}, () => {
-      if (this.props.state.sid) {
-        window.history.replaceState(null, "", `/dir/${this.props.state.from}`)
-      }
+      this.props.state.sid && window.history.replaceState(null, "", browserHistory.getCurrentLocation().pathname)
       this.loadtodoList()
     })
   }
@@ -444,7 +452,7 @@ class File extends React.Component {
     if (this.state.filterForm.keywords
       || this.state.filterForm.rules.length > 0
       || this.state.filterForm.sort_by
-      || this.props.state.sid) {
+      || (this.state.needFilter && this.props.state.sid)) {
       return (<ClearOutlined style={{color: "rgb(24, 144, 255)"}} onClick={() => {
         this.clearFilters()
       }}/>)
