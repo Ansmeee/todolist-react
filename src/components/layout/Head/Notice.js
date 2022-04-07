@@ -74,8 +74,19 @@ class Notice extends React.Component {
 
   msgOptions(item) {
     if (item.link) {
-      return <span className="msg-opt islink" onClick={()=>{ browserHistory.push(item.link) }}>查看详情</span>
+      return <span className="msg-opt islink" onClick={() => {
+        this.msgInfo(item)
+      }}>查看详情</span>
     }
+  }
+
+  msgInfo(item) {
+    if (item.status === 1) {
+      this.readMsg(item)
+      this.loadMsgCount()
+    }
+
+    browserHistory.push(item.link)
   }
 
   getMsgItem(item) {
@@ -126,11 +137,8 @@ class Notice extends React.Component {
           if (item.link) {
             btn = (
               <Button type="link" size="small" onClick={() => {
-                this.readMsg(item)
+                this.msgInfo(item)
                 notification.close(item.id)
-                if (item.link) {
-                  browserHistory.push(item.link)
-                }
               }}>立即查看</Button>
             );
           }
