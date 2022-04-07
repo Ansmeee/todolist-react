@@ -83,7 +83,6 @@ class Notice extends React.Component {
   msgInfo(item) {
     if (item.status === 1) {
       this.readMsg(item)
-      this.loadMsgCount()
     }
 
     browserHistory.push(item.link)
@@ -100,8 +99,13 @@ class Notice extends React.Component {
   }
 
   readMsg(item) {
+    const status = item.status
     msgApi.updateAttr(item.id, {name: 'status', value: "2"}).then(response => {
       if (response.code === 200) {
+        if (status === 1) {
+          this.loadMsgCount()
+        }
+
         item.status = 2
         var msgList = this.state.msgList
         var index = msgList.findIndex(i => {
