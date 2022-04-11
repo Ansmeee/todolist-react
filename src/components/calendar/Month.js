@@ -6,13 +6,13 @@ import {EllipsisOutlined} from "@ant-design/icons";
 import todoApi from "../../http/todo";
 import _ from "lodash";
 import fileApi from "../../http/file";
+import {priorityKey2Name} from "../../utils/task";
 
 class Month extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      priorityKey2Name: {3: '高', 2: '中', 1: '低', 0: '无'},
       weekDays: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
       currentTask: {
         id: '',
@@ -262,7 +262,7 @@ class Month extends React.Component {
 
   taskForm(task) {
     var currentTask = _.cloneDeep(task)
-    currentTask.priority = this.state.priorityKey2Name[currentTask.priority]
+    currentTask.priority = priorityKey2Name(currentTask.priority)
     return (
       <div style={{width: '500px', maxHeight: '400px'}}>
         <TaskForm

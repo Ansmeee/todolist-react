@@ -18,6 +18,7 @@ import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
 import TaskForm from "./task/TaskForm";
+import {priorityKey2Name} from "../utils/task";
 
 const _ = require('lodash');
 
@@ -43,7 +44,6 @@ class File extends React.Component {
       loading: false,
       todoList: [],
       priorityPopVisible: false,
-      priorityKey2Name: {3: '高', 2: '中', 1: '低', 0: '无'},
       needFilter: true,
     }
   }
@@ -72,7 +72,7 @@ class File extends React.Component {
     this.setState({loading: true})
     let params = _.cloneDeep(this.state.filterForm)
     params.from = this.props.state.from
-    
+
     if (this.props.state.sid && this.state.needFilter) {
       params.id = this.props.state.sid
     }
@@ -138,7 +138,7 @@ class File extends React.Component {
 
   itemClick(item) {
     var currentTask = _.cloneDeep(item)
-    currentTask.priority = this.state.priorityKey2Name[item.priority]
+    currentTask.priority = priorityKey2Name(item.priority)
     currentTask.deadline = currentTask.deadline ? currentTask.deadline : moment().format('YYYY-MM-DD')
     this.setState({currentTask: currentTask, createTask: true})
   }
@@ -432,7 +432,7 @@ class File extends React.Component {
 
   onTaskCreated = (todo) => {
     var currentTask = _.cloneDeep(todo)
-    currentTask.priority = this.state.priorityKey2Name[todo.priority]
+    currentTask.priority = priorityKey2Name(todo.priority)
     this.setState({currentTask: currentTask})
 
     var todoList = this.state.todoList

@@ -8,6 +8,7 @@ import _ from "lodash";
 import todoApi from "../../http/todo";
 import Vditor from "vditor";
 import "vditor/dist/index.css";
+import {priorityName2Key} from "../../utils/task";
 
 const {TextArea} = Input;
 const {Option} = Select;
@@ -23,13 +24,6 @@ class TaskForm extends React.Component {
     }
 
     this.editor = null
-
-    this.priorityName2Key = {
-      '高': 3,
-      '中': 2,
-      '低': 1,
-      '无': 0
-    }
   }
 
   componentDidMount() {
@@ -196,7 +190,7 @@ class TaskForm extends React.Component {
 
   updateTask() {
     var params = _.cloneDeep(this.props.currentTask)
-    params.priority = this.priorityName2Key[params.priority]
+    params.priority = priorityName2Key(params.priority)
 
     todoApi.update(params).then(response => {
       if (response.code === 200) {
@@ -210,7 +204,7 @@ class TaskForm extends React.Component {
 
   createTask() {
     var params = _.clone(this.props.currentTask)
-    params.priority = this.priorityName2Key[params.priority]
+    params.priority = priorityName2Key(params.priority)
     todoApi.create(params).then(response => {
       if (response.code === 200) {
         message.success('已保存');
