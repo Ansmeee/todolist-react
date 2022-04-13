@@ -8,8 +8,9 @@ import Dir from "../views/Dir"
 import Signin from "../views/Signin"
 import Signup from "../views/Signup"
 import Settings from "../views/Settings"
-import ResetPass from "../views/ResetPass";
-import {getUserInfoFromLocal} from "../utils/user";
+import ResetPass from "../views/ResetPass"
+import EmailVerify from "../views/EmailVerify"
+import {getUserInfoFromLocal} from "../utils/user"
 class Routes extends React.Component {
 
   checkAccess() {
@@ -28,6 +29,7 @@ class Routes extends React.Component {
           <Route path="/signup" component={Signup}/>
           <Route path="/signin" component={Signin}/>
           <Route path="/resetPass" component={ResetPass}/>
+          <Route path="/email/verify" component={EmailVerify} />
           <Route path="/calendar" component={Calendar} onEnter={() => {this.checkAccess()}}/>
           <Route path="/latest" component={Latest} onEnter={() => {this.checkAccess()}}/>
           <Route path="/done" component={Done} onEnter={() => {this.checkAccess()}}/>

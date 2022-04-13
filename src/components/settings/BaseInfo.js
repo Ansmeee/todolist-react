@@ -19,7 +19,8 @@ class userInfo extends React.Component {
         name: '',
         email: '',
         phone: '',
-        icon: ''
+        icon: '',
+        verified: 0
       },
       originInfo: {
         account: '',
@@ -79,6 +80,43 @@ class userInfo extends React.Component {
     var userInfo = this.state.userInfo
     userInfo[key] = value
     this.setState({userInfo: userInfo})
+  }
+
+  verifyEmail() {
+    userApi.verifyEmail().then(response => {
+      if (response.code === 200) {
+        this.updateuserInfo('verified', 1)
+        message.success("验证邮件已发送至该邮箱，请点击邮件内的链接进行验证")
+      } else {
+        message.error("验证邮件发送失败，请检查邮箱地址是否正确")
+      }
+    })
+  }
+
+  getVerifiedOpt() {
+    var verified = this.state.userInfo.verified
+    if (verified === 0) {
+      return (
+        <div>
+          <Button
+            type="link"
+            danger
+            onClick={() => {
+              this.verifyEmail()
+            }}>
+            验证邮箱
+          </Button>
+        </div>
+      )
+    }
+
+    if (verified === 1) {
+      return (
+        <div>
+          <span>验证中，请前往邮箱查看</span>
+        </div>
+      )
+    }
   }
 
   getOptions(key) {
@@ -156,6 +194,7 @@ class userInfo extends React.Component {
               bordered={false}>
             </Input>
             {this.getOptions('email')}
+            {this.getVerifiedOpt()}
           </div>
         </li>
         <li className="item-li">

@@ -7,7 +7,9 @@ import BaseInfo from "../components/settings/BaseInfo";
 import userApi from "../http/user";
 import {getUserInfoFromLocal} from "../utils/user";
 import {browserHistory} from "react-router";
-const { Panel } = Collapse
+
+const {Panel} = Collapse
+
 class Settings extends React.Component {
   constructor(props) {
     super(props);
@@ -39,7 +41,8 @@ class Settings extends React.Component {
           name: response.data.name,
           email: response.data.email,
           phone: response.data.phone,
-          icon: response.data.icon
+          icon: response.data.icon,
+          verified: response.data.verified
         }
 
         this.setState({userInfo: userInfo})
@@ -55,7 +58,7 @@ class Settings extends React.Component {
     }
   }
 
-  accountInfo () {
+  accountInfo() {
     if (this.state.userInfo) {
       return <Account userInfo={this.state.userInfo}></Account>
     }
@@ -63,7 +66,7 @@ class Settings extends React.Component {
 
   render() {
     return (
-      <div  className="settings-page-con">
+      <div className="settings-page-con">
         {this.accountInfo()}
         <div style={{overflowY: "auto", height: document.documentElement.clientHeight - 65 - 70 - 150 - 48}}>
           <Collapse

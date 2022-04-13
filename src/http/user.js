@@ -14,6 +14,12 @@ const userApi = {
   },
   resetPass(params) {
     return index.Put('/rest/user/pass', params)
+  },
+  verifyEmail() {
+    return index.Post('/rest/user/verify/email')
+  },
+  verify(params) {
+    return index.Post('/rest/user/email/verify', params)
   }
 }
 
