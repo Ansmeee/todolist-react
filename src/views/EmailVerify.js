@@ -16,14 +16,7 @@ class EmailVerify extends React.Component {
   componentDidMount() {
     var query = browserHistory.getCurrentLocation().query
     if (query && query.token) {
-      var params = {token: query.token}
-      userApi.verify(params).then(response => {
-        if (response.code === 200) {
-          this.setState({verified: 1})
-        } else {
-          this.setState({verified: -1})
-        }
-      })
+      this.verify(query.token)
     } else {
       window.location.href = '/'
     }
@@ -38,9 +31,20 @@ class EmailVerify extends React.Component {
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-        { this.verifyResult() }
+        {this.verifyResult()}
       </div>
     )
+  }
+
+  verify(token) {
+    var params = {token: token}
+    userApi.verify(params).then(response => {
+      if (response.code === 200) {
+        this.setState({verified: 1})
+      } else {
+        this.setState({verified: -1})
+      }
+    })
   }
 
   verifyResult() {
@@ -48,7 +52,9 @@ class EmailVerify extends React.Component {
       return (
         <Result
           status="success"
-          title={<div>邮箱验证成功！<Button  type="text" onClick={() => {window.location.href = '/'}}>返回系统>></Button></div>}
+          title={<div>邮箱验证成功！<Button type="text" onClick={() => {
+            window.location.href = '/'
+          }}>返回系统 >> </Button></div>}
         />
       )
     }
@@ -57,7 +63,9 @@ class EmailVerify extends React.Component {
       return (
         <Result
           status="error"
-          title={<div>邮箱验证失败！<Button  type="text" onClick={() => {window.location.href = '/'}}>返回系统>></Button></div>}
+          title={<div>邮箱验证失败！<Button type="text" onClick={() => {
+            window.location.href = '/'
+          }}>返回系统 >> </Button></div>}
         />
       )
     }
@@ -66,7 +74,7 @@ class EmailVerify extends React.Component {
       <Result
         status="info"
         title="邮箱验证中，请稍后。。。"
-        icon={<LoadingOutlined />}
+        icon={<LoadingOutlined/>}
       />
     )
   }
