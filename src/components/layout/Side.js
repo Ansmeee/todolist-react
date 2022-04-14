@@ -10,7 +10,7 @@ class Side extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      defaultOpenKey: '',
+      defaultOpenKey: 'dir',
       defaultSelectedMenuKey: '/latest',
       menuList: []
     }
@@ -26,6 +26,7 @@ class Side extends React.Component {
 
   componentDidMount() {
     if (this.props.account) {
+      this.setMenuList()
       this.setSelectedMenu()
     }
   }
@@ -33,11 +34,7 @@ class Side extends React.Component {
   menuContent() {
     if (this.props.account) {
       var currentPathName = browserHistory.getCurrentLocation().pathname
-      var defaultOpenKey = ''
       var defaultSelectedKey = currentPathName !== '/' ? currentPathName : '/calendar'
-      if (currentPathName.indexOf('dir') >= 0) {
-        defaultOpenKey = 'dir'
-      }
 
       return (
         <Menu
@@ -45,7 +42,7 @@ class Side extends React.Component {
             this.menuClick(e)
           }}
           defaultSelectedKeys={[defaultSelectedKey]}
-          defaultOpenKeys={[defaultOpenKey]}
+          defaultOpenKeys={[this.state.defaultOpenKey]}
           style={{height: document.documentElement.clientHeight - 65 - 70, overflowY: 'auto', overflowX: 'hidden'}}
           mode="inline">
           <Menu.Item key="/calendar">我的日程</Menu.Item>
@@ -70,7 +67,7 @@ class Side extends React.Component {
           var menuList = response.data.list.map(item => {
             return <Menu.Item key={'/dir/' + item.id}>{item.title}</Menu.Item>
           })
-          this.setState({menuList: menuList})
+          this.setState({menuList: menuList, defaultOpenKey: menuList.length > 0 ? 'dir' : ''})
         }
       })
       return
@@ -81,7 +78,7 @@ class Side extends React.Component {
       return <Menu.Item key={'/dir/' + item.id}>{item.title}</Menu.Item>
     })
 
-    this.setState({menuList: menuList})
+    this.setState({menuList: menuList, defaultOpenKey: menuList.length > 0 ? 'dir' : ''})
   }
 
   menuClick(e) {
@@ -91,13 +88,7 @@ class Side extends React.Component {
 
   setSelectedMenu() {
     var currentPathName = browserHistory.getCurrentLocation().pathname
-    var defaultOpenKey = ''
-    if (currentPathName.indexOf('dir') >= 0) {
-      defaultOpenKey = 'dir'
-      this.setMenuList()
-    }
-
-    this.setState({defaultOpenKey: defaultOpenKey, defaultSelectedMenuKey: currentPathName})
+    this.setState({defaultSelectedMenuKey: currentPathName})
   }
 }
 

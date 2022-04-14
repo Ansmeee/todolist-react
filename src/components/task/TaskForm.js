@@ -322,7 +322,7 @@ class TaskForm extends React.Component {
               onChange={(value) => {
                 this.typeChange(value)
               }}
-              value={this.props.currentTask.list_id ? this.props.currentTask.list_id.toString() : null}>
+              value={this.props.currentTask.list_id > 0 ? this.props.currentTask.list_id.toString() : null}>
               {this.typeOptions()}
             </Select>
             <Popover

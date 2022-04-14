@@ -111,6 +111,8 @@ class Mydir extends React.Component {
         message.success("已删除")
         var dirList = _.cloneDeep(this.state.dirList)
         index >= 0 && dirList.splice(index, 1) && this.updateDirList(dirList)
+      } else {
+        message.error("删除失败")
       }
     })
   }
