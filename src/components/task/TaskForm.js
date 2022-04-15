@@ -9,6 +9,8 @@ import todoApi from "../../http/todo";
 import Vditor from "vditor";
 import "vditor/dist/index.css";
 import {priorityName2Key} from "../../utils/task";
+import Priority from "./options/Priority";
+import Deadline from "./options/Deadline";
 
 const {TextArea} = Input;
 const {Option} = Select;
@@ -108,17 +110,10 @@ class TaskForm extends React.Component {
     }
   }
 
-  taskInfoChange(e, key) {
-    var currentTask = this.props.currentTask
-    currentTask[key] = e.target.value
-    this.setState({currentTask: currentTask})
-  }
-
-  taskInfoOptChange(key, val) {
+  taskInfoChange(key, val) {
     var currentTask = this.props.currentTask
     currentTask[key] = val
     this.setState({currentTask: currentTask})
-    this.setState({priorityPopVisible: false})
   }
 
   setContent(value) {
@@ -142,51 +137,6 @@ class TaskForm extends React.Component {
 
     return "task-info-opt"
   }
-
-  taskInfoPopContent(opt) {
-    if (opt === 'priority') {
-      return (
-        <div>
-          <Button
-            block
-            className="pop-opt-danger"
-            type={this.props.currentTask.priority === '高' ? 'link' : 'text'}
-            onClick={() => {
-              this.taskInfoOptChange('priority', '高')
-            }}>
-            高优先级
-          </Button>
-          <Button
-            block
-            className="pop-opt-warning"
-            type={this.props.currentTask.priority === '中' ? 'link' : 'text'}
-            onClick={() => {
-              this.taskInfoOptChange('priority', '中')
-            }}>
-            中优先级
-          </Button>
-          <Button
-            block
-            className="pop-opt-primary"
-            type={this.props.currentTask.priority === '低' ? 'link' : 'text'}
-            onClick={() => {
-              this.taskInfoOptChange('priority', '低')
-            }}>
-            低优先级
-          </Button>
-          <Button
-            block
-            type={this.props.currentTask.priority === '无' ? 'link' : 'text'}
-            onClick={() => {
-              this.taskInfoOptChange('priority', '无')
-            }}>
-            无优先级
-          </Button>
-        </div>
-      )
-    }
-  }
-
 
   updateTask() {
     var params = _.cloneDeep(this.props.currentTask)
@@ -272,45 +222,36 @@ class TaskForm extends React.Component {
       <div className="task-info-con" style={{height: '100%', overflowY: 'auto'}}>
         <div className="task-info-opt-con">
           <div className="task-info-opt-pre">
-            <span className={this.getTaskOPTClassName()}>
-              <FlagOutlined className="task-info-opt-icon"/>
-              <Popover
-                overlayClassName="pop-opt-con"
-                placement="bottomLeft"
-                visible={this.state.priorityPopVisible}
-                onVisibleChange={(visible) => {
-                  this.setState({priorityPopVisible: visible})
-                }}
-                content={this.taskInfoPopContent('priority')}
-                trigger="click">
+            <Priority
+              trigger={
                 <Input
                   style={{maxWidth: '65px', minWidth: '20px'}}
                   bordered={false}
                   readOnly={true}
                   placeholder="优先级"
-                  value={this.props.currentTask.priority}/>
-              </Popover>
-            </span>
-            <span className={this.props.currentTask.deadline ? 'task-info-opt task-info-opt-primary' : 'task-info-opt'}>
-            <CalendarOutlined className="task-info-opt-icon"/>
-            <DatePicker
-              onChange={(date, dateString) => {
-                this.taskInfoOptChange('deadline', dateString)
-              }}
-              bordered={false}
-              picker="date"
-              value={moment(this.props.currentTask.deadline)}
-              style={{maxWidth: '110px', minWidth: '110px'}}
-              inputReadOnly={true}
-              placeholder="时间"
-              allowClear={false}
-              suffixIcon={null}/>
-          </span>
+                  value={this.props.currentTask.priority}>
+                </Input>
+              }
+              currentTask={this.props.currentTask}
+              onPriorityChange={(val) => {
+                this.taskInfoChange('priority', val)
+              }}>
+            </Priority>
+            <Deadline
+              currentTask={this.props.currentTask}
+              onDeadlineChange={(val) => {
+                this.taskInfoChange('deadline', val)
+              }}>
+            </Deadline>
           </div>
           <div className="task-info-opt-end">
-            <Button type="primary" onClick={() => {
-              this.saveTaskClick()
-            }}>保 存</Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                this.saveTaskClick()
+              }}>
+              保 存
+            </Button>
           </div>
         </div>
         <div>
@@ -343,7 +284,7 @@ class TaskForm extends React.Component {
             bordered={false}
             placeholder="准备做什么事？"
             onChange={(e) => {
-              this.taskInfoChange(e, 'title')
+              this.taskInfoChange('title', e.target.value)
             }}>
           </TextArea>
 
