@@ -18,7 +18,6 @@ import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
 import TaskForm from "./task/TaskForm";
-import {priorityKey2Name} from "../utils/task";
 
 const _ = require('lodash');
 
@@ -37,7 +36,7 @@ class File extends React.Component {
         title: '',
         content: '',
         deadline: '',
-        priority: '',
+        priority: 0,
         list_id: ''
       },
       from: props.state.from,
@@ -138,7 +137,6 @@ class File extends React.Component {
 
   itemClick(item) {
     var currentTask = _.cloneDeep(item)
-    currentTask.priority = priorityKey2Name(item.priority)
     currentTask.deadline = currentTask.deadline ? currentTask.deadline : moment().format('YYYY-MM-DD')
     this.setState({currentTask: currentTask, createTask: true})
   }
@@ -432,7 +430,6 @@ class File extends React.Component {
 
   onTaskCreated = (todo) => {
     var currentTask = _.cloneDeep(todo)
-    currentTask.priority = priorityKey2Name(todo.priority)
     this.setState({currentTask: currentTask})
 
     var todoList = this.state.todoList

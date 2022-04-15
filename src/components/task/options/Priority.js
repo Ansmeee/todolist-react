@@ -17,35 +17,35 @@ class Priority extends React.Component {
         <Button
           block
           className="pop-opt-danger"
-          type={this.props.currentTask.priority === '高' ? 'link' : 'text'}
+          type="text"
           onClick={() => {
-            this.priorityChange('高')
+            this.priorityChange(3)
           }}>
           高优先级
         </Button>
         <Button
           block
           className="pop-opt-warning"
-          type={this.props.currentTask.priority === '中' ? 'link' : 'text'}
+          type="text"
           onClick={() => {
-            this.priorityChange('中')
+            this.priorityChange(2)
           }}>
           中优先级
         </Button>
         <Button
           block
           className="pop-opt-primary"
-          type={this.props.currentTask.priority === '低' ? 'link' : 'text'}
+          type="text"
           onClick={() => {
-            this.priorityChange('低')
+            this.priorityChange(1)
           }}>
           低优先级
         </Button>
         <Button
           block
-          type={this.props.currentTask.priority === '无' ? 'link' : 'text'}
+          type="text"
           onClick={() => {
-            this.priorityChange('无')
+            this.priorityChange(0)
           }}>
           无优先级
         </Button>
@@ -53,7 +53,6 @@ class Priority extends React.Component {
     )
     return (
       <span className={this.getTaskOPTClassName()}>
-        <FlagOutlined className="task-info-opt-icon"/>
         <Popover
           overlayClassName="pop-opt-con"
           placement="bottomLeft"
@@ -63,22 +62,26 @@ class Priority extends React.Component {
           }}
           content={popCon}
           trigger="click">
-          {this.props.trigger}
+          <div>
+            <FlagOutlined className="task-info-opt-icon"/>
+            {this.props.trigger}
+          </div>
         </Popover>
       </span>
     )
   }
 
   getTaskOPTClassName() {
-    if (this.props.currentTask.priority === '高') {
+    console.log(this.props.currentTask.priority)
+    if (this.props.currentTask.priority === 3) {
       return "task-info-opt task-info-opt-danger"
     }
 
-    if (this.props.currentTask.priority === '中') {
+    if (this.props.currentTask.priority === 2) {
       return "task-info-opt task-info-opt-warning"
     }
 
-    if (this.props.currentTask.priority === '低') {
+    if (this.props.currentTask.priority === 1) {
       return "task-info-opt task-info-opt-primary"
     }
 

@@ -19,7 +19,7 @@ class Month extends React.Component {
         title: '',
         content: '',
         deadline: moment((new Date()).date).format("YYYY-MM-DD"),
-        priority: '',
+        priority: 0,
         list_id: ''
       },
       days: [],
@@ -34,7 +34,6 @@ class Month extends React.Component {
 
   componentDidMount() {
     this.setDays()
-    this.setDirList()
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -90,32 +89,6 @@ class Month extends React.Component {
   lastDateOfLastMonth() {
     const lastDayOfLastMonth = new Date(this.props.currentMonth === 1 ? this.props.currentYear - 1 : this.props.currentYear, this.props.currentMonth - 1, 0);
     return lastDayOfLastMonth.getDate()
-  }
-
-
-  setDirList() {
-    const dirString = window.localStorage.getItem("menu")
-
-    if (!dirString) {
-      fileApi.fileList({}).then(response => {
-        if (response.code === 200) {
-          window.localStorage.setItem("menu", JSON.stringify(response.data.list))
-          const dirList = response.data.list.map(item => {
-            return {label: item.title, value: item.id}
-          })
-
-          this.setState({dirList: dirList})
-        }
-      })
-      return
-    }
-
-    const dir = JSON.parse(dirString)
-    var dirList = dir.map(item => {
-      return {label: item.title, value: item.id}
-    })
-
-    this.setState({dirList: dirList})
   }
 
   setDays() {
@@ -289,6 +262,7 @@ class Month extends React.Component {
   }
 
   onTaskCreated = (task) => {
+    this.setState({currentTask: task})
     this.loadTasks(task)
   }
 
@@ -311,10 +285,11 @@ class Month extends React.Component {
   getDayCell(record, index) {
     const currentDay = record['week-' + index]
     const taskPopForm = (
-      <div style={{width: '400px', maxHeight: '400px', overflowY: 'auto'}}>
+      <div style={{width: '450px', maxHeight: '450px', overflowY: 'auto'}}>
         <TaskForm
           date={currentDay.date}
           currentTask={this.state.currentTask}
+          onTaskUpdated={this.onTaskUpdated}
           onTaskCreated={this.onTaskCreated}>
         </TaskForm>
       </div>
