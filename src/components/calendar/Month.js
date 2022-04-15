@@ -5,8 +5,6 @@ import TaskForm from "../task/TaskForm";
 import {EllipsisOutlined} from "@ant-design/icons";
 import todoApi from "../../http/todo";
 import _ from "lodash";
-import fileApi from "../../http/file";
-import {priorityKey2Name} from "../../utils/task";
 
 class Month extends React.Component {
   constructor(props) {
@@ -235,7 +233,6 @@ class Month extends React.Component {
 
   taskForm(task) {
     var currentTask = _.cloneDeep(task)
-    currentTask.priority = priorityKey2Name(currentTask.priority)
     return (
       <div style={{width: '500px', maxHeight: '400px'}}>
         <TaskForm
