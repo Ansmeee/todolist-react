@@ -18,7 +18,9 @@ import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
 import TaskForm from "./task/TaskForm";
-
+import Priority from "./task/options/Priority";
+import {priorityKey2Name} from '../utils/task';
+import Deadline from './task/options/Deadline';
 const _ = require('lodash');
 
 class File extends React.Component {
@@ -26,24 +28,24 @@ class File extends React.Component {
     super(props)
 
     this.state = {
-      keywords: '',
-      filterForm: {
+      keywords          : '',
+      filterForm        : {
         rules: [],
       },
-      createTask: false,
-      currentTask: {
-        id: '',
-        title: '',
-        content: '',
+      createTask        : false,
+      currentTask       : {
+        id      : '',
+        title   : '',
+        content : '',
         deadline: '',
         priority: 0,
-        list_id: ''
+        list_id : ''
       },
-      from: props.state.from,
-      loading: false,
-      todoList: [],
+      from              : props.state.from,
+      loading           : false,
+      todoList          : [],
       priorityPopVisible: false,
-      needFilter: true,
+      needFilter        : true,
     }
   }
 
@@ -69,7 +71,7 @@ class File extends React.Component {
 
   loadtodoList() {
     this.setState({loading: true})
-    let params = _.cloneDeep(this.state.filterForm)
+    let params  = _.cloneDeep(this.state.filterForm)
     params.from = this.props.state.from
 
     if (this.props.state.sid && this.state.needFilter) {
@@ -89,7 +91,7 @@ class File extends React.Component {
 
   searchChange(e) {
     var filterForm = this.state.filterForm
-    var keywords = e.target.value
+    var keywords   = e.target.value
     if ((keywords || filterForm.keywords) && (keywords !== filterForm.keywords)) {
       filterForm.keywords = keywords
       this.setState({filterForm: filterForm}, () => this.loadtodoList())
@@ -97,10 +99,10 @@ class File extends React.Component {
   }
 
   sortOptClick(sort_by, sort_order = 'desc') {
-    var filterForm = {}
+    var filterForm   = {}
     filterForm.rules = this.state.filterForm.rules
     if (sort_by && (this.state.filterForm.sort_by !== sort_by || this.state.filterForm.sort_by === undefined)) {
-      filterForm.sort_by = sort_by
+      filterForm.sort_by    = sort_by
       filterForm.sort_order = sort_order
     }
 
@@ -136,7 +138,7 @@ class File extends React.Component {
   }
 
   itemClick(item) {
-    var currentTask = _.cloneDeep(item)
+    var currentTask      = _.cloneDeep(item)
     currentTask.deadline = currentTask.deadline ? currentTask.deadline : moment().format('YYYY-MM-DD')
     this.setState({currentTask: currentTask, createTask: true})
   }
@@ -206,9 +208,9 @@ class File extends React.Component {
 
   priorityChange(item, opt) {
     var params = {
-      id: item.id,
-      name: 'priority',
-      value: opt.toString()
+      id   : item.id,
+      name : 'priority',
+      value: opt
     }
 
     this.updateAttr(params)
@@ -216,9 +218,9 @@ class File extends React.Component {
 
   statusChange(item, opt) {
     var params = {
-      id: item.id,
-      name: 'status',
-      value: opt.toString()
+      id   : item.id,
+      name : 'status',
+      value: opt
     }
     this.updateAttr(params)
   }
@@ -227,6 +229,9 @@ class File extends React.Component {
     todoApi.updateAttr(params).then(response => {
       if (response.code === 200) {
         message.success('已保存')
+        var currentTask = this.state.currentTask
+        currentTask[params.name] = params.value
+        this.setState({currentTask: currentTask})
         this.updateTodoList(response.data)
       } else {
         message.error(response.msg || '保存失败')
@@ -238,7 +243,7 @@ class File extends React.Component {
     todoApi.delete(item.id).then(response => {
       if (response.code === 200) {
         var todoList = this.state.todoList
-        var index = todoList.findIndex(i => {
+        var index    = todoList.findIndex(i => {
           return i.id === item.id
         })
 
@@ -325,8 +330,8 @@ class File extends React.Component {
 
   listActions(item) {
     var currentDate = Date.now()
-    var expireDate = new Date(item.deadline).getTime()
-    var remainDate = expireDate - currentDate
+    var expireDate  = new Date(item.deadline).getTime()
+    var remainDate  = expireDate - currentDate
 
     var deadlineClassName = ''
     if (remainDate < 24 * 60 * 60 * 1000) {
@@ -341,33 +346,16 @@ class File extends React.Component {
       deadlineClassName = 'primary'
     }
 
-    var priorityClassName = ''
-    var priorityText = '无'
-    if (item.priority === 3) {
-      priorityClassName = 'danger'
-      priorityText = '高'
-    }
-
-    if (item.priority === 2) {
-      priorityClassName = 'warning'
-      priorityText = '中'
-    }
-
-    if (item.priority === 1) {
-      priorityClassName = 'primary'
-      priorityText = '低'
-    }
-
-    var statusText = "未开始"
+    var statusText      = "未开始"
     var statusClassName = ""
     if (item.status === 1) {
       statusClassName = 'primary'
-      statusText = "进行中"
+      statusText      = "进行中"
     }
 
     if (item.status === 2) {
       statusClassName = 'success'
-      statusText = "已完成"
+      statusText      = "已完成"
     }
 
     return [
@@ -377,22 +365,53 @@ class File extends React.Component {
         <CheckCircleOutlined/>
         {statusText}
       </Button>,
-      <Button
-        type="text"
-        className={"item-opt item-opt-" + priorityClassName}>
-        <FlagOutlined/>{priorityText}
-      </Button>,
-      <Button
-        type="text"
-        className={"item-opt item-opt-" + deadlineClassName}>
-        <CarryOutOutlined/>{item.deadline}
-      </Button>
+      <Priority
+        trigger={
+          <Button
+            type="text"
+            className={this.priorityClassName(item)}>
+            <FlagOutlined/>
+            {priorityKey2Name(item.priority)}
+          </Button>
+        }
+        currentTask={item}
+        onPriorityChange={(val) => {
+          this.priorityChange(item, val)
+        }}>
+      </Priority>,
+      <Deadline
+        currentTask={item}
+        onDeadlineChange={(val) => {
+          if (this.props.currentTask.id) {
+            this.updateTaksAttr('deadline', val)
+          } else {
+            this.taskInfoChange('deadline', val)
+            this.createTask()
+          }
+        }}>
+      </Deadline>
     ]
+  }
+
+  priorityClassName(item) {
+    if (item.priority === 3) {
+      return "item-opt item-opt-danger"
+    }
+
+    if (item.priority === 2) {
+      return "item-opt item-opt-warning"
+    }
+
+    if (item.priority === 1) {
+      return "item-opt item-opt-primary"
+    }
+
+    return "item-opt"
   }
 
   updateTodoList(todo) {
     var todoList = this.state.todoList
-    var index = todoList.findIndex(item => {
+    var index    = todoList.findIndex(item => {
       return item.id === todo.id
     })
 
@@ -460,9 +479,9 @@ class File extends React.Component {
   render() {
     return (
       <Row className="file-page-con">
-        <Col span={15} className="file-list-con">
+        <Col span={14} className="file-list-con">
           <Row className="file-filter-con">
-            <Col span={14}>
+            <Col span={12}>
               <div style={{borderBottom: '1px solid #d9d9d9'}}>
                 <Input
                   bordered={false}
@@ -506,15 +525,15 @@ class File extends React.Component {
                 </Button>
               </Popover>
             </Col>
-            <Col span={4} style={{textAlign: 'right', paddingRight: '16px'}}>
+            <Col span={6} style={{textAlign: 'right', paddingRight: '16px'}}>
               <Button type="primary" icon={<PlusOutlined/>} onClick={() => {
-                this.setState({currentTask: {}, createTask: true})
+                this.setState({currentTask: {id: "", priority: 0}, createTask: true})
               }}>新 建</Button>
             </Col>
           </Row>
           <List
             style={{
-              height: document.documentElement.clientHeight - 65 - 70 - 48 - 55,
+              height   : document.documentElement.clientHeight - 65 - 70 - 48 - 55,
               overflowY: 'auto'
             }}
             size="small"
@@ -534,7 +553,7 @@ class File extends React.Component {
             )}
           />
         </Col>
-        <Col span={9} style={{height: document.documentElement.clientHeight - 65 - 70 - 55}}>
+        <Col span={10} style={{height: document.documentElement.clientHeight - 65 - 70 - 55}}>
           {this.taskForm()}
         </Col>
       </Row>

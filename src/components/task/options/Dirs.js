@@ -61,7 +61,7 @@ class Dirs extends React.Component {
           <div>
             <FolderOutlined />
             <Input
-              style={{maxWidth: '120px', minWidth: '120px'}}
+              style={{maxWidth: '100px', minWidth: '100px'}}
               bordered={false}
               readOnly={true}
               placeholder="选择一个目录"

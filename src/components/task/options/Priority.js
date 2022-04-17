@@ -63,7 +63,6 @@ class Priority extends React.Component {
           content={popCon}
           trigger="click">
           <div>
-            <FlagOutlined className="task-info-opt-icon"/>
             {this.props.trigger}
           </div>
         </Popover>
@@ -72,7 +71,6 @@ class Priority extends React.Component {
   }
 
   getTaskOPTClassName() {
-    console.log(this.props.currentTask.priority)
     if (this.props.currentTask.priority === 3) {
       return "task-info-opt task-info-opt-danger"
     }

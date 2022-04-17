@@ -8,8 +8,7 @@ class Deadline extends React.Component {
   }
   render() {
     return (
-      <span className={this.getTaskOPTClassName()}>
-        <CarryOutOutlined className="task-info-opt-icon"/>
+      <div className={'task-info-opt ' + this.getTaskOPTClassName()}>
         <DatePicker
           onChange={(date, dateString) => {
             this.deadlineChange(dateString)
@@ -17,12 +16,11 @@ class Deadline extends React.Component {
           bordered={false}
           picker="date"
           value={moment(this.props.currentTask.deadline)}
-          style={{maxWidth: '110px', minWidth: '110px'}}
           inputReadOnly={true}
-          placeholder="时间"
+          placeholder="截止时间"
           allowClear={false}
           suffixIcon={null}/>
-      </span>
+      </div>
     )
   }
 
@@ -31,18 +29,18 @@ class Deadline extends React.Component {
     var expireDate = new Date(this.props.currentTask.deadline).getTime()
     var remainDate = expireDate - currentDate
     if (remainDate < 24 * 60 * 60 * 1000) {
-      return "task-info-opt task-info-opt-danger"
+      return "task-info-opt-danger"
     }
 
     if (remainDate > 24 * 60 * 60 * 1000 && remainDate <= 3 * 24 * 60 * 60 * 1000) {
-      return "task-info-opt task-info-opt-warning"
+      return "task-info-opt-warning"
     }
 
     if (remainDate > 3 * 24 * 60 * 60 * 1000 && remainDate <= 5 * 24 * 60 * 60 * 1000) {
-      return "task-info-opt task-info-opt-primary"
+      return "task-info-opt-primary"
     }
 
-    return "task-info-opt"
+    return ""
   }
 
   deadlineChange(val) {

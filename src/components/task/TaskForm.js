@@ -1,8 +1,6 @@
 import React from "react";
 import "../../assets/style/taskform.less"
-import {Button, Input, message, Select} from "antd";
-import {CheckOutlined} from "@ant-design/icons";
-import fileApi from "../../http/file";
+import {Input, message} from "antd";
 import moment from "moment";
 import _ from "lodash";
 import todoApi from "../../http/todo";
@@ -12,6 +10,7 @@ import {priorityKey2Name} from "../../utils/task";
 import Priority from "./options/Priority";
 import Deadline from "./options/Deadline";
 import Dirs from "./options/Dirs";
+import {FlagOutlined} from '@ant-design/icons';
 
 const {TextArea} = Input;
 
@@ -21,7 +20,7 @@ class TaskForm extends React.Component {
     this.state = {
       originTask: {}
     }
-    this.editor = null
+    this.editor = {}
   }
 
   componentDidMount() {
@@ -38,7 +37,7 @@ class TaskForm extends React.Component {
     if (this.props.currentTask.id !== prevProps.currentTask.id) {
       this.setState({originTask: _.cloneDeep(this.props.currentTask)})
       let value = this.props.currentTask.content
-      let md = value ? this.editor.html2md(value) : ''
+      let md = value && this.editor ? this.editor.html2md(value) : ''
       this.editor.setValue(md)
     }
   }
@@ -47,18 +46,6 @@ class TaskForm extends React.Component {
     return (
       <div className="task-info-con" style={{height: '100%', overflowY: 'auto'}}>
         <div className="task-info-opt-con">
-          <Dirs
-            currentTask={this.props.currentTask}
-            onDirChange={(val) => {
-              this.taskInfoChange('type', val.label)
-              if (this.props.currentTask.id) {
-                this.updateTaksAttr('list_id', val.value)
-              } else {
-                this.taskInfoChange('list_id', val.value)
-                this.createTask()
-              }
-            }}>
-          </Dirs>
           <Deadline
             currentTask={this.props.currentTask}
             onDeadlineChange={(val) => {
@@ -72,13 +59,16 @@ class TaskForm extends React.Component {
           </Deadline>
           <Priority
             trigger={
-              <Input
-                style={{maxWidth: '65px', minWidth: '20px'}}
-                bordered={false}
-                readOnly={true}
-                placeholder="优先级"
-                value={priorityKey2Name(this.props.currentTask.priority)}>
-              </Input>
+              <span>
+                <FlagOutlined/>
+                <Input
+                  style={{maxWidth: '25px', minWidth: '25px'}}
+                  bordered={false}
+                  readOnly={true}
+                  placeholder="优先级"
+                  value={priorityKey2Name(this.props.currentTask.priority)}>
+                </Input>
+              </span>
             }
             currentTask={this.props.currentTask}
             onPriorityChange={(val) => {
