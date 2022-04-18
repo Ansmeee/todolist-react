@@ -13,11 +13,13 @@ class Deadline extends React.Component {
   render() {
     return (
       <div className={this.getTaskOPTClassName()}>
-        <CarryOutOutlined />
+        {this.props.trigger}
         <DatePicker
+          className="deadline-picker"
           onChange={(date, dateString) => {
             this.deadlineChange(dateString)
           }}
+          open={this.props.open}
           bordered={false}
           picker="date"
           locale={locale}
@@ -39,14 +41,14 @@ class Deadline extends React.Component {
     }
 
     if (remainDate > 24 * 60 * 60 * 1000 && remainDate <= 3 * 24 * 60 * 60 * 1000) {
-      return "task-info-opt task-info-opt-warning"
+      return "task-info-opt-warning"
     }
 
     if (remainDate > 3 * 24 * 60 * 60 * 1000 && remainDate <= 5 * 24 * 60 * 60 * 1000) {
-      return "task-info-opt task-info-opt-primary"
+      return "task-info-opt-primary"
     }
 
-    return "task-info-opt"
+    return ""
   }
 
   deadlineChange(val) {

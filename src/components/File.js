@@ -354,6 +354,7 @@ class File extends React.Component {
     return [
       <Button
         type="text"
+        style={{fontSize: '12px'}}
         className={"item-opt item-opt-" + statusClassName}>
         <CheckCircleOutlined/>
         {statusText}
@@ -362,6 +363,7 @@ class File extends React.Component {
         trigger={
           <Button
             type="text"
+            style={{fontSize: '12px'}}
             className={priorityClassName(item.priority)}>
             <FlagOutlined/>
             {priorityKey2Name(item.priority)}

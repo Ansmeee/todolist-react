@@ -10,15 +10,17 @@ import {priorityKey2Name} from "../../utils/task";
 import Priority from "./options/Priority";
 import Deadline from "./options/Deadline";
 import Dirs from "./options/Dirs";
-import {FlagOutlined} from '@ant-design/icons';
+import {CarryOutOutlined, FlagOutlined} from '@ant-design/icons';
+import {deadlineClassName, priorityClassName} from './options/ClassName';
 
 const {TextArea} = Input;
 
 class TaskForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      originTask: {}
+    this.state  = {
+      originTask: {},
+      popShow   : false,
     }
     this.editor = {}
   }
@@ -26,7 +28,7 @@ class TaskForm extends React.Component {
   componentDidMount() {
     this.createVidtor({value: this.props.currentTask.content})
     if (this.props.date) {
-      var currentTask = this.props.currentTask
+      var currentTask      = this.props.currentTask
       currentTask.deadline = moment(this.props.date).format("YYYY-MM-DD")
       this.setState({currentTask: currentTask})
     }
@@ -37,7 +39,7 @@ class TaskForm extends React.Component {
     if (this.props.currentTask.id !== prevProps.currentTask.id) {
       this.setState({originTask: _.cloneDeep(this.props.currentTask)})
       let value = this.props.currentTask.content
-      let md = value && this.editor ? this.editor.html2md(value) : ''
+      let md    = value && this.editor ? this.editor.html2md(value) : ''
       this.editor.setValue(md)
     }
   }
@@ -47,6 +49,25 @@ class TaskForm extends React.Component {
       <div className="task-info-con" style={{height: '100%', overflowY: 'auto'}}>
         <div className="task-info-opt-con">
           <Deadline
+            trigger={
+              <div
+                onBlur={() => {
+                  this.setState({popShow: !this.state.popShow})
+                }}
+                onClick={() => {
+                  this.setState({popShow: !this.state.popShow})
+                }}
+                className={deadlineClassName(this.props.currentTask.deadline)}>
+                <CarryOutOutlined/>
+                <Input
+                  style={{width: '100px'}}
+                  bordered={false}
+                  readOnly={true}
+                  value={this.props.currentTask.deadline}>
+                </Input>
+              </div>
+            }
+            open={this.state.popShow}
             currentTask={this.props.currentTask}
             onDeadlineChange={(val) => {
               if (this.props.currentTask.id) {
@@ -59,10 +80,10 @@ class TaskForm extends React.Component {
           </Deadline>
           <Priority
             trigger={
-              <div>
+              <div className={priorityClassName(this.props.currentTask.priority)}>
                 <FlagOutlined/>
                 <Input
-                  style={{maxWidth: '25px', minWidth: '25px'}}
+                  style={{width: '37px'}}
                   bordered={false}
                   readOnly={true}
                   placeholder="优先级"
@@ -108,10 +129,14 @@ class TaskForm extends React.Component {
     )
   }
 
+  onRef(ref) {
+    this.child = ref
+  }
+
   updateTaksAttr(key, val) {
     var params = {
-      id: this.props.currentTask.id,
-      name: key,
+      id   : this.props.currentTask.id,
+      name : key,
       value: val
     }
     todoApi.updateAttr(params).then(response => {
@@ -125,7 +150,7 @@ class TaskForm extends React.Component {
   }
 
   taskInfoChange(key, val) {
-    var currentTask = this.props.currentTask
+    var currentTask  = this.props.currentTask
     currentTask[key] = val
     this.setState({currentTask: currentTask})
   }
@@ -153,12 +178,12 @@ class TaskForm extends React.Component {
 
   createVidtor = params => {
     let {value} = params;
-    value = value ? value : "";
-    var that = this
-    var vditor = new Vditor("vditor", {
+    value       = value ? value : "";
+    var that    = this
+    var vditor  = new Vditor("vditor", {
       placeholder: "具体要怎么做。。。",
-      toolbar: [],
-      classes: "task-editor",
+      toolbar    : [],
+      classes    : "task-editor",
       after() {
         let md = value ? vditor.html2md(value) : ''
         vditor.setValue(md);
