@@ -3,7 +3,6 @@ import {browserHistory} from "react-router";
 import {
   PlusOutlined,
   FlagOutlined,
-  CarryOutOutlined,
   SortAscendingOutlined,
   FilterOutlined,
   MoreOutlined,
@@ -21,6 +20,7 @@ import TaskForm from "./task/TaskForm";
 import Priority from "./task/options/Priority";
 import {priorityKey2Name} from '../utils/task';
 import Deadline from './task/options/Deadline';
+import {priorityClassName, deadlineClassName} from './task/options/ClassName'
 const _ = require('lodash');
 
 class File extends React.Component {
@@ -216,6 +216,16 @@ class File extends React.Component {
     this.updateAttr(params)
   }
 
+  deadlineChange(item, val) {
+    var params = {
+      id   : item.id,
+      name : 'deadline',
+      value: val
+    }
+
+    this.updateAttr(params)
+  }
+
   statusChange(item, opt) {
     var params = {
       id   : item.id,
@@ -329,23 +339,6 @@ class File extends React.Component {
   }
 
   listActions(item) {
-    var currentDate = Date.now()
-    var expireDate  = new Date(item.deadline).getTime()
-    var remainDate  = expireDate - currentDate
-
-    var deadlineClassName = ''
-    if (remainDate < 24 * 60 * 60 * 1000) {
-      deadlineClassName = 'danger'
-    }
-
-    if (remainDate > 24 * 60 * 60 * 1000 && remainDate <= 3 * 24 * 60 * 60 * 1000) {
-      deadlineClassName = 'warning'
-    }
-
-    if (remainDate > 3 * 24 * 60 * 60 * 1000 && remainDate <= 5 * 24 * 60 * 60 * 1000) {
-      deadlineClassName = 'primary'
-    }
-
     var statusText      = "未开始"
     var statusClassName = ""
     if (item.status === 1) {
@@ -369,7 +362,7 @@ class File extends React.Component {
         trigger={
           <Button
             type="text"
-            className={this.priorityClassName(item)}>
+            className={priorityClassName(item.priority)}>
             <FlagOutlined/>
             {priorityKey2Name(item.priority)}
           </Button>
@@ -381,32 +374,12 @@ class File extends React.Component {
       </Priority>,
       <Deadline
         currentTask={item}
+        className={deadlineClassName(item.deadline)}
         onDeadlineChange={(val) => {
-          if (this.props.currentTask.id) {
-            this.updateTaksAttr('deadline', val)
-          } else {
-            this.taskInfoChange('deadline', val)
-            this.createTask()
-          }
+          this.deadlineChange(item, val)
         }}>
       </Deadline>
     ]
-  }
-
-  priorityClassName(item) {
-    if (item.priority === 3) {
-      return "item-opt item-opt-danger"
-    }
-
-    if (item.priority === 2) {
-      return "item-opt item-opt-warning"
-    }
-
-    if (item.priority === 1) {
-      return "item-opt item-opt-primary"
-    }
-
-    return "item-opt"
   }
 
   updateTodoList(todo) {

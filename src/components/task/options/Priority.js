@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Popover} from "antd";
-import {FlagOutlined} from "@ant-design/icons";
+import "../../../assets/style/priority.less"
 
 class Priority extends React.Component {
   constructor(props) {
@@ -52,7 +52,7 @@ class Priority extends React.Component {
       </div>
     )
     return (
-      <span className={this.getTaskOPTClassName()}>
+      <div>
         <Popover
           overlayClassName="pop-opt-con"
           placement="bottomLeft"
@@ -66,7 +66,7 @@ class Priority extends React.Component {
             {this.props.trigger}
           </div>
         </Popover>
-      </span>
+      </div>
     )
   }
 

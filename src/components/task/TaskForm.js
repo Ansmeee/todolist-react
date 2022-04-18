@@ -59,7 +59,7 @@ class TaskForm extends React.Component {
           </Deadline>
           <Priority
             trigger={
-              <span>
+              <div>
                 <FlagOutlined/>
                 <Input
                   style={{maxWidth: '25px', minWidth: '25px'}}
@@ -68,7 +68,7 @@ class TaskForm extends React.Component {
                   placeholder="优先级"
                   value={priorityKey2Name(this.props.currentTask.priority)}>
                 </Input>
-              </span>
+              </div>
             }
             currentTask={this.props.currentTask}
             onPriorityChange={(val) => {
