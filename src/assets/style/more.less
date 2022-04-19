@@ -1,0 +1,61 @@
+.item-opt-more {
+  width: 200px;
+  .ant-popover-inner-content {
+    padding: 5px 16px !important;
+
+    .item-opt-more-label {
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.45);
+      margin-top: 5px;
+    }
+
+    .item-opt-li {
+      cursor: pointer;
+      margin: 5px 0px;
+      font-size: 12px;
+    }
+
+    .item-opt-mul {
+      border-top: 1px solid rgb(217, 217, 217);
+
+      .item-opt-mul-div {
+        display: flex;
+        justify-content: space-evenly;
+
+        .ant-btn-text {
+          font-size: 14px;
+          padding: 5px 0px !important;
+        }
+
+        .item-opt-mul {
+          &-danger {
+            color: rgb(255, 77, 79)
+          }
+
+          &-warning {
+            color: rgb(250, 173, 20)
+          }
+
+          &-primary {
+            color: rgb(24, 144, 255)
+          }
+
+          &-success {
+            color: rgb(56, 158, 13)
+          }
+        }
+      }
+    }
+
+    .item-opt-del {
+      height: 30px;
+      line-height: 30px;
+
+      &-del {
+        font-size: 14px;
+        border-top: 1px solid rgb(217, 217, 217);
+        color: rgb(255, 77, 79);
+      }
+    }
+  }
+}

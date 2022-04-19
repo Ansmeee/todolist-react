@@ -17,11 +17,8 @@ import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
 import TaskForm from "./task/TaskForm";
-import Priority from "./task/options/Priority";
-import {priorityKey2Name} from '../utils/task';
-import Deadline from './task/options/Deadline';
-import {priorityClassName, deadlineClassName} from './task/options/ClassName'
-import Status from "./task/options/Status";
+import More from "./task/options/More";
+import Action from "./task/options/Action";
 
 const _ = require('lodash');
 
@@ -140,12 +137,6 @@ class File extends React.Component {
     })
   }
 
-  itemClick(item) {
-    var currentTask = _.cloneDeep(item)
-    currentTask.deadline = currentTask.deadline ? currentTask.deadline : moment().format('YYYY-MM-DD')
-    this.setState({currentTask: currentTask, createTask: true})
-  }
-
   filterPopContent() {
     var showStatus = ""
     if (this.props.state.from !== 'done') {
@@ -209,33 +200,45 @@ class File extends React.Component {
     )
   }
 
-  priorityChange(item, opt) {
-    var params = {
-      id: item.id,
-      name: 'priority',
-      value: opt
-    }
+  itemDel(item) {
+    var todoList = this.state.todoList
+    var index = todoList.findIndex(i => {
+      return i.id === item.id
+    })
 
-    this.updateAttr(params)
+    todoList.splice(index, 1)
+
+    this.setState({todoList: todoList})
+    if (todoList.length > 0) {
+      this.setState({currentTask: todoList[0]})
+    } else {
+      this.setState({
+        currentTask: {
+          id: '',
+          title: '',
+          content: '',
+          deadline: '',
+          priority: 0,
+          list_id: ''
+        },
+        createTask: false
+      })
+    }
   }
 
-  deadlineChange(item, val) {
+  itemChange(item, key, val) {
     var params = {
       id: item.id,
-      name: 'deadline',
+      name: key,
       value: val
     }
-
     this.updateAttr(params)
   }
 
-  statusChange(item, opt) {
-    var params = {
-      id: item.id,
-      name: 'status',
-      value: opt
-    }
-    this.updateAttr(params)
+  itemClick(item) {
+    var currentTask = _.cloneDeep(item)
+    currentTask.deadline = currentTask.deadline ? currentTask.deadline : moment().format('YYYY-MM-DD')
+    this.setState({currentTask: currentTask, createTask: true})
   }
 
   updateAttr(params) {
@@ -248,153 +251,6 @@ class File extends React.Component {
         message.error(response.msg || '保存失败')
       }
     })
-  }
-
-  deleteTodo(item) {
-    todoApi.delete(item.id).then(response => {
-      if (response.code === 200) {
-        var todoList = this.state.todoList
-        var index = todoList.findIndex(i => {
-          return i.id === item.id
-        })
-
-        todoList.splice(index, 1)
-        this.setState({todoList: todoList})
-      }
-    })
-  }
-
-  listExtras(item) {
-    var menu = (
-      <div>
-        <div className="item-opt-li item-opt-mul">
-          <div className="item-opt-more-label">
-            <CheckCircleOutlined style={{marginRight: '3px'}}/>状态
-          </div>
-          <div className="item-opt-mul-div">
-            <Button
-              type="text"
-              onClick={() => {
-                this.statusChange(item, 0)
-              }}>未开始</Button>
-            <Button
-              type="text"
-              className="item-opt-mul-primary"
-              onClick={() => {
-                this.statusChange(item, 1)
-              }}>进行中</Button>
-            <Button
-              type="text"
-              className="item-opt-mul-success"
-              onClick={() => {
-                this.statusChange(item, 2)
-              }}>已完成</Button>
-          </div>
-        </div>
-        <div className="item-opt-li item-opt-mul">
-          <div className="item-opt-more-label">
-            <UnorderedListOutlined style={{marginRight: '3px'}}/>优先级
-          </div>
-          <div className="item-opt-mul-div">
-            <Button
-              type="text"
-              className="item-opt-mul-danger"
-              onClick={() => {
-                this.priorityChange(item, 3)
-              }}>高</Button>
-            <Button
-              type="text"
-              className="item-opt-mul-warning"
-              onClick={() => {
-                this.priorityChange(item, 2)
-              }}>中</Button>
-            <Button
-              type="text"
-              className="item-opt-mul-primary"
-              onClick={() => {
-                this.priorityChange(item, 1)
-              }}>低</Button>
-            <Button
-              type="text"
-              onClick={() => {
-                this.priorityChange(item, 0)
-              }}>无</Button>
-          </div>
-        </div>
-        <div className="item-opt-li item-opt-del">
-          <div className="item-opt-del-del" onClick={() => {
-            this.deleteTodo(item)
-          }}><DeleteOutlined/> 删除
-          </div>
-        </div>
-      </div>
-    )
-
-    return (
-      <Popover overlayClassName="item-opt-more" placement="bottomLeft" content={menu} trigger="click">
-        <Button type="text">
-          <MoreOutlined/>
-        </Button>
-      </Popover>
-    )
-  }
-
-  listActions(item) {
-    var statusText = "未开始"
-    var statusClassName = ""
-    if (item.status === 1) {
-      statusClassName = 'primary'
-      statusText = "进行中"
-    }
-
-    if (item.status === 2) {
-      statusClassName = 'success'
-      statusText = "已完成"
-    }
-
-    return [
-      // <Button
-      //   type="text"
-      //   style={{fontSize: '12px'}}
-      //   className={"item-opt item-opt-" + statusClassName}>
-      //   <CheckCircleOutlined/>
-      //   {statusText}
-      // </Button>,
-      <Status
-        currentTask={item}
-        onStatusChange={(val) => {
-          this.statusChange(item, val)
-        }}>
-      </Status>,
-      <Priority
-        trigger={
-          <Button
-            type="text"
-            style={{fontSize: '12px'}}
-            className={priorityClassName(item.priority)}>
-            <FlagOutlined/>
-            {priorityKey2Name(item.priority)}
-          </Button>
-        }
-        currentTask={item}
-        onPriorityChange={(val) => {
-          this.priorityChange(item, val)
-        }}>
-      </Priority>,
-      <Deadline
-        trigger={
-          <Button type="text" style={{fontSize: '12px'}} className={deadlineClassName(item.deadline)}>
-            <CarryOutOutlined/>
-            {item.deadline}
-          </Button>
-        }
-        pickerClassName="file-deadline-picker"
-        currentTask={item}
-        onDeadlineChange={(val) => {
-          this.deadlineChange(item, val)
-        }}>
-      </Deadline>
-    ]
   }
 
   updateTodoList(todo) {
@@ -516,7 +372,15 @@ class File extends React.Component {
             </Col>
             <Col span={6} style={{textAlign: 'right', paddingRight: '16px'}}>
               <Button type="primary" icon={<PlusOutlined/>} onClick={() => {
-                this.setState({currentTask: {id: "", priority: 0}, createTask: true})
+                this.setState({
+                  currentTask: {
+                    id: "",
+                    priority: 0,
+                    deadline: moment().format('YYYY-MM-DD'),
+                    list_id: this.props.state.from ? this.props.state.from : '',
+                  },
+                  createTask: true
+                })
               }}>新 建</Button>
             </Col>
           </Row>
@@ -533,8 +397,25 @@ class File extends React.Component {
             renderItem={item => (
               <List.Item
                 key={item.id}
-                extra={this.listExtras(item)}
-                actions={this.listActions(item)}>
+                extra={
+                  <More
+                    currentTask={item}
+                    onItemDel={() => {
+                      this.itemDel(item)
+                    }}
+                    onItemChange={(key, val) => {
+                      this.itemChange(item, key, val)
+                    }}>
+                  </More>
+                }
+                actions={[
+                  <Action
+                    currentTask={item}
+                    onItemChange={(key, val) => {
+                      this.itemChange(item, key, val)
+                    }}>
+                  </Action>
+                ]}>
                 <div onClick={() => {
                   this.itemClick(item)
                 }}>{item.title}</div>

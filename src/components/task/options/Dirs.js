@@ -59,9 +59,9 @@ class Dirs extends React.Component {
           content={popCon}
           trigger="click">
           <div>
-            <FolderOutlined />
+            <FolderOutlined/>
             <Input
-              style={{maxWidth: '100px', minWidth: '100px'}}
+              style={{maxWidth: '120px', minWidth: '120px'}}
               bordered={false}
               readOnly={true}
               placeholder="选择一个目录"
@@ -142,6 +142,20 @@ class Dirs extends React.Component {
           const dirList = response.data.list.map(item => {
             return {label: item.title, value: item.id}
           })
+
+
+          console.log(this.props.currentTask.list_id)
+          if (this.props.currentTask.list_id) {
+            var task = this.props.currentTask
+            var index = dirList.findIndex(item => {
+              return item.id === task.list_id
+            })
+
+            if (index >= 0) {
+              task['type'] = dirList[index].title
+            }
+            this.setState({currentTask: task})
+          }
 
           this.setState({dirList: dirList})
         }
