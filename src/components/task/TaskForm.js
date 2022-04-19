@@ -104,6 +104,7 @@ class TaskForm extends React.Component {
           }}>
           <TextArea
             autoSize={{minRows: 1, maxRows: 2}}
+            maxLength={100}
             value={this.props.currentTask.title}
             bordered={false}
             placeholder="准备做什么事？"
