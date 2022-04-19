@@ -70,22 +70,6 @@ class Priority extends React.Component {
     )
   }
 
-  getTaskOPTClassName() {
-    if (this.props.currentTask.priority === 3) {
-      return "task-info-opt task-info-opt-danger"
-    }
-
-    if (this.props.currentTask.priority === 2) {
-      return "task-info-opt task-info-opt-warning"
-    }
-
-    if (this.props.currentTask.priority === 1) {
-      return "task-info-opt task-info-opt-primary"
-    }
-
-    return "task-info-opt"
-  }
-
   priorityChange(val) {
     this.setState({priorityPopVisible: false})
     this.props.onPriorityChange(val)

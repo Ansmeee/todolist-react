@@ -6,11 +6,11 @@ import _ from "lodash";
 import todoApi from "../../http/todo";
 import Vditor from "vditor";
 import "vditor/dist/index.css";
-import {priorityKey2Name} from "../../utils/task";
 import Priority from "./options/Priority";
 import Deadline from "./options/Deadline";
 import Dirs from "./options/Dirs";
 import {CarryOutOutlined, FlagOutlined} from '@ant-design/icons';
+import {priorityKey2Name} from "../../utils/task";
 import {deadlineClassName, priorityClassName} from './options/ClassName';
 
 const {TextArea} = Input;
@@ -120,10 +120,6 @@ class TaskForm extends React.Component {
         </div>
       </div>
     )
-  }
-
-  onRef(ref) {
-    this.child = ref
   }
 
   updateTaksAttr(key, val) {
