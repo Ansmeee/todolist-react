@@ -48,7 +48,7 @@ class File extends React.Component {
     this.loadtodoList()
   }
 
-  componentDidUpdate(prevProps)  {
+  componentDidUpdate(prevProps) {
     if (prevProps.state.from !== this.props.state.from || prevProps.state.sid !== this.props.state.sid) {
       this.setState({createTask: false})
       this.preLoad()
@@ -373,7 +373,7 @@ class File extends React.Component {
                     id: "",
                     priority: 0,
                     deadline: moment().format('YYYY-MM-DD'),
-                    list_id: this.props.state.from ? this.props.state.from : '',
+                    list_id: this.props.state.from && parseFloat(this.props.state.from).toString() !== "NaN" ? this.props.state.from : '',
                   },
                   createTask: true
                 })

@@ -19,12 +19,6 @@ class Dirs extends React.Component {
     this.setDirList()
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.currentTask.id !== prevProps.currentTask.id || this.props.currentTask.list_id !== prevProps.currentTask.list_id) {
-      this.setType()
-    }
-  }
-
   render() {
     var dirOptions = this.state.dirList.map(element =>
       <Button
@@ -71,13 +65,32 @@ class Dirs extends React.Component {
               bordered={false}
               readOnly={true}
               placeholder="选择一个目录"
-              value={this.props.currentTask.type}>
+              value={this.getType()}>
             </Input>
           </div>
 
         </Popover>
       </div>
     )
+  }
+
+  getType() {
+    if (this.props.currentTask.type) {
+      return this.props.currentTask.type
+    }
+
+    if (this.props.currentTask.list_id) {
+      var task = this.props.currentTask
+      var index = this.state.dirList.findIndex(item => {
+        return item.value === task.list_id
+      })
+
+      if (index >= 0) {
+        return this.state.dirList[index].label
+      }
+    }
+
+    return ""
   }
 
   createType() {
@@ -148,9 +161,7 @@ class Dirs extends React.Component {
           const dirList = response.data.list.map(item => {
             return {label: item.title, value: item.id}
           })
-          this.setState({dirList: dirList}, () => {
-            this.setType()
-          })
+          this.setState({dirList: dirList})
         }
       })
       return
@@ -161,24 +172,7 @@ class Dirs extends React.Component {
       return {label: item.title, value: item.id}
     })
 
-    this.setState({dirList: dirList}, () => {
-      this.setType()
-    })
-  }
-
-  setType() {
-    if (this.props.currentTask.list_id) {
-      var task = this.props.currentTask
-      var index = this.state.dirList.findIndex(item => {
-        return item.value === task.list_id
-      })
-
-      if (index >= 0) {
-        task['type'] = this.state.dirList[index].label
-      }
-
-      this.setState({currentTask: task})
-    }
+    this.setState({dirList: dirList})
   }
 }
 
