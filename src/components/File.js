@@ -55,6 +55,7 @@ class File extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.state.from !== this.props.state.from || prevProps.state.sid !== this.props.state.sid) {
+      this.setState({createTask: false})
       this.preLoad()
     }
   }

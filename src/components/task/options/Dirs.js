@@ -19,6 +19,12 @@ class Dirs extends React.Component {
     this.setDirList()
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.currentTask.id != prevProps.currentTask.id || this.props.currentTask.list_id !== prevProps.currentTask.list_id) {
+      this.setType()
+    }
+  }
+
   render() {
     var dirOptions = this.state.dirList.map(element =>
       <Button
@@ -142,22 +148,9 @@ class Dirs extends React.Component {
           const dirList = response.data.list.map(item => {
             return {label: item.title, value: item.id}
           })
-
-
-          console.log(this.props.currentTask.list_id)
-          if (this.props.currentTask.list_id) {
-            var task = this.props.currentTask
-            var index = dirList.findIndex(item => {
-              return item.id === task.list_id
-            })
-
-            if (index >= 0) {
-              task['type'] = dirList[index].title
-            }
-            this.setState({currentTask: task})
-          }
-
-          this.setState({dirList: dirList})
+          this.setState({dirList: dirList}, () => {
+            this.setType()
+          })
         }
       })
       return
@@ -168,7 +161,24 @@ class Dirs extends React.Component {
       return {label: item.title, value: item.id}
     })
 
-    this.setState({dirList: dirList})
+    this.setState({dirList: dirList}, () => {
+      this.setType()
+    })
+  }
+
+  setType() {
+    if (this.props.currentTask.list_id) {
+      var task = this.props.currentTask
+      var index = this.state.dirList.findIndex(item => {
+        return item.value === task.list_id
+      })
+
+      if (index >= 0) {
+        task['type'] = this.state.dirList[index].label
+      }
+
+      this.setState({currentTask: task})
+    }
   }
 }
 
