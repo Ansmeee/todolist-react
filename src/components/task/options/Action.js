@@ -8,10 +8,6 @@ import {priorityKey2Name} from "../../../utils/task";
 import Deadline from "./Deadline";
 
 class Action extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const item = this.props.currentTask
     return (

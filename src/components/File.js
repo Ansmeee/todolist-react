@@ -2,15 +2,10 @@ import React from "react";
 import {browserHistory} from "react-router";
 import {
   PlusOutlined,
-  FlagOutlined,
   SortAscendingOutlined,
   FilterOutlined,
-  MoreOutlined,
-  DeleteOutlined,
-  CheckCircleOutlined,
-  UnorderedListOutlined,
   SelectOutlined,
-  ClearOutlined, CarryOutOutlined
+  ClearOutlined
 } from "@ant-design/icons";
 import {Row, Col, Input, Button, Popover, List, message} from "antd";
 import todoApi from "../http/todo";
@@ -53,7 +48,7 @@ class File extends React.Component {
     this.loadtodoList()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps)  {
     if (prevProps.state.from !== this.props.state.from || prevProps.state.sid !== this.props.state.sid) {
       this.setState({createTask: false})
       this.preLoad()

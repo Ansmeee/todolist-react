@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Input, message, Popover, Select} from "antd";
+import {Button, Input, message, Popover} from "antd";
 import {CheckOutlined, PlusOutlined, FolderOutlined} from "@ant-design/icons";
 import fileApi from "../../../http/file";
 
@@ -20,7 +20,7 @@ class Dirs extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.currentTask.id != prevProps.currentTask.id || this.props.currentTask.list_id !== prevProps.currentTask.list_id) {
+    if (this.props.currentTask.id !== prevProps.currentTask.id || this.props.currentTask.list_id !== prevProps.currentTask.list_id) {
       this.setType()
     }
   }

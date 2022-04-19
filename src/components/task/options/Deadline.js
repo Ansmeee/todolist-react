@@ -6,10 +6,6 @@ import moment from "moment";
 import "../../../assets/style/opt.less"
 
 class Deadline extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div style={{display: 'flex'}}>
@@ -42,8 +38,7 @@ class Deadline extends React.Component {
   quickDate(type = 0) {
     var date = new Date()
     if (type === 1) {
-      var date = moment(date).add(1, 'days').format("YYYY-MM-DD")
-      this.deadlineChange(date)
+      this.deadlineChange(moment(date).add(1, 'days').format("YYYY-MM-DD"))
       return
     }
 
@@ -57,13 +52,11 @@ class Deadline extends React.Component {
 
     if (type === 3) {
       var nextMon = moment(date).add(1, 'months').format("YYYY-MM")
-      var date = moment(nextMon).format('YYYY-MM-DD')
-      this.deadlineChange(date)
+      this.deadlineChange(moment(nextMon).format('YYYY-MM-DD'))
       return
     }
 
-    var date = moment(date).format("YYYY-MM-DD")
-    this.deadlineChange(date)
+    this.deadlineChange(moment(date).format("YYYY-MM-DD"))
     return
   }
 

@@ -1,5 +1,3 @@
-import React from "react";
-
 function initUserInfo(token) {
   var payload = parseToken(token)
   window.localStorage.setItem("token", token)
