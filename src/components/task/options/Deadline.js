@@ -4,7 +4,7 @@ import 'moment/locale/zh-cn';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import {DatePicker} from "antd";
 import moment from "moment";
-import "../../../assets/style/priority.less"
+import "../../../assets/style/opt.less"
 
 class Deadline extends React.Component {
   constructor(props) {
@@ -12,14 +12,13 @@ class Deadline extends React.Component {
   }
   render() {
     return (
-      <div className={this.getTaskOPTClassName()}>
+      <div style={{display: 'flex'}}>
         {this.props.trigger}
         <DatePicker
-          className="deadline-picker"
+          className={this.props.pickerClassName}
           onChange={(date, dateString) => {
             this.deadlineChange(dateString)
           }}
-          open={this.props.open}
           bordered={false}
           picker="date"
           locale={locale}
@@ -30,25 +29,6 @@ class Deadline extends React.Component {
           suffixIcon={null}/>
       </div>
     )
-  }
-
-  getTaskOPTClassName() {
-    var currentDate = Date.now()
-    var expireDate = new Date(this.props.currentTask.deadline).getTime()
-    var remainDate = expireDate - currentDate
-    if (remainDate < 24 * 60 * 60 * 1000) {
-      return "task-info-opt-danger"
-    }
-
-    if (remainDate > 24 * 60 * 60 * 1000 && remainDate <= 3 * 24 * 60 * 60 * 1000) {
-      return "task-info-opt-warning"
-    }
-
-    if (remainDate > 3 * 24 * 60 * 60 * 1000 && remainDate <= 5 * 24 * 60 * 60 * 1000) {
-      return "task-info-opt-primary"
-    }
-
-    return ""
   }
 
   deadlineChange(val) {

@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Popover} from "antd";
-import "../../../assets/style/priority.less"
+import "../../../assets/style/opt.less"
 
 class Priority extends React.Component {
   constructor(props) {

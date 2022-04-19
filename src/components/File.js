@@ -10,7 +10,7 @@ import {
   CheckCircleOutlined,
   UnorderedListOutlined,
   SelectOutlined,
-  ClearOutlined
+  ClearOutlined, CarryOutOutlined
 } from "@ant-design/icons";
 import {Row, Col, Input, Button, Popover, List, message} from "antd";
 import todoApi from "../http/todo";
@@ -21,6 +21,7 @@ import Priority from "./task/options/Priority";
 import {priorityKey2Name} from '../utils/task';
 import Deadline from './task/options/Deadline';
 import {priorityClassName, deadlineClassName} from './task/options/ClassName'
+
 const _ = require('lodash');
 
 class File extends React.Component {
@@ -28,24 +29,25 @@ class File extends React.Component {
     super(props)
 
     this.state = {
-      keywords          : '',
-      filterForm        : {
+      keywords: '',
+      filterForm: {
         rules: [],
       },
-      createTask        : false,
-      currentTask       : {
-        id      : '',
-        title   : '',
-        content : '',
+      createTask: false,
+      currentTask: {
+        id: '',
+        title: '',
+        content: '',
         deadline: '',
         priority: 0,
-        list_id : ''
+        list_id: ''
       },
-      from              : props.state.from,
-      loading           : false,
-      todoList          : [],
+      from: props.state.from,
+      loading: false,
+      todoList: [],
       priorityPopVisible: false,
-      needFilter        : true,
+      needFilter: true,
+      popShow: false,
     }
   }
 
@@ -71,7 +73,7 @@ class File extends React.Component {
 
   loadtodoList() {
     this.setState({loading: true})
-    let params  = _.cloneDeep(this.state.filterForm)
+    let params = _.cloneDeep(this.state.filterForm)
     params.from = this.props.state.from
 
     if (this.props.state.sid && this.state.needFilter) {
@@ -91,7 +93,7 @@ class File extends React.Component {
 
   searchChange(e) {
     var filterForm = this.state.filterForm
-    var keywords   = e.target.value
+    var keywords = e.target.value
     if ((keywords || filterForm.keywords) && (keywords !== filterForm.keywords)) {
       filterForm.keywords = keywords
       this.setState({filterForm: filterForm}, () => this.loadtodoList())
@@ -99,10 +101,10 @@ class File extends React.Component {
   }
 
   sortOptClick(sort_by, sort_order = 'desc') {
-    var filterForm   = {}
+    var filterForm = {}
     filterForm.rules = this.state.filterForm.rules
     if (sort_by && (this.state.filterForm.sort_by !== sort_by || this.state.filterForm.sort_by === undefined)) {
-      filterForm.sort_by    = sort_by
+      filterForm.sort_by = sort_by
       filterForm.sort_order = sort_order
     }
 
@@ -138,7 +140,7 @@ class File extends React.Component {
   }
 
   itemClick(item) {
-    var currentTask      = _.cloneDeep(item)
+    var currentTask = _.cloneDeep(item)
     currentTask.deadline = currentTask.deadline ? currentTask.deadline : moment().format('YYYY-MM-DD')
     this.setState({currentTask: currentTask, createTask: true})
   }
@@ -208,8 +210,8 @@ class File extends React.Component {
 
   priorityChange(item, opt) {
     var params = {
-      id   : item.id,
-      name : 'priority',
+      id: item.id,
+      name: 'priority',
       value: opt
     }
 
@@ -218,8 +220,8 @@ class File extends React.Component {
 
   deadlineChange(item, val) {
     var params = {
-      id   : item.id,
-      name : 'deadline',
+      id: item.id,
+      name: 'deadline',
       value: val
     }
 
@@ -228,8 +230,8 @@ class File extends React.Component {
 
   statusChange(item, opt) {
     var params = {
-      id   : item.id,
-      name : 'status',
+      id: item.id,
+      name: 'status',
       value: opt
     }
     this.updateAttr(params)
@@ -239,9 +241,7 @@ class File extends React.Component {
     todoApi.updateAttr(params).then(response => {
       if (response.code === 200) {
         message.success('已保存')
-        var currentTask = this.state.currentTask
-        currentTask[params.name] = params.value
-        this.setState({currentTask: currentTask})
+        this.setState({currentTask: response.data})
         this.updateTodoList(response.data)
       } else {
         message.error(response.msg || '保存失败')
@@ -253,7 +253,7 @@ class File extends React.Component {
     todoApi.delete(item.id).then(response => {
       if (response.code === 200) {
         var todoList = this.state.todoList
-        var index    = todoList.findIndex(i => {
+        var index = todoList.findIndex(i => {
           return i.id === item.id
         })
 
@@ -339,16 +339,16 @@ class File extends React.Component {
   }
 
   listActions(item) {
-    var statusText      = "未开始"
+    var statusText = "未开始"
     var statusClassName = ""
     if (item.status === 1) {
       statusClassName = 'primary'
-      statusText      = "进行中"
+      statusText = "进行中"
     }
 
     if (item.status === 2) {
       statusClassName = 'success'
-      statusText      = "已完成"
+      statusText = "已完成"
     }
 
     return [
@@ -375,8 +375,14 @@ class File extends React.Component {
         }}>
       </Priority>,
       <Deadline
+        trigger={
+          <Button type="text" style={{fontSize: '12px'}} className={deadlineClassName(item.deadline)}>
+            <CarryOutOutlined/>
+            {item.deadline}
+          </Button>
+        }
+        pickerClassName="file-deadline-picker"
         currentTask={item}
-        className={deadlineClassName(item.deadline)}
         onDeadlineChange={(val) => {
           this.deadlineChange(item, val)
         }}>
@@ -386,7 +392,7 @@ class File extends React.Component {
 
   updateTodoList(todo) {
     var todoList = this.state.todoList
-    var index    = todoList.findIndex(item => {
+    var index = todoList.findIndex(item => {
       return item.id === todo.id
     })
 
@@ -508,7 +514,7 @@ class File extends React.Component {
           </Row>
           <List
             style={{
-              height   : document.documentElement.clientHeight - 65 - 70 - 48 - 55,
+              height: document.documentElement.clientHeight - 65 - 70 - 48 - 55,
               overflowY: 'auto'
             }}
             size="small"

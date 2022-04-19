@@ -50,14 +50,7 @@ class TaskForm extends React.Component {
         <div className="task-info-opt-con">
           <Deadline
             trigger={
-              <div
-                onBlur={() => {
-                  this.setState({popShow: !this.state.popShow})
-                }}
-                onClick={() => {
-                  this.setState({popShow: !this.state.popShow})
-                }}
-                className={deadlineClassName(this.props.currentTask.deadline)}>
+              <div className={deadlineClassName(this.props.currentTask.deadline)}>
                 <CarryOutOutlined/>
                 <Input
                   style={{width: '100px'}}
@@ -67,7 +60,7 @@ class TaskForm extends React.Component {
                 </Input>
               </div>
             }
-            open={this.state.popShow}
+            pickerClassName="form-deadline-picker"
             currentTask={this.props.currentTask}
             onDeadlineChange={(val) => {
               if (this.props.currentTask.id) {
@@ -81,7 +74,7 @@ class TaskForm extends React.Component {
           <Priority
             trigger={
               <div className={priorityClassName(this.props.currentTask.priority)}>
-                <FlagOutlined/>
+                <FlagOutlined style={{cursor: 'text'}}/>
                 <Input
                   style={{width: '37px'}}
                   bordered={false}
