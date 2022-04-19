@@ -14,6 +14,18 @@ function priorityClassName(priority = 0) {
   return "item-opt"
 }
 
+function statusClassName(status) {
+  if (status === 1) {
+    return "item-opt item-opt-primary"
+  }
+
+  if (status === 2) {
+    return "item-opt item-opt-success"
+  }
+
+  return "item-opt"
+}
+
 function deadlineClassName(deadline) {
   var currentDate = Date.now()
   var expireDate = new Date(deadline).getTime()
@@ -33,4 +45,4 @@ function deadlineClassName(deadline) {
   return "item-opt"
 }
 
-export {priorityClassName, deadlineClassName}
+export {priorityClassName, deadlineClassName, statusClassName}

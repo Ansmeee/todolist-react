@@ -21,6 +21,7 @@ import Priority from "./task/options/Priority";
 import {priorityKey2Name} from '../utils/task';
 import Deadline from './task/options/Deadline';
 import {priorityClassName, deadlineClassName} from './task/options/ClassName'
+import Status from "./task/options/Status";
 
 const _ = require('lodash');
 
@@ -352,13 +353,19 @@ class File extends React.Component {
     }
 
     return [
-      <Button
-        type="text"
-        style={{fontSize: '12px'}}
-        className={"item-opt item-opt-" + statusClassName}>
-        <CheckCircleOutlined/>
-        {statusText}
-      </Button>,
+      // <Button
+      //   type="text"
+      //   style={{fontSize: '12px'}}
+      //   className={"item-opt item-opt-" + statusClassName}>
+      //   <CheckCircleOutlined/>
+      //   {statusText}
+      // </Button>,
+      <Status
+        currentTask={item}
+        onStatusChange={(val) => {
+          this.statusChange(item, val)
+        }}>
+      </Status>,
       <Priority
         trigger={
           <Button
