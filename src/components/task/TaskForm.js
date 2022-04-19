@@ -1,6 +1,6 @@
 import React from "react";
 import "../../assets/style/taskform.less"
-import {Input, message} from "antd";
+import {Input, message, Layout} from "antd";
 import moment from "moment";
 import _ from "lodash";
 import todoApi from "../../http/todo";
@@ -14,13 +14,14 @@ import {priorityKey2Name} from "../../utils/task";
 import {deadlineClassName, priorityClassName} from './options/ClassName';
 
 const {TextArea} = Input;
+const {Header, Footer, Content} = Layout;
 
 class TaskForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state  = {
+    this.state = {
       originTask: {},
-      popShow   : false,
+      popShow: false,
     }
     this.editor = {}
   }
@@ -28,7 +29,7 @@ class TaskForm extends React.Component {
   componentDidMount() {
     this.createVidtor({value: this.props.currentTask.content})
     if (this.props.date) {
-      var currentTask      = this.props.currentTask
+      var currentTask = this.props.currentTask
       currentTask.deadline = moment(this.props.date).format("YYYY-MM-DD")
       this.setState({currentTask: currentTask})
     }
@@ -39,15 +40,15 @@ class TaskForm extends React.Component {
     if (this.props.currentTask.id !== prevProps.currentTask.id) {
       this.setState({originTask: _.cloneDeep(this.props.currentTask)})
       let value = this.props.currentTask.content
-      let md    = value && this.editor ? this.editor.html2md(value) : ''
+      let md = value && this.editor ? this.editor.html2md(value) : ''
       this.editor.setValue(md)
     }
   }
 
   render() {
     return (
-      <div className="task-info-con" style={{height: '100%', overflowY: 'auto'}}>
-        <div className="task-info-opt-con">
+      <Layout className="task-info-con" style={{height: '100%', overflow: 'hidden'}}>
+        <Header className="task-info-opt-con">
           <Deadline
             trigger={
               <div className={deadlineClassName(this.props.currentTask.deadline)}>
@@ -94,8 +95,13 @@ class TaskForm extends React.Component {
               }
             }}>
           </Priority>
-        </div>
-        <div>
+        </Header>
+        <Content
+          className="task-info-con"
+          style={{
+            height: this.props.height,
+            overflowY: 'auto',
+          }}>
           <TextArea
             autoSize={{minRows: 1, maxRows: 2}}
             value={this.props.currentTask.title}
@@ -117,15 +123,29 @@ class TaskForm extends React.Component {
           <div className="editorWrap">
             <div id="vditor"/>
           </div>
-        </div>
-      </div>
+        </Content>
+        <Footer className="task-info-footer">
+          <Dirs
+            currentTask={this.props.currentTask}
+            onDirChange={(val) => {
+              this.taskInfoChange('type', val.label)
+              if (this.props.currentTask.id) {
+                this.updateTaksAttr('list_id', val.value)
+              } else {
+                this.taskInfoChange('list_id', val.value)
+                this.createTask()
+              }
+            }}>
+          </Dirs>
+        </Footer>
+      </Layout>
     )
   }
 
   updateTaksAttr(key, val) {
     var params = {
-      id   : this.props.currentTask.id,
-      name : key,
+      id: this.props.currentTask.id,
+      name: key,
       value: val
     }
     todoApi.updateAttr(params).then(response => {
@@ -139,7 +159,7 @@ class TaskForm extends React.Component {
   }
 
   taskInfoChange(key, val) {
-    var currentTask  = this.props.currentTask
+    var currentTask = this.props.currentTask
     currentTask[key] = val
     this.setState({currentTask: currentTask})
   }
@@ -167,12 +187,12 @@ class TaskForm extends React.Component {
 
   createVidtor = params => {
     let {value} = params;
-    value       = value ? value : "";
-    var that    = this
-    var vditor  = new Vditor("vditor", {
+    value = value ? value : "";
+    var that = this
+    var vditor = new Vditor("vditor", {
       placeholder: "具体要怎么做。。。",
-      toolbar    : [],
-      classes    : "task-editor",
+      toolbar: [],
+      classes: "task-editor",
       after() {
         let md = value ? vditor.html2md(value) : ''
         vditor.setValue(md);

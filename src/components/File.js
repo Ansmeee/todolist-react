@@ -409,6 +409,7 @@ class File extends React.Component {
     if (this.state.createTask) {
       return (
         <TaskForm
+          height={document.documentElement.clientHeight - 65 - 70 - 55 - 70}
           currentTask={this.state.currentTask}
           onTaskUpdated={this.onTaskUpdated}
           onTaskCreated={this.onTaskCreated}>
@@ -534,9 +535,7 @@ class File extends React.Component {
             )}
           />
         </Col>
-        <Col span={10} style={{height: document.documentElement.clientHeight - 65 - 70 - 55}}>
-          {this.taskForm()}
-        </Col>
+        <Col span={10}>{this.taskForm()}</Col>
       </Row>
     )
   }

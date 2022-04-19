@@ -236,6 +236,7 @@ class Month extends React.Component {
     return (
       <div style={{width: '500px', maxHeight: '400px'}}>
         <TaskForm
+          height="320px"
           currentTask={currentTask}
           onTaskUpdated={this.onTaskUpdated}
           onTaskCreated={this.onTaskCreated}>
