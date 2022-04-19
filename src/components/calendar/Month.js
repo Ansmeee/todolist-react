@@ -311,7 +311,7 @@ class Month extends React.Component {
                     title: '',
                     content: '',
                     deadline: moment(currentDay.date).format("YYYY-MM-DD"),
-                    priority: '',
+                    priority: 0,
                     list_id: ''
                   },
                 })

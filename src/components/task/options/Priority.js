@@ -72,7 +72,7 @@ class Priority extends React.Component {
 
   priorityChange(val) {
     this.setState({priorityPopVisible: false})
-    this.props.onPriorityChange(val)
+    this.props.onPriorityChange(parseInt(val))
   }
 }
 
