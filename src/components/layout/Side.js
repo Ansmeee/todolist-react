@@ -11,7 +11,7 @@ class Side extends React.Component {
     super(props);
     this.state = {
       defaultOpenKey: 'dir',
-      defaultSelectedMenuKey: '/latest',
+      defaultSelectedMenuKey: '/today',
       menuList: []
     }
   }
@@ -34,7 +34,7 @@ class Side extends React.Component {
   menuContent() {
     if (this.props.account) {
       var currentPathName = browserHistory.getCurrentLocation().pathname
-      var defaultSelectedKey = currentPathName !== '/' ? currentPathName : '/calendar'
+      var defaultSelectedKey = currentPathName !== '/' ? currentPathName : '/today'
 
       return (
         <Menu
@@ -45,13 +45,14 @@ class Side extends React.Component {
           defaultOpenKeys={[this.state.defaultOpenKey]}
           style={{height: document.documentElement.clientHeight - 65 - 70, overflowY: 'auto', overflowX: 'hidden'}}
           mode="inline">
-          <Menu.Item key="/calendar">我的日程</Menu.Item>
-          <Menu.Item key="/latest">最近查看</Menu.Item>
+          <Menu.Item key="/today">今日要事</Menu.Item>
+          <Menu.Item key="/all">所有任务</Menu.Item>
           <SubMenu key="dir" title="我的文件夹" onTitleClick={() => {
             this.setMenuList()
           }}>
             {this.state.menuList}
           </SubMenu>
+          <Menu.Item key="/calendar">我的日程</Menu.Item>
           <Menu.Item key="/done">已完成</Menu.Item>
         </Menu>
       )

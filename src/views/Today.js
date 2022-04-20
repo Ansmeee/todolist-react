@@ -1,12 +1,12 @@
 import React from "react"
 import File from "../components/File";
 
-class Latest extends React.Component {
+class Today extends React.Component {
   render() {
     return (
-      <File state={{from: 'latest'}}></File>
+      <File state={{from: 'today'}}></File>
     )
   }
 }
 
-export default Latest
+export default Today
