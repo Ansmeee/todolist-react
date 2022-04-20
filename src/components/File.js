@@ -397,7 +397,7 @@ class File extends React.Component {
                 extra={
                   <More
                     currentTask={item}
-                    onItemDel={this.onTaskDeleted()}
+                    onItemDel={this.onTaskDeleted}
                     onItemChange={(key, val) => {
                       this.itemChange(item, key, val)
                     }}>
