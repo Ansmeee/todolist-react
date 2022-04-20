@@ -201,14 +201,12 @@ class TaskForm extends React.Component {
       toolbar: [],
       classes: "task-editor",
       after() {
+        that.refs.titleInput.focus()
         let md = value ? vditor.html2md(value) : ''
         vditor.setValue(md);
       },
       blur() {
         that.setContent(vditor)
-      },
-      focus() {
-        that.refs.titleInput.focus()
       }
     })
     this.editor = vditor
