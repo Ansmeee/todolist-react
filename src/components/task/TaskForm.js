@@ -12,6 +12,7 @@ import Dirs from "./options/Dirs";
 import {CarryOutOutlined, FlagOutlined} from '@ant-design/icons';
 import {priorityKey2Name} from "../../utils/task";
 import {deadlineClassName, priorityClassName} from './options/ClassName';
+import More from "./options/More";
 
 const {TextArea} = Input;
 const {Header, Footer, Content} = Layout;
@@ -142,6 +143,12 @@ class TaskForm extends React.Component {
               }
             }}>
           </Dirs>
+          <More
+            currentTask={this.props.currentTask}
+            onItemDel={() => {
+              this.props.onItemDel(this.props.currentTask)
+            }}>
+          </More>
         </Footer>
       </Layout>
     )

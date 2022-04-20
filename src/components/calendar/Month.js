@@ -238,11 +238,26 @@ class Month extends React.Component {
         <TaskForm
           height="320px"
           currentTask={currentTask}
+          onItemDel={this.onTaskDel}
           onTaskUpdated={this.onTaskUpdated}
           onTaskCreated={this.onTaskCreated}>
         </TaskForm>
       </div>
     )
+  }
+
+  onTaskDel = (task) => {
+    var taskList = this.state.taskList
+    var index = taskList.findIndex(item => {
+      return item.id === task.id
+    })
+
+    if (index >= 0) {
+      taskList.splice(index, 1)
+      this.setState({taskList: taskList}, () => {
+        this.setTasks(taskList)
+      })
+    }
   }
 
   onTaskUpdated = (task) => {

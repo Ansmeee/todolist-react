@@ -196,32 +196,6 @@ class File extends React.Component {
     )
   }
 
-  itemDel(item) {
-    var todoList = this.state.todoList
-    var index = todoList.findIndex(i => {
-      return i.id === item.id
-    })
-
-    todoList.splice(index, 1)
-
-    this.setState({todoList: todoList})
-    if (todoList.length > 0) {
-      this.setState({currentTask: todoList[0]})
-    } else {
-      this.setState({
-        currentTask: {
-          id: '',
-          title: '',
-          content: '',
-          deadline: '',
-          priority: 0,
-          list_id: ''
-        },
-        createTask: false
-      })
-    }
-  }
-
   itemChange(item, key, val) {
     var params = {
       id: item.id,
@@ -270,6 +244,7 @@ class File extends React.Component {
         <TaskForm
           height={document.documentElement.clientHeight - 65 - 70 - 55 - 70}
           currentTask={this.state.currentTask}
+          onItemDel={this.onTaskDeleted}
           onTaskUpdated={this.onTaskUpdated}
           onTaskCreated={this.onTaskCreated}>
         </TaskForm>
@@ -282,6 +257,32 @@ class File extends React.Component {
         <span>点击任务标题查看详情</span>
       </div>
     )
+  }
+
+  onTaskDeleted = (item) => {
+    var todoList = this.state.todoList
+    var index = todoList.findIndex(i => {
+      return i.id === item.id
+    })
+
+    todoList.splice(index, 1)
+
+    this.setState({todoList: todoList})
+    if (todoList.length > 0) {
+      this.setState({currentTask: todoList[0]})
+    } else {
+      this.setState({
+        currentTask: {
+          id: '',
+          title: '',
+          content: '',
+          deadline: '',
+          priority: 0,
+          list_id: ''
+        },
+        createTask: false
+      })
+    }
   }
 
   onTaskUpdated = (todo) => {
@@ -396,9 +397,7 @@ class File extends React.Component {
                 extra={
                   <More
                     currentTask={item}
-                    onItemDel={() => {
-                      this.itemDel(item)
-                    }}
+                    onItemDel={this.onTaskDeleted()}
                     onItemChange={(key, val) => {
                       this.itemChange(item, key, val)
                     }}>
