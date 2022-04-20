@@ -107,13 +107,16 @@ class TaskForm extends React.Component {
             maxLength={100}
             value={this.props.currentTask.title}
             bordered={false}
+            ref="titleInput"
             placeholder="准备做什么事？"
             onBlur={(e) => {
               if (this.props.currentTask.id) {
                 this.updateTaksAttr('title', e.target.value)
               } else {
-                this.taskInfoChange('title', e.target.value)
-                this.createTask()
+                if (e.target.value.length > 0) {
+                  this.taskInfoChange('title', e.target.value)
+                  this.createTask()
+                }
               }
             }}
             onChange={(e) => {
@@ -170,8 +173,10 @@ class TaskForm extends React.Component {
     if (this.props.currentTask.id) {
       this.updateTaksAttr('content', content)
     } else {
-      this.taskInfoChange('content', content)
-      this.createTask()
+      if (content.length > 0) {
+        this.taskInfoChange('content', content)
+        this.createTask()
+      }
     }
   }
 
