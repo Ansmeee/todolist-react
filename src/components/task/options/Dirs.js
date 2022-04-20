@@ -129,6 +129,7 @@ class Dirs extends React.Component {
           placeholder="分类描述"
           maxLength="10"
           bordered={false}
+          autoFocus={true}
           onChange={(e) => {
             this.setState({typeTitle: e.target.value})
           }}
