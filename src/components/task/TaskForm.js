@@ -38,6 +38,7 @@ class TaskForm extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.currentTask.id !== prevProps.currentTask.id) {
+      this.refs.titleInput.focus()
       this.setState({originTask: _.cloneDeep(this.props.currentTask)})
       let value = this.props.currentTask.content
       let md = value && this.editor ? this.editor.html2md(value) : ''
@@ -206,6 +207,9 @@ class TaskForm extends React.Component {
       blur() {
         that.setContent(vditor)
       },
+      focus() {
+        that.refs.titleInput.focus()
+      }
     })
     this.editor = vditor
   }
