@@ -115,7 +115,7 @@ class More extends React.Component {
       if (response.code === 200) {
         message.success("已删除")
         this.setState({popVisible: false}, () => {
-          this.props.onItemDel()
+          this.props.onItemDel(this.props.currentTask)
         })
       }
     })

@@ -267,22 +267,19 @@ class File extends React.Component {
 
     todoList.splice(index, 1)
 
-    this.setState({todoList: todoList})
-    if (todoList.length > 0) {
-      this.setState({currentTask: todoList[0]})
-    } else {
-      this.setState({
-        currentTask: {
-          id: '',
-          title: '',
-          content: '',
-          deadline: '',
-          priority: 0,
-          list_id: ''
-        },
-        createTask: false
-      })
-    }
+    this.setState({
+      todoList: todoList,
+      currentTask: {
+        id: '',
+        title: '',
+        content: '',
+        deadline: '',
+        priority: 0,
+        list_id: ''
+      },
+      createTask: false
+    })
+
   }
 
   onTaskUpdated = (todo) => {
@@ -372,6 +369,8 @@ class File extends React.Component {
                 this.setState({
                   currentTask: {
                     id: "",
+                    content: "",
+                    title: "",
                     priority: 0,
                     deadline: moment().format('YYYY-MM-DD'),
                     list_id: this.props.state.from && parseFloat(this.props.state.from).toString() !== "NaN" ? this.props.state.from : '',

@@ -39,7 +39,6 @@ class TaskForm extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.currentTask.id !== prevProps.currentTask.id) {
-      this.refs.titleInput.focus()
       this.setState({originTask: _.cloneDeep(this.props.currentTask)})
       let value = this.props.currentTask.content
       let md = value && this.editor ? this.editor.html2md(value) : ''
@@ -208,9 +207,12 @@ class TaskForm extends React.Component {
       toolbar: [],
       classes: "task-editor",
       after() {
-        that.refs.titleInput.focus()
-        let md = value ? vditor.html2md(value) : ''
-        vditor.setValue(md);
+        if (value.length > 0) {
+          let md = value ? vditor.html2md(value) : ''
+          vditor.setValue(md);
+        } else {
+          that.refs.titleInput.focus()
+        }
       },
       blur() {
         that.setContent(vditor)
