@@ -43,6 +43,7 @@ class TaskForm extends React.Component {
       let value = this.props.currentTask.content
       let md = value && this.editor ? this.editor.html2md(value) : ''
       this.editor.setValue(md)
+      this.refs.titleInput.focus()
     }
   }
 
