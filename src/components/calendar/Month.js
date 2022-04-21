@@ -303,6 +303,7 @@ class Month extends React.Component {
           height="320px"
           date={currentDay.date}
           currentTask={this.state.currentTask}
+          onItemDel={this.onTaskDel}
           onTaskUpdated={this.onTaskUpdated}
           onTaskCreated={this.onTaskCreated}>
         </TaskForm>

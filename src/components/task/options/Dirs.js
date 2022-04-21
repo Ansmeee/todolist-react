@@ -20,10 +20,11 @@ class Dirs extends React.Component {
   }
 
   render() {
-    var dirOptions = this.state.dirList.map(element =>
+    var dirOptions = this.state.dirList.map((element, index) =>
       <Button
         block
         type="text"
+        key={index}
         onClick={() => {
           this.dirSelected(element)
         }}>{element.label}</Button>
