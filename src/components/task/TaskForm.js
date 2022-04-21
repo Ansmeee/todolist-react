@@ -143,17 +143,24 @@ class TaskForm extends React.Component {
               }
             }}>
           </Dirs>
-          <More
-            currentTask={this.props.currentTask}
-            onItemDel={() => {
-              this.props.onItemDel(this.props.currentTask)
-            }}>
-          </More>
+          {this.moreOpt()}
         </Footer>
       </Layout>
     )
   }
 
+  moreOpt() {
+    if (this.props.currentTask.id) {
+      return (
+        <More
+          currentTask={this.props.currentTask}
+          onItemDel={() => {
+            this.props.onItemDel(this.props.currentTask)
+          }}>
+        </More>
+      )
+    }
+  }
   updateTaksAttr(key, val) {
     var params = {
       id: this.props.currentTask.id,

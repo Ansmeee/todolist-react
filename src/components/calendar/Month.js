@@ -298,8 +298,9 @@ class Month extends React.Component {
   getDayCell(record, index) {
     const currentDay = record['week-' + index]
     const taskPopForm = (
-      <div style={{width: '450px', maxHeight: '450px', overflowY: 'auto'}}>
+      <div style={{width: '500px', maxHeight: '400px'}}>
         <TaskForm
+          height="320px"
           date={currentDay.date}
           currentTask={this.state.currentTask}
           onTaskUpdated={this.onTaskUpdated}
@@ -334,7 +335,7 @@ class Month extends React.Component {
             }}
             destroyTooltipOnHide={true}
             content={taskPopForm}
-            title="新建日程" trigger="click" placement="rightTop">
+            title="新建日程" trigger="click" placement="rightTop" >
             <EllipsisOutlined className="day calendar-date-opt"/>
           </Popover>
         </div>

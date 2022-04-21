@@ -16,61 +16,6 @@ class More extends React.Component {
   render() {
     const popCon = (
       <div>
-        {/*<div className="item-opt-li item-opt-mul">*/}
-        {/*  <div className="item-opt-more-label">*/}
-        {/*    <CheckCircleOutlined style={{marginRight: '3px'}}/>状态*/}
-        {/*  </div>*/}
-        {/*  <div className="item-opt-mul-div">*/}
-        {/*    <Button*/}
-        {/*      type="text"*/}
-        {/*      onClick={() => {*/}
-        {/*        this.statusChange(0)*/}
-        {/*      }}>未开始</Button>*/}
-        {/*    <Button*/}
-        {/*      type="text"*/}
-        {/*      className="item-opt-mul-primary"*/}
-        {/*      onClick={() => {*/}
-        {/*        this.statusChange(1)*/}
-        {/*      }}>进行中</Button>*/}
-        {/*    <Button*/}
-        {/*      type="text"*/}
-        {/*      className="item-opt-mul-success"*/}
-        {/*      onClick={() => {*/}
-        {/*        this.statusChange(2)*/}
-        {/*      }}>已完成</Button>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-        {/*<div className="item-opt-li item-opt-mul">*/}
-        {/*  <div className="item-opt-more-label">*/}
-        {/*    <UnorderedListOutlined style={{marginRight: '3px'}}/>*/}
-        {/*    优先级*/}
-        {/*  </div>*/}
-        {/*  <div className="item-opt-mul-div">*/}
-        {/*    <Button*/}
-        {/*      type="text"*/}
-        {/*      className="item-opt-mul-danger"*/}
-        {/*      onClick={() => {*/}
-        {/*        this.priorityChange(3)*/}
-        {/*      }}>高</Button>*/}
-        {/*    <Button*/}
-        {/*      type="text"*/}
-        {/*      className="item-opt-mul-warning"*/}
-        {/*      onClick={() => {*/}
-        {/*        this.priorityChange(2)*/}
-        {/*      }}>中</Button>*/}
-        {/*    <Button*/}
-        {/*      type="text"*/}
-        {/*      className="item-opt-mul-primary"*/}
-        {/*      onClick={() => {*/}
-        {/*        this.priorityChange(1)*/}
-        {/*      }}>低</Button>*/}
-        {/*    <Button*/}
-        {/*      type="text"*/}
-        {/*      onClick={() => {*/}
-        {/*        this.priorityChange(0)*/}
-        {/*      }}>无</Button>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
         <div className="item-opt-li item-opt-del">
           <div className="item-opt-del-del" onClick={() => {
             this.delete()
