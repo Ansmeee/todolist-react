@@ -41,12 +41,8 @@ class TaskForm extends React.Component {
     if (this.props.currentTask.id !== prevProps.currentTask.id) {
       this.setState({originTask: _.cloneDeep(this.props.currentTask)})
       let value = this.props.currentTask.content
-      if (value.length > 0) {
-        let md = value && this.editor ? this.editor.html2md(value) : ''
-        this.editor.setValue(md)
-      } else {
-        this.refs.titleInput.focus({cursor: 'end'})
-      }
+      let md = value && this.editor ? this.editor.html2md(value) : ''
+      this.editor.setValue(md)
     }
   }
 
