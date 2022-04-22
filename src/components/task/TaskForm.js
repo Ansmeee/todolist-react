@@ -43,7 +43,6 @@ class TaskForm extends React.Component {
       let value = this.props.currentTask.content
       let md = value && this.editor ? this.editor.html2md(value) : ''
       this.editor.setValue(md)
-      this.refs.titleInput.focus()
     }
   }
 
@@ -155,12 +154,14 @@ class TaskForm extends React.Component {
         <More
           currentTask={this.props.currentTask}
           onItemDel={() => {
+            this.editor.setValue("")
             this.props.onItemDel(this.props.currentTask)
           }}>
         </More>
       )
     }
   }
+
   updateTaksAttr(key, val) {
     var params = {
       id: this.props.currentTask.id,
