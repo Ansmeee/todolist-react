@@ -41,8 +41,12 @@ class TaskForm extends React.Component {
     if (this.props.currentTask.id !== prevProps.currentTask.id) {
       this.setState({originTask: _.cloneDeep(this.props.currentTask)})
       let value = this.props.currentTask.content
-      let md = value && this.editor ? this.editor.html2md(value) : ''
-      this.editor.setValue(md)
+      if (value.length > 0) {
+        let md = value && this.editor ? this.editor.html2md(value) : ''
+        this.editor.setValue(md)
+      } else {
+        this.refs.titleInput.focus({cursor: 'end'})
+      }
     }
   }
 
@@ -184,8 +188,8 @@ class TaskForm extends React.Component {
     this.setState({currentTask: currentTask})
   }
 
-  setContent(value) {
-    var content = value.getHTML()
+  setContent() {
+    var content = this.editor.getHTML()
     if (this.props.currentTask.id) {
       this.updateTaksAttr('content', content)
     } else {
@@ -215,6 +219,7 @@ class TaskForm extends React.Component {
       placeholder: "具体要怎么做。。。",
       toolbar: [],
       classes: "task-editor",
+      cache: {enable: false},
       after() {
         if (value.length > 0) {
           let md = value ? vditor.html2md(value) : ''
@@ -224,7 +229,7 @@ class TaskForm extends React.Component {
         }
       },
       blur() {
-        that.setContent(vditor)
+        that.setContent()
       }
     })
     this.editor = vditor
