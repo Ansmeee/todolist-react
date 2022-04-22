@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Popover, message} from "antd";
-import {DeleteOutlined, MoreOutlined} from "@ant-design/icons";
+import {CheckCircleOutlined, DeleteOutlined, MoreOutlined} from "@ant-design/icons";
 import todoApi from "../../../http/todo";
 import "../../../assets/style/more.less";
 
@@ -16,10 +16,16 @@ class More extends React.Component {
   render() {
     const popCon = (
       <div>
+        <div className="item-opt-li">
+          <div onClick={() => {
+            this.finish()
+          }}><CheckCircleOutlined className="item-opt-li-icon"/> 完 成
+          </div>
+        </div>
         <div className="item-opt-li item-opt-del">
           <div className="item-opt-del-del" onClick={() => {
             this.delete()
-          }}><DeleteOutlined/> 删除
+          }}><DeleteOutlined className="item-opt-li-icon"/> 删 除
           </div>
         </div>
       </div>
@@ -53,6 +59,10 @@ class More extends React.Component {
     this.setState({popVisible: false}, () => {
       this.props.onItemChange('priority', priority)
     })
+  }
+
+  finish() {
+    this.statusChange(2)
   }
 
   delete() {

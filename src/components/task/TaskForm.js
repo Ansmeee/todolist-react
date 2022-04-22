@@ -153,6 +153,9 @@ class TaskForm extends React.Component {
       return (
         <More
           currentTask={this.props.currentTask}
+          onItemChange={(key, val) => {
+            this.updateTaksAttr(key, val)
+          }}
           onItemDel={() => {
             this.editor.setValue("")
             this.props.onItemDel(this.props.currentTask)
@@ -170,6 +173,9 @@ class TaskForm extends React.Component {
     }
     todoApi.updateAttr(params).then(response => {
       if (response.code === 200) {
+        if (key === "status") {
+          message.success("已完成")
+        }
         this.taskInfoChange(key, val)
         this.props.onTaskUpdated(response.data)
       } else {

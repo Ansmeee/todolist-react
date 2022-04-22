@@ -267,10 +267,18 @@ class Month extends React.Component {
     })
 
     if (index >= 0) {
-      taskList[index] = task
-      this.setState({taskList: taskList}, () => {
-        this.setTasks(taskList)
-      })
+      if (task.status === 2) {
+        taskList.splice(index, 1)
+        this.setState({taskList: taskList}, () => {
+          this.setTasks(taskList)
+        })
+      } else {
+        taskList[index] = task
+        this.setState({taskList: taskList}, () => {
+          this.setTasks(taskList)
+        })
+      }
+
     }
   }
 

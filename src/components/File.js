@@ -214,7 +214,6 @@ class File extends React.Component {
   updateAttr(params) {
     todoApi.updateAttr(params).then(response => {
       if (response.code === 200) {
-        message.success('已保存')
         this.setState({currentTask: response.data})
         this.updateTodoList(response.data)
       } else {
@@ -386,7 +385,7 @@ class File extends React.Component {
               overflowY: 'auto'
             }}
             size="small"
-            locale={{emptyText: this.props.emptyText ? this.props.emptyText : <Empty description="暂无数据" />}}
+            locale={{emptyText: this.props.emptyText ? this.props.emptyText : <Empty description="暂无数据"/>}}
             itemLayout="vertical"
             loading={this.state.loading}
             dataSource={this.state.todoList}
