@@ -5,7 +5,7 @@ import {Empty} from "antd";
 class Done extends React.Component {
   render() {
     return (
-      <File state={{from: 'done'}} emptyText={<Empty description="好的计划要坚持完成" />}></File>
+      <File state={{from: 'done'}} emptyText={<Empty description="好计划，要坚持" />}></File>
     )
   }
 }
