@@ -7,7 +7,7 @@ import {
   SelectOutlined,
   ClearOutlined
 } from "@ant-design/icons";
-import {Row, Col, Input, Button, Popover, List, message} from "antd";
+import {Row, Col, Input, Button, Popover, List, message, Empty} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
@@ -386,6 +386,7 @@ class File extends React.Component {
               overflowY: 'auto'
             }}
             size="small"
+            locale={{emptyText: this.props.emptyText ? this.props.emptyText : <Empty description="暂无数据" />}}
             itemLayout="vertical"
             loading={this.state.loading}
             dataSource={this.state.todoList}
