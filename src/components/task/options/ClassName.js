@@ -30,11 +30,11 @@ function deadlineClassName(deadline) {
   var currentDate = Date.now()
   var expireDate = new Date(deadline).getTime()
   var remainDate = expireDate - currentDate
-  if (remainDate < 24 * 60 * 60 * 1000) {
+  if (remainDate <= 0) {
     return "item-opt item-opt-danger"
   }
 
-  if (remainDate > 24 * 60 * 60 * 1000 && remainDate <= 3 * 24 * 60 * 60 * 1000) {
+  if (remainDate > 0 && remainDate <= 3 * 24 * 60 * 60 * 1000) {
     return "item-opt item-opt-warning"
   }
 
