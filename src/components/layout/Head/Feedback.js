@@ -49,7 +49,7 @@ class Feedback extends React.Component {
                   autoSize={{minRows: 4, maxRows: 4}}
                   bordered={false}
                   maxLength={150}
-                  placeholder="输入您想说的话">
+                  placeholder="您的建议。。。">
                 </Input.TextArea>
               </Form.Item>
               <div style={{marginTop: '10px', marginBottom: '10px'}}>

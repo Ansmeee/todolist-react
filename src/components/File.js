@@ -286,12 +286,14 @@ class File extends React.Component {
   }
 
   onTaskCreated = (todo) => {
-    var currentTask = _.cloneDeep(todo)
-    this.setState({currentTask: currentTask})
+    if (this.props.state.from !== 'done') {
+      var currentTask = _.cloneDeep(todo)
+      this.setState({currentTask: currentTask})
 
-    var todoList = this.state.todoList
-    todoList.unshift(todo)
-    this.setState({todoList: todoList})
+      var todoList = this.state.todoList
+      todoList.unshift(todo)
+      this.setState({todoList: todoList})
+    }
   }
 
   clearFilters() {
