@@ -24,7 +24,9 @@ class Feedback extends React.Component {
   render() {
     return (
       <div className="header-con-opt-notice">
-        <QuestionCircleOutlined onClick={this.showFeedPop} style={{fontSize: '14px'}}/>
+        <div style={{height: '100%', width: '100%'}} onClick={this.showFeedPop}>
+          <QuestionCircleOutlined style={{fontSize: '14px'}}/>
+        </div>
         <Modal
           width={600}
           title="反馈与建议"
@@ -109,6 +111,7 @@ class Feedback extends React.Component {
   }
 
   cancel = () => {
+    this.refs.feedbackForm.resetFields()
     this.setState({feedbackDia: false})
   }
 

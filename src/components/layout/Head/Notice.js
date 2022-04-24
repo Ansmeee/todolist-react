@@ -209,7 +209,11 @@ class Notice extends React.Component {
           title="通知"
           content={content}
           trigger="click">
-          <Badge count={this.state.msgCount} size="small"><BellOutlined style={{fontSize: '14px'}}/></Badge>
+          <div style={{height: '100%', width: '100%'}}>
+            <Badge count={this.state.msgCount} size="small">
+              <BellOutlined style={{fontSize: '14px'}}/>
+            </Badge>
+          </div>
         </Popover>
       </div>
     )

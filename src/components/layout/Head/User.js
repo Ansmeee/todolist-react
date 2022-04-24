@@ -69,9 +69,11 @@ class User extends React.Component {
           content={this.getAccountCon()}
           placement="bottom"
           trigger="click">
-          {cusavatar}
-          <span className="header-con-username" id="user-name">{name}</span>
-          <DownOutlined style={{fontSize: '14px'}}/>
+          <div style={{height: '100%', width: '100%'}}>
+            {cusavatar}
+            <span className="header-con-username" id="user-name">{name}</span>
+            <DownOutlined style={{fontSize: '14px'}}/>
+          </div>
         </Popover>
       </div>
     )
