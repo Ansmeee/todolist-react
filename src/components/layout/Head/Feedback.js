@@ -103,7 +103,7 @@ class Feedback extends React.Component {
           this.refs.feedbackForm.resetFields()
           this.setState({feedbackDia: false, uploading: false, form: {content: ''}, imgList: []})
         } else {
-          message.success('提交失败，再试一次吧')
+          message.error(response.msg || '提交失败，请再试一次')
           this.setState({uploading: false})
         }
       })
