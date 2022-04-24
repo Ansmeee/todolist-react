@@ -230,6 +230,10 @@ class File extends React.Component {
 
     if ((todo.status === 2 && this.props.state.from !== 'done') || (todo.status !== 2 && this.props.state.from === 'done')) {
       todoList.splice(index, 1)
+      this.setState({currentTask: {}, createTask: false})
+    } else if (this.props.state.from === 'today' && todo.deadline > moment().format('YYYY-MM-DD')) {
+      todoList.splice(index, 1)
+      this.setState({currentTask: {}, createTask: false})
     } else {
       todoList[index] = todo
     }

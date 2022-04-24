@@ -173,7 +173,7 @@ class TaskForm extends React.Component {
     }
     todoApi.updateAttr(params).then(response => {
       if (response.code === 200) {
-        if (key === "status") {
+        if (key === "status" && val === 2) {
           message.success("已完成")
         }
         this.taskInfoChange(key, val)
