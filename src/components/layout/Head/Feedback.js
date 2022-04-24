@@ -44,11 +44,12 @@ class Feedback extends React.Component {
               <Form.Item
                 name="content"
                 rules={[{required: true, message: '请输入您的宝贵建议'}]}
-                style={{textAlign: "right"}}>
+                style={{textAlign: "left"}}>
                 <Input.TextArea
                   autoSize={{minRows: 4, maxRows: 4}}
                   bordered={false}
                   maxLength={150}
+                  showCount={true}
                   placeholder="您的建议。。。">
                 </Input.TextArea>
               </Form.Item>
