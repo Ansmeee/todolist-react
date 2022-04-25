@@ -265,7 +265,7 @@ class userInfo extends React.Component {
                 style={{textAlign: "right"}}>
                 <Input.Password
                   className="form-input"
-                  prefix={<LockOutlined/>}
+                  prefix={<LockOutlined style={{color: 'rgba(0, 0, 0, 0.25)'}}/>}
                   bordered={false}
                   placeholder="新密码">
                 </Input.Password>
@@ -277,7 +277,7 @@ class userInfo extends React.Component {
                 style={{textAlign: "right"}}>
                 <Input.Password
                   className="form-input"
-                  prefix={<SafetyOutlined/>}
+                  prefix={<SafetyOutlined style={{color: 'rgba(0, 0, 0, 0.25)'}}/>}
                   bordered={false}
                   placeholder="确认密码">
                 </Input.Password>
