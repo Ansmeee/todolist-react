@@ -159,6 +159,7 @@ class userInfo extends React.Component {
   }
 
   cancel = () => {
+    this.refs.resetPassForm.resetFields()
     this.setState({resetPassModal: false, resetPassForm: {password: '', auth: ''}})
   }
 
@@ -256,6 +257,7 @@ class userInfo extends React.Component {
           <div className="reset-pass-form">
             <Form
               id="resetPassForm"
+              ref="resetPassForm"
               onFinish={(values) => {
                 this.onFinish(values)
               }}>
