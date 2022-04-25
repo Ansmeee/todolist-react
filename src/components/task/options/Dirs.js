@@ -76,10 +76,6 @@ class Dirs extends React.Component {
   }
 
   getType() {
-    if (this.props.currentTask.type) {
-      return this.props.currentTask.type
-    }
-
     if (this.props.currentTask.list_id) {
       var task = this.props.currentTask
       var index = this.state.dirList.findIndex(item => {
