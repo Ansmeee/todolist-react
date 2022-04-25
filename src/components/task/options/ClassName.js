@@ -15,10 +15,6 @@ function priorityClassName(priority = 0) {
 }
 
 function statusClassName(status) {
-  if (status === 1) {
-    return "item-opt item-opt-primary"
-  }
-
   if (status === 2) {
     return "item-opt item-opt-success"
   }

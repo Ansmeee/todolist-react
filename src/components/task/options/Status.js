@@ -19,15 +19,6 @@ class Status extends React.Component {
           block
           type="text"
           onClick={() => {
-            this.statusChange(0)
-          }}>
-          未开始
-        </Button>
-        <Button
-          block
-          className="pop-opt-primary"
-          type="text"
-          onClick={() => {
             this.statusChange(1)
           }}>
           进行中

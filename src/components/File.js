@@ -161,18 +161,6 @@ class File extends React.Component {
   }
 
   sortPopContent() {
-    var statusSort = ""
-    if (this.props.state.from !== "done") {
-      statusSort = <Button
-        block
-        type={this.state.filterForm.sort_by === 'status' ? 'link' : 'text'}
-        onClick={() => {
-          this.sortOptClick('status')
-        }}>
-        按状态
-      </Button>
-    }
-
     return (
       <div>
         <Button
@@ -183,7 +171,6 @@ class File extends React.Component {
           }}>
           按时间
         </Button>
-        {statusSort}
         <Button
           block
           type={this.state.filterForm.sort_by === 'priority' ? 'link' : 'text'}
