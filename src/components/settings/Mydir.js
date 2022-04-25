@@ -224,7 +224,7 @@ class Mydir extends React.Component {
           <Button
             type="text"
             onClick={() => {
-              this.setState({newDirTitle: '', newDir: false})
+              this.setState({newDirTitle: '', newDir: false, submitDis: false})
             }}>
             <CloseOutlined className="item-li-val-danger"/>
           </Button>
