@@ -13,6 +13,9 @@ class Mydir extends React.Component {
       originList: [],
       modifyIndex: {},
       delPopVisible: {},
+      newDir: false,
+      newDirTitle: '',
+      submitDis: false,
     }
   }
 
@@ -117,6 +120,25 @@ class Mydir extends React.Component {
     })
   }
 
+  submit() {
+    if (this.state.newDirTitle) {
+      this.setState({submitDis: true}, () => {
+        fileApi.create({title: this.state.newDirTitle}).then(response => {
+          if (response.code === 200) {
+            this.setState({newDir: false, newDirTitle: '', submitDis: false}, () => {
+              var dirList = this.state.dirList
+              dirList.push(response.data)
+              this.updateDirList(dirList)
+            })
+          } else {
+            this.setState({submitDis: false})
+            message.error("添加失败")
+          }
+        })
+      })
+    }
+  }
+
   updateDirList(dirList) {
     window.sessionStorage.setItem("menu", JSON.stringify(dirList))
     this.setState({dirList: dirList})
@@ -160,9 +182,60 @@ class Mydir extends React.Component {
       <div className="baseinfo-page">
         <li className="item-li">
           <div className="item-li-label">我的文件夹</div>
-          <div style={{paddingTop: '9px'}}>{dirlist}</div>
+          <div style={{paddingTop: '9px'}}>
+            {dirlist}
+            <div className="item-li-val">
+              {this.createOpt()}
+            </div>
+          </div>
         </li>
       </div>
+    )
+  }
+
+  createOpt() {
+    if (this.state.newDir) {
+      return (
+        <div>
+          <Input
+            className="item-li-val-input"
+            bordered={false}
+            size="small"
+            placeholder="请输入文件夹名称"
+            autoFocus={true}
+            onChange={(e) => {
+              this.setState({newDirTitle: e.target.value})
+            }}
+            onPressEnter={(e) => {
+              if (!this.state.submitDis) {
+                this.submit()
+              }
+            }}
+            value={this.state.newDirTitle}>
+          </Input>
+          <Button
+            type="text"
+            disabled={this.state.submitDis}
+            onClick={() => {
+              this.submit()
+            }}>
+            <CheckOutlined className="item-li-val-success"/>
+          </Button>
+          <Button
+            type="text"
+            onClick={() => {
+              this.setState({newDirTitle: '', newDir: false})
+            }}>
+            <CloseOutlined className="item-li-val-danger"/>
+          </Button>
+        </div>
+      )
+    }
+
+    return (
+      <Button style={{paddingLeft: '7px'}} type="link" onClick={() => {
+        this.setState({newDir: true})
+      }}>新建文件夹</Button>
     )
   }
 }
