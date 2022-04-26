@@ -4,6 +4,7 @@ import {statusKey2Name} from "../../../utils/task";
 import {CheckCircleOutlined} from "@ant-design/icons";
 import "../../../assets/style/opt.less"
 import {statusClassName} from "./ClassName";
+import moment from "moment";
 
 class Status extends React.Component {
   constructor(props) {
@@ -49,13 +50,23 @@ class Status extends React.Component {
           <Button
             type="text"
             style={{fontSize: '12px'}}
-            className={statusClassName(this.props.currentTask.status)}>
+            className={statusClassName(this.props.currentTask)}>
             <CheckCircleOutlined/>
-            {statusKey2Name(this.props.currentTask.status)}
+            {this.statusText()}
           </Button>
         </Popover>
       </div>
     )
+  }
+
+  statusText() {
+    var currentDate = moment().format("YYYY-MM-DD")
+    var expireDate = moment(this.props.currentTask.deadline).format("YYYY-MM-DD")
+    if (currentDate > expireDate) {
+      return '已过期'
+    }
+
+    return statusKey2Name(this.props.currentTask.status)
   }
 
   statusChange(status) {
