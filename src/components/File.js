@@ -38,6 +38,7 @@ class File extends React.Component {
       from: props.state.from,
       loading: false,
       todoList: [],
+      todoTotal: 0,
       priorityPopVisible: false,
       needFilter: true,
       popShow: false,
@@ -77,7 +78,7 @@ class File extends React.Component {
     todoApi.todoList(params).then(response => {
       this.setState({loading: false})
       if (response.code === 200) {
-        this.setState({todoList: response.data.list})
+        this.setState({todoList: response.data.list, todoTotal: response.data.total})
         if (params.id && response.data.list[0]) {
           this.itemClick(response.data.list[0])
         }
@@ -224,7 +225,7 @@ class File extends React.Component {
     } else if (this.props.state.dir && this.props.state.dir !== todo.list_id) {
       todoList.splice(index, 1)
       this.setState({currentTask: {}, createTask: false})
-    }else {
+    } else {
       todoList[index] = todo
     }
 
@@ -253,6 +254,7 @@ class File extends React.Component {
   }
 
   onTaskDeleted = (item) => {
+    var todoTotal = this.state.todoTotal
     var todoList = this.state.todoList
     var index = todoList.findIndex(i => {
       return i.id === item.id
@@ -262,6 +264,7 @@ class File extends React.Component {
 
     this.setState({
       todoList: todoList,
+      todoTotal: todoTotal == 0 ? 0 : todoTotal - 1,
       currentTask: {
         id: '',
         title: '',
@@ -286,7 +289,8 @@ class File extends React.Component {
 
       var todoList = this.state.todoList
       todoList.unshift(todo)
-      this.setState({todoList: todoList})
+      var todoTotal = this.state.todoTotal
+      this.setState({todoList: todoList, todoTotal: todoTotal + 1})
     }
   }
 
@@ -315,7 +319,7 @@ class File extends React.Component {
       <Row className="file-page-con">
         <Col span={14} className="file-list-con">
           <Row className="file-filter-con">
-            <Col span={12}>
+            <Col span={10}>
               <div style={{borderBottom: '1px solid #d9d9d9'}}>
                 <Input
                   bordered={false}
@@ -333,7 +337,7 @@ class File extends React.Component {
                   }}/>
               </div>
             </Col>
-            <Col span={6} style={{paddingLeft: '10px'}}>
+            <Col span={4} style={{paddingLeft: '10px'}}>
               <Popover
                 overlayClassName="pop-opt-con"
                 placement="bottomLeft"
@@ -359,6 +363,11 @@ class File extends React.Component {
                 </Button>
               </Popover>
             </Col>
+            <Col span={4}>
+              <Button type='text' className="filter-form-opt">
+                共 {this.state.todoTotal ? this.state.todoTotal : 0} 条
+              </Button>
+            </Col>
             <Col span={6} style={{textAlign: 'right', paddingRight: '16px'}}>
               <Button type="primary" icon={<PlusOutlined/>} onClick={() => {
                 this.setState({
@@ -376,16 +385,16 @@ class File extends React.Component {
             </Col>
           </Row>
           <List
+            size="small"
+            itemLayout="vertical"
+            className="file-item-con"
+            loading={this.state.loading}
+            dataSource={this.state.todoList}
             style={{
               height: document.documentElement.clientHeight - 65 - 70 - 48 - 55,
               overflowY: 'auto'
             }}
-            size="small"
             locale={{emptyText: this.props.emptyText ? this.props.emptyText : <Empty description="暂无数据"/>}}
-            itemLayout="vertical"
-            loading={this.state.loading}
-            dataSource={this.state.todoList}
-            className="file-item-con"
             renderItem={item => (
               <List.Item
                 key={item.id}
