@@ -62,7 +62,7 @@ class Status extends React.Component {
   statusText() {
     var currentDate = moment().format("YYYY-MM-DD")
     var expireDate = moment(this.props.currentTask.deadline).format("YYYY-MM-DD")
-    if (currentDate > expireDate) {
+    if (this.props.currentTask.status === 1 && currentDate > expireDate) {
       return '已过期'
     }
 
