@@ -13,6 +13,7 @@ import {CarryOutOutlined, FlagOutlined} from '@ant-design/icons';
 import {priorityKey2Name} from "../../utils/task";
 import {deadlineClassName, priorityClassName} from './options/ClassName';
 import More from "./options/More";
+import index from "../../http";
 
 const {TextArea} = Input;
 const {Header, Footer, Content} = Layout;
@@ -222,6 +223,34 @@ class TaskForm extends React.Component {
       toolbar: [],
       classes: "task-editor",
       cache: {enable: false},
+      upload: {
+        url: index.Host() + `/rest/todo/upload`,
+        linkToImgUrl: index.Host() + '/rest/todo/img',
+        headers: {'Authorization': window.localStorage.getItem('token')},
+        extraData: {'id': that.props.currentTask.id},
+        fieldName: "upload",
+        filename(name) {
+          return name.replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, '').replace(/[\?\\/:|<>\*\[\]\(\)\$%\{\}@~]/g, '').replace('/\\s/g', '')
+        },
+        error(msg) {
+          console.log('error', msg)
+        },
+        format(file, res) {
+          var response = JSON.parse(res)
+          if (response.code === 200) {
+            return JSON.stringify({
+              "msg": "",
+              "code": 0,
+              "data": {
+                "errFiles": [],
+                "succMap": response.data.success
+              }
+            })
+          } else {
+            message.error("上传失败")
+          }
+        }
+      },
       after() {
         if (value.length > 0) {
           let md = value ? vditor.html2md(value) : ''

@@ -1,6 +1,10 @@
 import index from './index'
 
 const todoApi = {
+  uploadUrl() {
+    return index.Host() + `/rest/todo/upload`
+  },
+
   todoList(params) {
     return index.Get(`/rest/todo`, params)
   },
