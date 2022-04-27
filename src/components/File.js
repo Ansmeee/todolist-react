@@ -262,7 +262,7 @@ class File extends React.Component {
 
     this.setState({
       todoList: todoList,
-      todoTotal: todoTotal == 0 ? 0 : todoTotal - 1,
+      todoTotal: todoTotal === 0 ? 0 : todoTotal - 1,
       currentTask: {
         id: '',
         title: '',
