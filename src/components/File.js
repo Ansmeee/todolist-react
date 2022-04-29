@@ -216,13 +216,14 @@ class File extends React.Component {
       return item.id === todo.id
     })
 
-    if (
-      ((todo.status === 2 && this.props.state.from !== 'done') || (todo.status !== 2 && this.props.state.from === 'done'))
-      || (this.props.state.from === 'today' && todo.deadline > moment().format('YYYY-MM-DD'))
+    if (((todo.status === 2 && this.props.state.from !== 'done') || (todo.status !== 2 && this.props.state.from === 'done'))) {
+      index >=0 && todoList.splice(index, 1)
+      this.setState({currentTask: {}, createTask: false, todoTotal: this.state.todoTotal - 1})
+    } else if ((this.props.state.from === 'today' && todo.deadline > moment().format('YYYY-MM-DD'))
       || (this.props.state.dir && this.props.state.dir !== todo.list_id)
     ) {
-      todoList.splice(index, 1)
-      this.setState({currentTask: {}, createTask: false, todoTotal: this.state.todoTotal - 1})
+      index >=0 && todoList.splice(index, 1)
+      this.setState({todoTotal: this.state.todoTotal - 1})
     } else {
       todoList[index] = todo
     }
