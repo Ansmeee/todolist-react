@@ -1,5 +1,7 @@
 import React from "react";
 import {browserHistory} from "react-router";
+import 'moment/locale/zh-cn';
+import locale from 'antd/es/date-picker/locale/zh_CN';
 import {
   PlusOutlined,
   SortAscendingOutlined,
@@ -7,7 +9,7 @@ import {
   SelectOutlined,
   ClearOutlined
 } from "@ant-design/icons";
-import {Row, Col, Input, Button, Popover, List, message, Empty} from "antd";
+import {Row, Col, Input, Button, Popover, List, message, Empty, DatePicker} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
@@ -16,6 +18,7 @@ import More from "./task/options/More";
 import Action from "./task/options/Action";
 
 const _ = require('lodash');
+const {RangePicker} = DatePicker;
 
 class File extends React.Component {
   constructor(props) {
@@ -108,7 +111,8 @@ class File extends React.Component {
     })
   }
 
-  filterOptClick(filterType) {
+  filterOptClick(filterType, value) {
+    console.log(value)
     var filterForm = this.state.filterForm
 
     var filterRules = filterForm.rules
@@ -143,20 +147,28 @@ class File extends React.Component {
         onClick={() => {
           this.filterOptClick('status')
         }}>
-        显示已完成
+        显示已完成任务
       </Button>
     }
     return (
       <div>
+        {showStatus}
         <Button
           block
           type={this.state.filterForm.rules.includes('priority') ? 'link' : 'text'}
           onClick={() => {
             this.filterOptClick('priority')
           }}>
-          仅显示高优
+          仅显示高优先级任务
         </Button>
-        {showStatus}
+        <RangePicker
+          locale={locale}
+          suffixIcon={null}
+          placement="bottomLeft"
+          onChange={(dates, dateStrings) => {
+            this.filterOptClick('deadline', dateStrings)
+          }}>
+        </RangePicker>
       </div>
     )
   }
@@ -221,13 +233,13 @@ class File extends React.Component {
       this.setState({
         currentTask: {},
         createTask: false,
-        todoTotal: this.state.todoTotal == 0 ? 0 : this.state.todoTotal - 1
+        todoTotal: this.state.todoTotal === 0 ? 0 : this.state.todoTotal - 1
       })
     } else if ((this.props.state.from === 'today' && todo.deadline > moment().format('YYYY-MM-DD'))
       || (this.props.state.dir && this.props.state.dir !== todo.list_id)
     ) {
       index >= 0 && todoList.splice(index, 1)
-      this.setState({todoTotal: this.state.todoTotal == 0 ? 0 : this.state.todoTotal - 1})
+      this.setState({todoTotal: this.state.todoTotal === 0 ? 0 : this.state.todoTotal - 1})
     } else {
       todoList[index] = todo
     }
@@ -354,7 +366,7 @@ class File extends React.Component {
                 </Button>
               </Popover>
               <Popover
-                overlayClassName="pop-opt-con"
+                overlayClassName="pop-opt-con-filter"
                 placement="bottomLeft"
                 title={<span><FilterOutlined style={{marginRight: '3px'}}/>展示内容</span>}
                 content={this.filterPopContent()}
