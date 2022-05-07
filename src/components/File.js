@@ -112,7 +112,6 @@ class File extends React.Component {
   }
 
   filterOptClick(filterType, value) {
-    console.log(value)
     var filterForm = this.state.filterForm
 
     var filterRules = filterForm.rules
@@ -147,7 +146,7 @@ class File extends React.Component {
         onClick={() => {
           this.filterOptClick('status')
         }}>
-        显示已完成任务
+        显示已完成
       </Button>
     }
     return (
@@ -159,16 +158,8 @@ class File extends React.Component {
           onClick={() => {
             this.filterOptClick('priority')
           }}>
-          仅显示高优先级任务
+          仅显示高优
         </Button>
-        <RangePicker
-          locale={locale}
-          suffixIcon={null}
-          placement="bottomLeft"
-          onChange={(dates, dateStrings) => {
-            this.filterOptClick('deadline', dateStrings)
-          }}>
-        </RangePicker>
       </div>
     )
   }
@@ -366,9 +357,9 @@ class File extends React.Component {
                 </Button>
               </Popover>
               <Popover
-                overlayClassName="pop-opt-con-filter"
+                overlayClassName="pop-opt-con"
                 placement="bottomLeft"
-                title={<span><FilterOutlined style={{marginRight: '3px'}}/>展示内容</span>}
+                title={<span><FilterOutlined style={{marginRight: '3px'}}/>筛选条件</span>}
                 content={this.filterPopContent()}
                 trigger="click">
                 <Button
