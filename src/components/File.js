@@ -1,7 +1,6 @@
 import React from "react";
 import {browserHistory} from "react-router";
 import 'moment/locale/zh-cn';
-import locale from 'antd/es/date-picker/locale/zh_CN';
 import {
   PlusOutlined,
   SortAscendingOutlined,
@@ -9,7 +8,7 @@ import {
   SelectOutlined,
   ClearOutlined
 } from "@ant-design/icons";
-import {Row, Col, Input, Button, Popover, List, message, Empty, DatePicker} from "antd";
+import {Row, Col, Input, Button, Popover, List, message, Empty} from "antd";
 import todoApi from "../http/todo";
 import "../assets/style/file.less"
 import moment from 'moment';
@@ -18,7 +17,6 @@ import More from "./task/options/More";
 import Action from "./task/options/Action";
 
 const _ = require('lodash');
-const {RangePicker} = DatePicker;
 
 class File extends React.Component {
   constructor(props) {

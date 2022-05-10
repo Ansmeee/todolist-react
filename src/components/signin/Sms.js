@@ -93,6 +93,10 @@ class Sms extends React.Component {
       var form = this.refs.signinForm.getFieldsValue()
       signApi.sendSMSCode({account: form.account}).then(response => {
         if (response.code === 200) {
+          if (response.msg) {
+            message.success(response.msg)
+          }
+
           this.setState({counting: true, countDate: Date.now() + 1000 * 60})
         } else {
           message.error("验证码发送失败，请重试")
