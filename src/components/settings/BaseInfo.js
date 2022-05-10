@@ -1,13 +1,15 @@
 import React from "react";
-import {Input, Button, message, Form} from "antd";
+import {Input, Button, message, Form, Statistic} from "antd";
 import {CheckOutlined, CloseOutlined, LockOutlined, SafetyOutlined} from "@ant-design/icons";
 import userApi from '../../http/user';
 import {setUserInfo} from "../../utils/user";
 import Modal from "antd/es/modal/Modal";
 import Pattern from "../../utils/pattern";
 import md5 from "js-md5";
+import signApi from "../../http/sign";
 
 const _ = require('lodash');
+const {Countdown} = Statistic;
 
 class userInfo extends React.Component {
   constructor(props) {
@@ -39,13 +41,23 @@ class userInfo extends React.Component {
       resetPassForm: {
         password: '',
         auth: ''
-      }
+      },
+      phoneInputDis: false,
+      emailInputDis: false,
+      counting: false,
+      countDate: Date.now() + 1000 * 60,
+      code: ''
     }
   }
 
   componentDidMount() {
     if (this.props.userInfo && this.props.userInfo.account) {
-      this.setState({userInfo: this.props.userInfo, originInfo: _.cloneDeep(this.props.userInfo)})
+      this.setState({
+        userInfo: this.props.userInfo,
+        originInfo: _.cloneDeep(this.props.userInfo),
+        phoneInputDis: this.props.userInfo.phone ? true : false,
+        emailInputDis: this.props.userInfo.email ? true : false
+      })
     }
   }
 
@@ -56,6 +68,10 @@ class userInfo extends React.Component {
       value: this.state.userInfo[key]
     }
 
+    if (key === 'phone') {
+      params.code = this.state.code
+    }
+
     userApi.updateAttr(params).then(response => {
       if (response.code === 200) {
         message.success('已保存')
@@ -63,9 +79,12 @@ class userInfo extends React.Component {
         if (key === 'name') {
           setUserInfo("name", this.state.userInfo[key])
         }
+
+        if (key === 'phone') {
+          this.setState({phoneInputDis: true, counting: false, code: ''})
+        }
       } else {
         message.error(response.msg || '保存失败')
-        this.updateModifiedKey(key, false)
       }
     })
   }
@@ -133,6 +152,9 @@ class userInfo extends React.Component {
           <Button type="text" onClick={() => {
             this.updateuserInfo(key, this.state.originInfo[key])
             this.updateModifiedKey(key, false)
+            if (key === 'phone') {
+              this.setState({phoneInputDis: true})
+            }
           }}><CloseOutlined className="item-li-val-danger"/></Button>
         </div>
       )
@@ -149,11 +171,10 @@ class userInfo extends React.Component {
     values.account = this.state.userInfo.account
     userApi.resetPass(values).then(response => {
       if (response.code === 200) {
-        message.success("重置成功，请重新登陆")
-        window.localStorage.removeItem("token")
-        window.location.href = '/'
+        message.success("密码重置成功")
+        this.cancel()
       } else {
-        message.error(response.msg || "重置失败")
+        message.error(response.msg || "密码重置失败")
       }
     })
   }
@@ -181,7 +202,7 @@ class userInfo extends React.Component {
           <div className="item-li-label">绑定邮箱</div>
           <div className="item-li-val">
             <Input
-              disabled={true}
+              disabled={this.state.emailInputDis}
               onChange={(e) => {
                 this.updateuserInfo('email', e.target.value)
                 this.updateModifiedKey('email', true)
@@ -196,6 +217,27 @@ class userInfo extends React.Component {
             </Input>
             {this.getOptions('email')}
             {this.getVerifiedOpt()}
+          </div>
+        </li>
+        <li className="item-li">
+          <div className="item-li-label">绑定手机</div>
+          <div className="item-li-val">
+            <Input
+              disabled={this.state.phoneInputDis}
+              onChange={(e) => {
+                this.updateuserInfo('phone', e.target.value)
+                this.updateModifiedKey('phone', true)
+              }}
+              onPressEnter={() => {
+                this.state.modifiedKey['phone'] && this.confirm('phone')
+              }}
+              className="item-li-val-input"
+              value={this.state.userInfo.phone}
+              placeholder="未填写"
+              bordered={false}>
+            </Input>
+            {this.changePhoneOpt()}
+            {this.getOptions('phone')}
           </div>
         </li>
         <li className="item-li">
@@ -215,25 +257,6 @@ class userInfo extends React.Component {
               bordered={false}>
             </Input>
             {this.getOptions('name')}
-          </div>
-        </li>
-        <li className="item-li">
-          <div className="item-li-label">绑定手机</div>
-          <div className="item-li-val">
-            <Input
-              onChange={(e) => {
-                this.updateuserInfo('phone', e.target.value)
-                this.updateModifiedKey('phone', true)
-              }}
-              onPressEnter={() => {
-                this.state.modifiedKey['phone'] && this.confirm('phone')
-              }}
-              className="item-li-val-input"
-              value={this.state.userInfo.phone}
-              placeholder="未填写"
-              bordered={false}>
-            </Input>
-            {this.getOptions('phone')}
           </div>
         </li>
         <li className="item-li">
@@ -289,6 +312,81 @@ class userInfo extends React.Component {
         </Modal>
       </div>
     )
+  }
+
+  changePhone() {
+    this.updateModifiedKey('phone', true)
+    this.setState({phoneInputDis: false})
+  }
+
+  changePhoneOpt() {
+    if (this.state.phoneInputDis) {
+      return (
+        <div>
+          <Button
+            type="link"
+            danger
+            onClick={() => {
+              this.changePhone()
+            }}>
+            更换手机
+          </Button>
+        </div>
+      )
+    }
+
+    return (
+      <div>
+        <Input
+          style={{width: '150px'}}
+          bordered={false}
+          value={this.state.code}
+          onChange={(e) => {
+            this.setState({code: e.target.value})
+          }}
+          placeholder="请输入短信验证码">
+        </Input>
+        {this.countingCon()}
+      </div>
+    )
+  }
+
+  countingCon() {
+    if (this.state.counting) {
+      return (
+        <Button type="text">
+          <Countdown
+            onFinish={() => {
+              this.setState({counting: false})
+            }}
+            value={this.state.countDate}
+            format="s" suffix="s">
+          </Countdown>
+        </Button>
+      )
+    }
+
+    return (
+      <Button
+        type="link"
+        disabled={this.state.userInfo.phone ? false : true}
+        onClick={() => {
+          this.sendSMSCode()
+        }}>
+        获取验证码
+      </Button>
+    )
+  }
+
+
+  sendSMSCode() {
+    signApi.sendSMSCode({account: this.state.userInfo.phone}).then(response => {
+      if (response.code === 200) {
+        this.setState({counting: true, countDate: Date.now() + 1000 * 60})
+      } else {
+        message.error("验证码发送失败，请重试")
+      }
+    })
   }
 }
 

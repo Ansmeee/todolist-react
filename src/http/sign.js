@@ -18,6 +18,10 @@ const signApi = {
 
   captchaimg(source) {
     return index.Host() + `/rest/user/captchaimg?source=${source}`
+  },
+
+  sendSMSCode(parmas) {
+    return index.Post('/rest/user/sms', parmas)
   }
 }
 
