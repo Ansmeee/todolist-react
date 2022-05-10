@@ -23,7 +23,7 @@ function getUserInfo(key) {
 
 function parseToken(token) {
   var tokenArr = token.split(".")
-  var payload = JSON.parse(atob(tokenArr[1]))
+  var payload = JSON.parse(decodeURIComponent(escape(window.atob(tokenArr[1]))))
   return payload
 }
 

@@ -7,7 +7,8 @@ import signApi from "../../../http/sign";
 class User extends React.Component {
   accountOptClick(opt) {
     if (opt === 'signout') {
-      window.localStorage.removeItem("token")
+      window.localStorage.clear()
+      window.sessionStorage.clear()
       signApi.signout().then(response => {
         window.location.href = '/'
       })
