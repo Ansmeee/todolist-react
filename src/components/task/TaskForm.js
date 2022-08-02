@@ -223,6 +223,7 @@ class TaskForm extends React.Component {
       toolbar: [],
       classes: "task-editor",
       cache: {enable: false},
+      cdn: "http://todoo.ansme.cc/816290818/vditor",
       upload: {
         url: index.Host() + `/rest/todo/upload`,
         linkToImgUrl: index.Host() + '/rest/todo/img',
