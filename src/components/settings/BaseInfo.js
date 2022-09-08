@@ -188,17 +188,6 @@ class userInfo extends React.Component {
     return (
       <div className="baseinfo-page">
         <li className="item-li">
-          <div className="item-li-label">用户 ID</div>
-          <div className="item-li-val">
-            <Input
-              bordered={false}
-              disabled={true}
-              value={this.state.userInfo.account}
-              className="item-li-val-input">
-            </Input>
-          </div>
-        </li>
-        <li className="item-li">
           <div className="item-li-label">绑定邮箱</div>
           <div className="item-li-val">
             <Input
