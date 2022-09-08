@@ -306,7 +306,7 @@ class Month extends React.Component {
   getDayCell(record, index) {
     const currentDay = record['week-' + index]
     const taskPopForm = (
-      <div style={{width: '500px', maxHeight: '400px'}}>
+      <div style={{width: '700px', maxHeight: '400px'}}>
         <TaskForm
           height="320px"
           date={currentDay.date}

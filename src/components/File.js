@@ -240,7 +240,7 @@ class File extends React.Component {
     if (this.state.createTask) {
       return (
         <TaskForm
-          height={document.documentElement.clientHeight - 65 - 70 - 55 - 70}
+          height={document.documentElement.clientHeight - 65 - 70 - 55 - 70 - 55}
           currentTask={this.state.currentTask}
           onItemDel={this.onTaskDeleted}
           onTaskUpdated={this.onTaskUpdated}
@@ -320,49 +320,48 @@ class File extends React.Component {
 
   render() {
     return (
-      <Row className="file-page-con">
-        <Col span={14} className="file-list-con">
+        <div className="file-con">
           <Row className="file-filter-con">
             <Col span={10}>
               <div style={{borderBottom: '1px solid #d9d9d9'}}>
                 <Input
-                  bordered={false}
-                  placeholder="输入关键字搜索"
-                  suffix={this.clearOpt()}
-                  onBlur={(e) => {
-                    this.searchChange(e)
-                  }}
-                  value={this.state.keywords}
-                  onChange={(e) => {
-                    this.setState({keywords: e.target.value})
-                  }}
-                  onPressEnter={(e) => {
-                    this.searchChange(e)
-                  }}/>
+                    bordered={false}
+                    placeholder="输入关键字搜索"
+                    suffix={this.clearOpt()}
+                    onBlur={(e) => {
+                      this.searchChange(e)
+                    }}
+                    value={this.state.keywords}
+                    onChange={(e) => {
+                      this.setState({keywords: e.target.value})
+                    }}
+                    onPressEnter={(e) => {
+                      this.searchChange(e)
+                    }}/>
               </div>
             </Col>
             <Col span={4} style={{paddingLeft: '10px'}}>
               <Popover
-                overlayClassName="pop-opt-con"
-                placement="bottomLeft"
-                title={<span><SortAscendingOutlined style={{marginRight: '3px'}}/>排序方式</span>}
-                content={this.sortPopContent()}
-                trigger="click">
+                  overlayClassName="pop-opt-con"
+                  placement="bottomLeft"
+                  title={<span><SortAscendingOutlined style={{marginRight: '3px'}}/>排序方式</span>}
+                  content={this.sortPopContent()}
+                  trigger="click">
                 <Button
-                  type={this.state.filterForm.sort_by ? 'link' : 'text'}
-                  className={this.state.filterForm.sort_by ? '' : 'filter-form-opt'}>
+                    type={this.state.filterForm.sort_by ? 'link' : 'text'}
+                    className={this.state.filterForm.sort_by ? '' : 'filter-form-opt'}>
                   <SortAscendingOutlined/>
                 </Button>
               </Popover>
               <Popover
-                overlayClassName="pop-opt-con"
-                placement="bottomLeft"
-                title={<span><FilterOutlined style={{marginRight: '3px'}}/>筛选条件</span>}
-                content={this.filterPopContent()}
-                trigger="click">
+                  overlayClassName="pop-opt-con"
+                  placement="bottomLeft"
+                  title={<span><FilterOutlined style={{marginRight: '3px'}}/>筛选条件</span>}
+                  content={this.filterPopContent()}
+                  trigger="click">
                 <Button
-                  type={this.state.filterForm.rules.length > 0 ? 'link' : 'text'}
-                  className={this.state.filterForm.rules.length > 0 ? '' : 'filter-form-opt'}>
+                    type={this.state.filterForm.rules.length > 0 ? 'link' : 'text'}
+                    className={this.state.filterForm.rules.length > 0 ? '' : 'filter-form-opt'}>
                   <FilterOutlined/>
                 </Button>
               </Popover>
@@ -372,7 +371,7 @@ class File extends React.Component {
                 共 {this.state.todoTotal >= 0 ? this.state.todoTotal : 0} 条
               </Button>
             </Col>
-            <Col span={6} style={{textAlign: 'right', paddingRight: '16px'}}>
+            <Col span={6} style={{textAlign: 'right'}}>
               <Button type="primary" icon={<PlusOutlined/>} onClick={() => {
                 this.setState({
                   currentTask: {
@@ -388,46 +387,49 @@ class File extends React.Component {
               }}>新 建</Button>
             </Col>
           </Row>
-          <List
-            size="small"
-            itemLayout="vertical"
-            className="file-item-con"
-            loading={this.state.loading}
-            dataSource={this.state.todoList}
-            style={{
-              height: document.documentElement.clientHeight - 65 - 70 - 48 - 55,
-              overflowY: 'auto'
-            }}
-            locale={{emptyText: this.props.emptyText ? this.props.emptyText : <Empty description="暂无数据"/>}}
-            renderItem={item => (
-              <List.Item
-                key={item.id}
-                extra={
-                  <More
-                    currentTask={item}
-                    onItemDel={this.onTaskDeleted}
-                    onItemChange={(key, val) => {
-                      this.itemChange(item, key, val)
-                    }}>
-                  </More>
-                }
-                actions={[
-                  <Action
-                    currentTask={item}
-                    onItemChange={(key, val) => {
-                      this.itemChange(item, key, val)
-                    }}>
-                  </Action>
-                ]}>
-                <div onClick={() => {
-                  this.itemClick(item)
-                }}>{item.title}</div>
-              </List.Item>
-            )}
-          />
-        </Col>
-        <Col span={10}>{this.taskForm()}</Col>
-      </Row>
+          <Row className="file-page-con">
+            <Col span={10} className="file-list-con">
+              <List
+                  size="small"
+                  itemLayout="vertical"
+                  className="file-item-con"
+                  loading={this.state.loading}
+                  dataSource={this.state.todoList}
+                  style={{
+                    height: document.documentElement.clientHeight - 65 - 70 - 48 - 55,
+                    overflowY: 'auto'
+                  }}
+                  locale={{emptyText: this.props.emptyText ? this.props.emptyText : <Empty description="暂无数据"/>}}
+                  renderItem={item => (
+                      <List.Item
+                          key={item.id}
+                          extra={
+                            <More
+                                currentTask={item}
+                                onItemDel={this.onTaskDeleted}
+                                onItemChange={(key, val) => {
+                                  this.itemChange(item, key, val)
+                                }}>
+                            </More>
+                          }
+                          actions={[
+                            <Action
+                                currentTask={item}
+                                onItemChange={(key, val) => {
+                                  this.itemChange(item, key, val)
+                                }}>
+                            </Action>
+                          ]}>
+                        <div onClick={() => {
+                          this.itemClick(item)
+                        }}>{item.title}</div>
+                      </List.Item>
+                  )}
+              />
+            </Col>
+            <Col span={13} offset={1}>{this.taskForm()}</Col>
+          </Row>
+        </div>
     )
   }
 }
